@@ -3,11 +3,11 @@
 \docType{data}
 \name{signatures_df}
 \alias{signatures_df}
-\title{Prices of 50,000 round cut diamonds.}
+\title{Gene-level information for each signature implemented.}
 \format{
 A data frame with 53940 rows and 10 variables:
 \describe{
-  \item{signature_id}{a unique ID gien to the signature}
+  \item{signature_id}{a unique ID given to the signature}
   \item{ensembl_gene_id}{ENSEMBL gene ID}
   \item{gene_symbol}{Gene Symbol ID}
   \item{entrez_gene_id}{Entrez gene ID}

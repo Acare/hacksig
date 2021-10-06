@@ -4,10 +4,10 @@
 \alias{hack_cinsarc}
 \title{Classify a cohort of samples based on the CINSARC Signature}
 \usage{
-hack_cinsarc(expr_mat, dm_status)
+hack_cinsarc(expr_data, dm_status)
 }
 \arguments{
-\item{expr_mat}{A gene expression matrix (or data frame) with gene symbols as
+\item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
 row names and samples as columns.}
 
 \item{dm_status}{A numeric vector specifying whether a sample has either (1)

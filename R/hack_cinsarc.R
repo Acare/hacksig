@@ -5,7 +5,7 @@
 #' classes, C1 or C2, using the 67-gene signature CINSARC and the LOOCV method
 #' as implemented in ...
 #'
-#' @param expr_mat A gene expression matrix (or data frame) with gene symbols as
+#' @param expr_data A gene expression matrix (or data frame) with gene symbols as
 #'  row names and samples as columns.
 #' @param dm_status A numeric vector specifying whether a sample has either (1)
 #'  or not (0) developed distant metastasis.
@@ -15,8 +15,8 @@
 #'
 #' @examples
 #' m <- matrix()
-hack_cinsarc <- function(expr_mat, dm_status) {
-    event_df <- tibble::tibble(sample_name = colnames(expr_mat),
+hack_cinsarc <- function(expr_data, dm_status) {
+    event_df <- tibble::tibble(sample_name = colnames(expr_data),
                                event = ifelse(event_vector == 0, "X0", "X1") %>% as.factor())
 
     tidy_transpose <- function(data, genes) {

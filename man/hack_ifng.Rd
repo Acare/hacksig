@@ -4,7 +4,7 @@
 \alias{hack_ifng}
 \title{Hack Interferon Gamma Signatures}
 \usage{
-hack_ifng(expr_mat, signature = "all", method = "default")
+hack_ifng(expr_data, signature = "all", method = "default")
 }
 \arguments{
 \item{signature}{character}

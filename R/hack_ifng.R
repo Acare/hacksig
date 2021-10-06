@@ -1,6 +1,6 @@
 #' Hack Interferon Gamma Signatures
 #'
-#' @param expr_mat
+#' @param expr_data
 #' @param signature character
 #' @param method character
 #'
@@ -8,6 +8,6 @@
 #' @export
 #'
 #' @examples
-hack_ifng <- function(expr_mat, signature = "all", method = "default") {
+hack_ifng <- function(expr_data, signature = "all", method = "default") {
 
 }
