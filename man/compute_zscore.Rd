@@ -10,14 +10,31 @@ compute_zscore(expr_data, signatures)
 \item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
 row names and samples as columns.}
 
-\item{signature}{A list of character vectors corresponding to gene signatures.}
+\item{signature}{A list of named character vectors corresponding to gene signatures.}
 }
 \value{
-A data frame with
+A tibble with the first column indicating sample identifiers (`sample_id`)
+ and all the other columns ....
 }
 \description{
 Obtain single sample z-scores, as implemented in XXX, from a cohort of samples.
 }
 \examples{
-m <- matrix()
+set.seed(123)
+
+test_expr <- data.frame(
+    sample1 = rnorm(10, mean = 8, sd = 2),
+    sample2 = rnorm(10, mean = 7, sd = 2),
+    sample3 = rnorm(10, mean = 8, sd = 3),
+    row.names = paste0("gene", 1:10)
+)
+
+test_list <- list(
+    gs1 = paste0("gene", c(1, 2, 6)),
+    gs2 = paste0("gene", 1:5),
+    gs3 = paste0("gene", c(3, 1, 9)),
+    gs4 = paste0("gene", c(1, 3, 9))
+)
+
+compute_zscore(test_expr, test_list)
 }

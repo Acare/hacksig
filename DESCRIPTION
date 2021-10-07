@@ -1,15 +1,28 @@
 Package: hacksig
 Type: Package
-Title: A Collection of Gene Signatures
+Title: A Tidy Framework to Hack Gene Expression Signatures
 Version: 0.1.0
-Authors@R: person("Andrea", "Carenzo", email = "andrea.carenzo@gmail.com",
-  role = c("aut", "cre"))
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(person(given = "Andrea", 
+                    family = "Carenzo", 
+                    email = "andrea.carenzo@gmail.com",
+                    role = c("aut", "cre"), 
+                    comment = c(ORCID = "0000-0001-6804-9984")),
+             person(given = "Loris",
+                    family = "De Cecco",
+                    email = "loris.dececco@istitutotumori.mi.it",
+                    role = "aut",
+                    comment = c(ORCID = "")),
+             person(given = "Federico",
+                    family = "Pistore",
+                    email = "federico.pistore@istitutotumori.mi.it",
+                    role = "aut",
+                    comment = c(ORCID = "")))
+Description: A collection of gene expression signatures found in literature,
+    single sample methods with a tidy output.
 License: MIT + file LICENSE
+URL: https://github.com/Acare/hacksig
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
 Depends: 
-    R (>= 2.10)
+    R (>= 4.0.5)
