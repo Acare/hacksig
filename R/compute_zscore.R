@@ -1,14 +1,26 @@
-#' Single Sample Z-score
+#' Single sample z-score
 #'
-#' Obtain single sample z-scores, as implemented in XXX, from a cohort of samples.
+#' Obtain single sample z-scores for a list of gene signatures,
+#' as implemented in *Lee et al. (2008)*.
 #'
 #' @param expr_data A gene expression matrix (or data frame) with gene symbols as
 #'  row names and samples as columns.
-#' @param signature A list of named character vectors corresponding to gene signatures.
+#' @param signatures A list of named character vectors corresponding to gene signatures.
 #'
 #' @return A tibble with the first column indicating sample identifiers (`sample_id`)
 #'  and all the other columns ....
-#' @export
+#'
+#' @references
+#' Hänzelmann, S., Castelo, R., & Guinney, J. (2013). GSVA: gene set variation
+#' analysis for microarray and RNA-seq data. *BMC bioinformatics*, 14, 7.
+#' [doi :10.1186/1471-2105-14-7](https://doi.org/10.1186/1471-2105-14-7).
+#'
+#' Lee, E., Chuang, H. Y., Kim, J. W., Ideker, T., & Lee, D. (2008). Inferring
+#' pathway activity toward precise disease classification.
+#' *PLoS computational biology*, 4(11), e1000217.
+#' [doi: 10.1371/journal.pcbi.1000217](https://doi.org/10.1371/journal.pcbi.1000217).
+#'
+#' @seealso
 #'
 #' @examples
 #' set.seed(123)
@@ -28,6 +40,8 @@
 #' )
 #'
 #' compute_zscore(test_expr, test_list)
+#'
+#' @export
 
 compute_zscore <- function(expr_data, signatures) {
 
@@ -40,8 +54,8 @@ compute_zscore <- function(expr_data, signatures) {
 
     result <- base::lapply(
         signatures,
-        FUN = function(geneset) {
-            single_sig_zscore(dataset = expr_data, genes = geneset)
+        FUN = function(genes) {
+            single_sig_zscore(dataset = expr_data, genes = genes)
         }
     )
     result <- dplyr::bind_rows(result, .id = "signature_id")

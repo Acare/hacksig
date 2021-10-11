@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_zscore.R
 \name{compute_zscore}
 \alias{compute_zscore}
-\title{Single Sample Z-score}
+\title{Single sample z-score}
 \usage{
 compute_zscore(expr_data, signatures)
 }
@@ -10,14 +10,15 @@ compute_zscore(expr_data, signatures)
 \item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
 row names and samples as columns.}
 
-\item{signature}{A list of named character vectors corresponding to gene signatures.}
+\item{signatures}{A list of named character vectors corresponding to gene signatures.}
 }
 \value{
-A tibble with the first column indicating sample identifiers (`sample_id`)
- and all the other columns ....
+A tibble with the first column indicating sample identifiers (\code{sample_id})
+and all the other columns ....
 }
 \description{
-Obtain single sample z-scores, as implemented in XXX, from a cohort of samples.
+Obtain single sample z-scores for a list of gene signatures,
+as implemented in \emph{Lee et al. (2008)}.
 }
 \examples{
 set.seed(123)
@@ -37,4 +38,18 @@ test_list <- list(
 )
 
 compute_zscore(test_expr, test_list)
+
+}
+\references{
+Hänzelmann, S., Castelo, R., & Guinney, J. (2013). GSVA: gene set variation
+analysis for microarray and RNA-seq data. \emph{BMC bioinformatics}, 14, 7.
+\href{https://doi.org/10.1186/1471-2105-14-7}{doi :10.1186/1471-2105-14-7}.
+
+Lee, E., Chuang, H. Y., Kim, J. W., Ideker, T., & Lee, D. (2008). Inferring
+pathway activity toward precise disease classification.
+\emph{PLoS computational biology}, 4(11), e1000217.
+\href{https://doi.org/10.1371/journal.pcbi.1000217}{doi: 10.1371/journal.pcbi.1000217}.
+}
+\seealso{
+
 }

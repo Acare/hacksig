@@ -18,7 +18,7 @@ A data frame with
 }
 \description{
 Given a gene expression data frame and a vector indicating the distant metastasis
-status of a sample, `hack_cinsarc()` classifies samples in one of two risk
+status of a sample, \code{hack_cinsarc()} classifies samples in one of two risk
 classes, C1 or C2, using the 67-gene signature CINSARC and the LOOCV method
 as implemented in ...
 }
