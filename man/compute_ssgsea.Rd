@@ -12,14 +12,15 @@ row names and samples as columns.}
 
 \item{signatures}{A list of named character vectors corresponding to gene signatures.}
 
-\item{norm}{Type of normalization affecting the single sample scores. Can be one of:
+\item{norm}{A character string specifying the type of normalization affecting
+the single sample scores. Can be one of:
 \itemize{
 \item \code{raw}, obtain raw scores (\emph{default});
 \item \code{separate}, normalize raw scores across samples for each signature separately.
 \item \code{all}, normalize raw scores both across samples and signatures.
 }}
 
-\item{alpha}{Exponent in the running sum of the score calculation which weights
+\item{alpha}{A numeric scalar. Exponent in the running sum of the score calculation which weights
 the gene ranks. Default to \eqn{\alpha = 0.25}. GSEA classic uses \eqn{\alpha = 1}.}
 }
 \value{
@@ -62,7 +63,7 @@ reveals that oncogenic KRAS-driven cancers require TBK1. \emph{Nature}, 462(7269
 
 Hänzelmann, S., Castelo, R., & Guinney, J. (2013). GSVA: gene set variation
 analysis for microarray and RNA-seq data. \emph{BMC bioinformatics}, 14, 7.
-\href{https://doi.org/10.1186/1471-2105-14-7}{doi :10.1186/1471-2105-14-7}.
+\href{https://doi.org/10.1186/1471-2105-14-7}{doi: 10.1186/1471-2105-14-7}.
 
 Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L.,
 Gillette, M. A., Paulovich, A., Pomeroy, S. L., Golub, T. R., Lander, E. S.,
@@ -72,5 +73,5 @@ approach for interpreting genome-wide expression profiles.
 102(43), 15545–15550. \href{https://doi.org/10.1073/pnas.0506580102}{doi: 10.1073/pnas.0506580102}.
 }
 \seealso{
-
+\code{\link[GSVA:gsva]{GSVA::gsva(..., method = "ssgsea")}}
 }

@@ -13,4 +13,4 @@
 #'   \item{gene_weight}{gives the gene weight in the model}
 #'   \item{method}{default method implemented in the original work}
 #' }
-"signatures_df"
+"signatures_data"

@@ -5,19 +5,16 @@
 #' generalization of the original Gene Set Enrichment Analysis (GSEA) procedure
 #' (see *Subramanian et al. (2005)*).
 #'
-#' @param expr_data A gene expression matrix (or data frame) with gene symbols as
-#'  row names and samples as columns.
-#' @param signatures A list of named character vectors corresponding to gene signatures.
-#' @param norm Type of normalization affecting the single sample scores. Can be one of:
-#'  * `raw`, obtain raw scores (_default_);
-#'  * `separate`, normalize raw scores across samples for each signature separately.
-#'  * `all`, normalize raw scores both across samples and signatures.
-#' @param alpha Exponent in the running sum of the score calculation which weights
+#' @param norm A character string specifying the type of normalization affecting
+#'  the single sample scores. Can be one of:
+#'   * `raw`, obtain raw scores (_default_);
+#'   * `separate`, normalize raw scores across samples for each signature separately.
+#'   * `all`, normalize raw scores both across samples and signatures.
+#' @param alpha A numeric scalar. Exponent in the running sum of the score calculation which weights
 #'  the gene ranks. Default to \eqn{\alpha = 0.25}. GSEA classic uses \eqn{\alpha = 1}.
-#'
+#' @inheritParams compute_zscore
 #' @return A tibble with the first column indicating sample identifiers (`sample_id`)
 #'  and all the other columns ....
-#'
 #' @references
 #' Barbie, D. A., Tamayo, P., Boehm, J. S., Kim, S. Y., Moody, S. E., Dunn, I. F.,
 #' Schinzel, A. C., Sandy, P., Meylan, E., Scholl, C., Fröhling, S., Chan, E. M.,
@@ -28,7 +25,7 @@
 #'
 #' Hänzelmann, S., Castelo, R., & Guinney, J. (2013). GSVA: gene set variation
 #' analysis for microarray and RNA-seq data. *BMC bioinformatics*, 14, 7.
-#' [doi :10.1186/1471-2105-14-7](https://doi.org/10.1186/1471-2105-14-7).
+#' [doi: 10.1186/1471-2105-14-7](https://doi.org/10.1186/1471-2105-14-7).
 #'
 #' Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L.,
 #' Gillette, M. A., Paulovich, A., Pomeroy, S. L., Golub, T. R., Lander, E. S.,
@@ -36,9 +33,7 @@
 #' approach for interpreting genome-wide expression profiles.
 #' *Proceedings of the National Academy of Sciences of the United States of America*,
 #' 102(43), 15545–15550. [doi: 10.1073/pnas.0506580102](https://doi.org/10.1073/pnas.0506580102).
-#'
-#' @seealso
-#'
+#' @seealso \code{\link[GSVA:gsva]{GSVA::gsva(..., method = "ssgsea")}}
 #' @examples
 #' set.seed(123)
 #'
@@ -78,7 +73,8 @@ compute_ssgsea <- function(expr_data, signatures, norm = "raw", alpha = 0.25) {
     single_sig_ssgsea <- function(dataset, genes) {
         rank_data <- apply(dataset, MARGIN = 2,
                            FUN = rank, na.last = "keep", ties.method = "average")
-        ssgsea_vec <- apply(rank_data, MARGIN = 2, FUN = es_ssgsea, geneset = genes)
+        ssgsea_vec <- apply(rank_data, MARGIN = 2,
+                            FUN = es_ssgsea, geneset = genes)
         tibble::enframe(ssgsea_vec, name = "sample_id", value = "ssgsea")
     }
 

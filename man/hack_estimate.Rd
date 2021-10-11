@@ -17,5 +17,13 @@ A data frame with
 Obtain Immune, Stroma, ESTIMATE and Purity scores from a cohort of samples.
 }
 \examples{
-m <- matrix()
+
+}
+\references{
+Yoshihara, K., Shahmoradgoli, M., Martínez, E., Vegesna, R.,
+Kim, H., Torres-Garcia, W., Treviño, V., Shen, H., Laird, P. W., Levine, D. A.,
+Carter, S. L., Getz, G., Stemke-Hale, K., Mills, G. B., & Verhaak, R. G. (2013).
+Inferring tumour purity and stromal and immune cell admixture from
+expression data. \emph{Nature communications}, 4, 2612.
+\href{https://doi.org/10.1038/ncomms3612}{doi: 10.1038/ncomms3612}
 }

@@ -47,12 +47,12 @@ compute_zscore <- function(expr_data, signatures) {
 
     single_sig_zscore <- function(dataset, genes) {
         filt_data <- dataset[genes, ]
-        scaled_data <- base::scale(t(filt_data), center = TRUE, scale = TRUE)
-        zscore_vec <- base::rowSums(scaled_data) / sqrt(length(genes))
+        scaled_data <- scale(t(filt_data), center = TRUE, scale = TRUE)
+        zscore_vec <- rowSums(scaled_data, na.rm = TRUE) / sqrt(length(genes))
         tibble::enframe(zscore_vec, name = "sample_id", value = "zscore")
     }
 
-    result <- base::lapply(
+    result <- lapply(
         signatures,
         FUN = function(genes) {
             single_sig_zscore(dataset = expr_data, genes = genes)
