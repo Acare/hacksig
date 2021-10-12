@@ -2,7 +2,7 @@
 % Please edit documentation in R/hack_cinsarc.R
 \name{hack_cinsarc}
 \alias{hack_cinsarc}
-\title{Classify a cohort of samples based on the CINSARC Signature}
+\title{CINSARC}
 \usage{
 hack_cinsarc(expr_data, dm_status)
 }
@@ -20,8 +20,22 @@ A data frame with
 Given a gene expression data frame and a vector indicating the distant metastasis
 status of a sample, \code{hack_cinsarc()} classifies samples in one of two risk
 classes, C1 or C2, using the 67-gene signature CINSARC and the LOOCV method
-as implemented in ...
+as implemented in \emph{Chibon et al. (2010), Lesluyes & Chibon (2020)}.
 }
 \examples{
-m <- matrix()
+
+}
+\references{
+Chibon, F., Lagarde, P., Salas, S., Pérot, G., Brouste, V., Tirode, F.,
+Lucchesi, C., de Reynies, A., Kauffmann, A., Bui, B., Terrier, P.,
+Bonvalot, S., Le Cesne, A., Vince-Ranchère, D., Blay, J. Y., Collin, F.,
+Guillou, L., Leroux, A., Coindre, J. M., & Aurias, A. (2010). Validated
+prediction of clinical outcome in sarcomas and multiple types of cancer on
+the basis of a gene expression signature related to genome complexity.
+\emph{Nature medicine}, 16(7), 781–787.
+\href{https://doi.org/10.1038/nm.2174}{doi: 10.1038/nm.2174}.
+
+Lesluyes, T., & Chibon, F. (2020). A Global and Integrated
+Analysis of CINSARC-Associated Genetic Defects. \emph{Cancer research}, 80(23),
+5282–5290. \href{https://doi.org/10.1158/0008-5472.CAN-20-0512}{doi: 10.1158/0008-5472.CAN-20-0512}.
 }

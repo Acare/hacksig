@@ -18,9 +18,8 @@
 #'
 #' @export
 hack_estimate <- function(expr_data) {
-    estimate_df <- signatures_data
-    estimate_df <- estimate_df[estimate_df$signature_id == "estimate",
-                               c("gene_type", "gene_symbol")]
+    estimate_df <- signatures_data[signatures_data$signature_id == "estimate",
+                                   c("gene_type", "gene_symbol")]
     estimate_sigs <- list(
         immune_score = estimate_df[estimate_df$gene_type == "immune",
                                    "gene_symbol",

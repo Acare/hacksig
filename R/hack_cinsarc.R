@@ -1,9 +1,9 @@
-#' Classify a cohort of samples based on the CINSARC Signature
+#' CINSARC
 #'
 #' Given a gene expression data frame and a vector indicating the distant metastasis
 #' status of a sample, `hack_cinsarc()` classifies samples in one of two risk
 #' classes, C1 or C2, using the 67-gene signature CINSARC and the LOOCV method
-#' as implemented in ...
+#' as implemented in *Chibon et al. (2010), Lesluyes & Chibon (2020)*.
 #'
 #' @param expr_data A gene expression matrix (or data frame) with gene symbols as
 #'  row names and samples as columns.
@@ -11,10 +11,23 @@
 #'  or not (0) developed distant metastasis.
 #'
 #' @return A data frame with
-#' @export
+#' @references
+#' Chibon, F., Lagarde, P., Salas, S., Pérot, G., Brouste, V., Tirode, F.,
+#' Lucchesi, C., de Reynies, A., Kauffmann, A., Bui, B., Terrier, P.,
+#' Bonvalot, S., Le Cesne, A., Vince-Ranchère, D., Blay, J. Y., Collin, F.,
+#' Guillou, L., Leroux, A., Coindre, J. M., & Aurias, A. (2010). Validated
+#' prediction of clinical outcome in sarcomas and multiple types of cancer on
+#' the basis of a gene expression signature related to genome complexity.
+#' *Nature medicine*, 16(7), 781–787.
+#' [doi: 10.1038/nm.2174](https://doi.org/10.1038/nm.2174).
+#'
+#' Lesluyes, T., & Chibon, F. (2020). A Global and Integrated
+#' Analysis of CINSARC-Associated Genetic Defects. *Cancer research*, 80(23),
+#' 5282–5290. [doi: 10.1158/0008-5472.CAN-20-0512](https://doi.org/10.1158/0008-5472.CAN-20-0512).
 #'
 #' @examples
-#' m <- matrix()
+#'
+#' @export
 hack_cinsarc <- function(expr_data, dm_status) {
     event_df <- tibble::tibble(sample_name = colnames(expr_data),
                                event = ifelse(event_vector == 0, "X0", "X1") %>% as.factor())

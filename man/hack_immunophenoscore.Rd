@@ -2,7 +2,7 @@
 % Please edit documentation in R/hack_immunophenoscore.R
 \name{hack_immunophenoscore}
 \alias{hack_immunophenoscore}
-\title{Classify a cohort of samples based on the Immunophenoscore}
+\title{Immunophenoscore}
 \usage{
 hack_immunophenoscore(expr_data)
 }
@@ -14,8 +14,16 @@ row names and samples as columns.}
 A data frame with
 }
 \description{
-WRITE SOMETHING
+Obtain various immune biomarkers scores, which combined together give the
+immunophenoscore (\emph{Charoentong et al., 2017}).
 }
 \examples{
-m <- matrix()
+
+}
+\references{
+Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
+Efremova, M., Rieder, D., Hackl, H., & Trajanoski, Z. (2017). Pan-cancer
+Immunogenomic Analyses Reveal Genotype-Immunophenotype Relationships and
+Predictors of Response to Checkpoint Blockade. \emph{Cell reports}, 18(1), 248–262.
+\href{https://doi.org/10.1016/j.celrep.2016.12.019}{doi: 10.1016/j.celrep.2016.12.019}.
 }

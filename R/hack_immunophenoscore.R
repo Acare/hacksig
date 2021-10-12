@@ -1,60 +1,63 @@
-#' Classify a cohort of samples based on the Immunophenoscore
+#' Immunophenoscore
 #'
-#' WRITE SOMETHING
+#' Obtain various immune biomarkers scores, which combined together give the
+#'  immunophenoscore (*Charoentong et al., 2017*).
 #'
-#' @param expr_data A gene expression matrix (or data frame) with gene symbols as
-#'  row names and samples as columns.
-#'
+#' @inheritParams hack_estimate
 #' @return A data frame with
-#' @export
+#'
+#' @references
+#' Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
+#' Efremova, M., Rieder, D., Hackl, H., & Trajanoski, Z. (2017). Pan-cancer
+#' Immunogenomic Analyses Reveal Genotype-Immunophenotype Relationships and
+#' Predictors of Response to Checkpoint Blockade. *Cell reports*, 18(1), 248–262.
+#' [doi: 10.1016/j.celrep.2016.12.019](https://doi.org/10.1016/j.celrep.2016.12.019).
 #'
 #' @examples
-#' m <- matrix()
+#'
+#' @export
 hack_immunophenoscore <- function(expr_data) {
-    IPSG <- read_tsv(file = path_to_IPS_genes)
-    expr_mat <- expression_matrix %>% as.data.frame() %>% rownames_to_column("GENE")
-
-    # compute sample-wise mean and sd for all genes in expression_matrix
-    mean_sd <- expression_matrix %>%
-        t() %>%
-        as_tibble(rownames = "sample") %>%
-        rowwise() %>%
-        mutate(mean = mean(c_across(-sample)), sd = sd(c_across(-sample)), .keep = "unused")
-
-    # check if all genes are present and eventually print out a message
-    # remove missing immune genes
-    MISSING_GENES <- setdiff(IPSG$GENE, expr_mat$GENE)
-
-    if (length(MISSING_GENES) > 0) {
-        IPSG <- IPSG %>% filter(!GENE %in% MISSING_GENES)
-        cat("differently named or missing genes: ", sort(MISSING_GENES), "\n")
-    }
-
-    # filter immune genes and compute z-scores
-    immune_mat <- IPSG %>%
-        left_join(expr_mat, by = "GENE") %>%
-        pivot_longer(-c(GENE, NAME, CLASS, WEIGHT), names_to = "sample", values_to = "expr") %>%
-        left_join(mean_sd, by = "sample") %>%
-        mutate(z_score = (expr - mean) / sd)
-
-    # create summary data frame
-    IPS_df <- immune_mat %>%
-        group_by(sample, NAME) %>%
-        mutate(score_NAME = mean(z_score), weight_NAME = mean(WEIGHT)) %>%
-        ungroup() %>%
-        select(-GENE, -expr, -mean, -sd, -z_score) %>%
-        distinct() %>%
-        # filter(sample == "TCGA-04-1348") %>%
-        mutate(score_NAME_w = score_NAME * weight_NAME) %>%
-        group_by(sample, CLASS) %>%
-        mutate(score_CLASS = mean(score_NAME_w)) %>%
-        group_by(sample) %>%
-        mutate(sum_CLASS = sum(unique(score_CLASS)),
-               IPS = case_when(sum_CLASS <= 0 ~ 0,
-                               sum_CLASS >= 3 ~ 10,
-                               sum_CLASS > 0 | sum_CLASS < 3 ~ round(sum_CLASS * 10 / 3, digits = 0))) %>%
-        select(sample, NAME, CLASS, starts_with("score"), IPS) %>%
-        ungroup()
-
-    IPS_df
+    biom_classes <- tibble::tibble(
+        gene_type = c("B2M", "TAP1", "TAP2",
+                      paste0("HLA-", c(LETTERS[1:3], "DPA1", "DPB1", "E", "F")),
+                      "PD-1", "CTLA-4", "LAG3", "TIGIT", "TIM3", "PD-L1", "PD-L2",
+                      "CD27", "ICOS", "IDO1",
+                      "Act CD4", "Act CD8", "Tem CD4", "Tem CD8", "MDSC", "Treg"),
+        gene_class = c(rep(c("MHC", "CP"), each = 10),
+                       rep_len("EC", 4), "SC", "SC")
+    )
+    ips_genes <- signatures_data[signatures_data$signature_id == "immunophenoscore",
+                                 c("gene_type", "gene_symbol", "gene_weight")]
+    ips_genes <- merge(ips_genes, biom_classes, by = "gene_type")
+    scaled_data <- scale(expr_data, center = TRUE, scale = TRUE)
+    ips_data <- merge(ips_genes,
+                      tibble::as_tibble(scaled_data, rownames = "gene_symbol"),
+                      by = "gene_symbol")
+    ips_data <- tidyr::pivot_longer(
+        ips_data,
+        cols = -c(gene_symbol, gene_type, gene_weight, gene_class),
+        names_to = "sample_id",
+        values_to = "norm_expr"
+        )
+    ips_data <- dplyr::mutate(dplyr::group_by(ips_data, sample_id, gene_type),
+                              type_score = mean(norm_expr),
+                              type_weight = mean(gene_weight))
+    keep_cols <- c("sample_id", "gene_type", "gene_class", "type_score", "type_weight")
+    result_type <- dplyr::distinct(dplyr::ungroup(ips_data[, keep_cols]))
+    result_type$weighted_type_score <- result_type$type_weight * result_type$type_score
+    result_type$type_weight <- NULL
+    result_class <- dplyr::mutate(dplyr::group_by(result_type, sample_id, gene_class),
+                                  class_score = mean(weighted_type_score))
+    keep_cols <- c("sample_id", "gene_class", "class_score")
+    result_class <- dplyr::distinct(dplyr::ungroup(result_class[, keep_cols]))
+    result_class <- dplyr::mutate(
+        dplyr::group_by(result_class, sample_id),
+        raw_score = sum(class_score),
+        ips_score = dplyr::case_when(
+            raw_score <= 0 ~ 0,
+            raw_score >= 3 ~ 10,
+            dplyr::between(raw_score, 0, 3) ~ round(raw_score * 10 / 3, digits = 0)
+            )
+        )
+    dplyr::left_join(result_type, result_class, by = c("sample_id", "gene_class"))
 }
