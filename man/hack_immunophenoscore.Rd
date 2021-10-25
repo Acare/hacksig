@@ -17,9 +17,6 @@ A data frame with
 Obtain various immune biomarkers scores, which combined together give the
 immunophenoscore (\emph{Charoentong et al., 2017}).
 }
-\examples{
-
-}
 \references{
 Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
 Efremova, M., Rieder, D., Hackl, H., & Trajanoski, Z. (2017). Pan-cancer

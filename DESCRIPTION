@@ -27,11 +27,16 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Depends: 
-    R (>= 4.0.5)
+    R (>= 4.0)
 Imports: 
     dplyr (>= 1.0.7),
+    future.apply (>= 1.8.1),
+    rlang (>= 0.4.11),
+    stats (>= 4.0.5),
+    tibble (>= 3.1.5),
     tidyr (>= 1.1.4)
 Suggests: 
+    future (>= 1.22.1),
     ggplot2 (>= 3.3.5),
     knitr (>= 1.36),
     msigdbr (>= 7.4.1),

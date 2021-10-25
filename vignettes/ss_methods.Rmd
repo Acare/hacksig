@@ -1,7 +1,5 @@
 ---
-title: "Single sample score Methods"
-author: "Andrea Carenzo"
-date: `r base::Sys.Date()`
+title: "Single sample methods"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ss_methods}
@@ -16,13 +14,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, eval=FALSE}
 library(hacksig)
 ```
 
 ## Introduction
 
-In this vignette you will see how to use the three different single sample methods present in the `hacksig` R package, that is: **z-score**, **single sample GSEA** and **Singscore**.
+In this vignette you will see how to use the three different single sample methods present in the `hacksig` R package, that is: **z-score**, **single sample GSEA** and **singscore**.
 
 ## Z-score
 
@@ -36,5 +34,3 @@ In this vignette you will see how to use the three different single sample metho
 # usa purrr::map() per far vedere come ottenere output per diversi valori dei parametri
 # usa ggplot2 per mostrare i risultati
 ```
-
-

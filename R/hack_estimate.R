@@ -18,6 +18,7 @@
 #'
 #' @export
 hack_estimate <- function(expr_data) {
+    signatures_data <- hacksig::signatures_data
     estimate_df <- signatures_data[signatures_data$signature_id == "estimate",
                                    c("gene_type", "gene_symbol")]
     estimate_sigs <- list(

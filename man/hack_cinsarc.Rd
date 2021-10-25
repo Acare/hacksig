@@ -23,6 +23,7 @@ classes, C1 or C2, using the 67-gene signature CINSARC and the LOOCV method
 as implemented in \emph{Chibon et al. (2010), Lesluyes & Chibon (2020)}.
 }
 \examples{
+hack_cinsarc
 
 }
 \references{

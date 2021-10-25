@@ -13,10 +13,10 @@
 #' Predictors of Response to Checkpoint Blockade. *Cell reports*, 18(1), 248–262.
 #' [doi: 10.1016/j.celrep.2016.12.019](https://doi.org/10.1016/j.celrep.2016.12.019).
 #'
-#' @examples
-#'
+#' @importFrom rlang .data
 #' @export
 hack_immunophenoscore <- function(expr_data) {
+    signatures_data <- hacksig::signatures_data
     biom_classes <- tibble::tibble(
         gene_type = c("B2M", "TAP1", "TAP2",
                       paste0("HLA-", c(LETTERS[1:3], "DPA1", "DPB1", "E", "F")),
@@ -33,30 +33,31 @@ hack_immunophenoscore <- function(expr_data) {
     ips_data <- merge(ips_genes,
                       tibble::as_tibble(scaled_data, rownames = "gene_symbol"),
                       by = "gene_symbol")
+    # browser()
     ips_data <- tidyr::pivot_longer(
         ips_data,
-        cols = -c(gene_symbol, gene_type, gene_weight, gene_class),
+        cols = -c("gene_symbol", "gene_type", "gene_weight", "gene_class"),
         names_to = "sample_id",
         values_to = "norm_expr"
         )
-    ips_data <- dplyr::mutate(dplyr::group_by(ips_data, sample_id, gene_type),
-                              type_score = mean(norm_expr),
-                              type_weight = mean(gene_weight))
+    ips_data <- dplyr::mutate(dplyr::group_by(ips_data, .data$sample_id, .data$gene_type),
+                              type_score = mean(.data$norm_expr),
+                              type_weight = mean(.data$gene_weight))
     keep_cols <- c("sample_id", "gene_type", "gene_class", "type_score", "type_weight")
     result_type <- dplyr::distinct(dplyr::ungroup(ips_data[, keep_cols]))
     result_type$weighted_type_score <- result_type$type_weight * result_type$type_score
     result_type$type_weight <- NULL
-    result_class <- dplyr::mutate(dplyr::group_by(result_type, sample_id, gene_class),
-                                  class_score = mean(weighted_type_score))
+    result_class <- dplyr::mutate(dplyr::group_by(result_type, .data$sample_id, .data$gene_class),
+                                  class_score = mean(.data$weighted_type_score))
     keep_cols <- c("sample_id", "gene_class", "class_score")
     result_class <- dplyr::distinct(dplyr::ungroup(result_class[, keep_cols]))
     result_class <- dplyr::mutate(
-        dplyr::group_by(result_class, sample_id),
-        raw_score = sum(class_score),
+        dplyr::group_by(result_class, .data$sample_id),
+        raw_score = sum(.data$class_score),
         ips_score = dplyr::case_when(
-            raw_score <= 0 ~ 0,
-            raw_score >= 3 ~ 10,
-            dplyr::between(raw_score, 0, 3) ~ round(raw_score * 10 / 3, digits = 0)
+            .data$raw_score <= 0 ~ 0,
+            .data$raw_score >= 3 ~ 10,
+            dplyr::between(.data$raw_score, 0, 3) ~ round(.data$raw_score * 10 / 3, digits = 0)
             )
         )
     dplyr::left_join(result_type, result_class, by = c("sample_id", "gene_class"))

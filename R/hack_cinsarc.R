@@ -26,61 +26,37 @@
 #' 5282–5290. [doi: 10.1158/0008-5472.CAN-20-0512](https://doi.org/10.1158/0008-5472.CAN-20-0512).
 #'
 #' @examples
+#' hack_cinsarc
 #'
 #' @export
 hack_cinsarc <- function(expr_data, dm_status) {
-    event_df <- tibble::tibble(sample_name = colnames(expr_data),
-                               event = ifelse(event_vector == 0, "X0", "X1") %>% as.factor())
+    signatures_data <- hacksig::signatures_data
+    event_df <- tibble::tibble(sample_id = colnames(expr_data),
+                               event = as.factor(ifelse(dm_status == 0, "X0", "X1")))
+    cinsarc_genes <- signatures_data[signatures_data$signature_id == "cinsarc",
+                                     "gene_symbol", drop = TRUE]
+    filt_data <- expr_data[rownames(expr_data) %in% cinsarc_genes, ]
+    centered_data <- scale(t(filt_data), center = TRUE, scale = FALSE)
+    result <- vector("list", ncol(expr_data))
 
-    tidy_transpose <- function(data, genes) {
-        data %>%
-            as.data.frame() %>%
-            tibble::rownames_to_column("SYMBOL") %>%
-            dplyr::filter(SYMBOL %in% genes) %>%
-            tidyr::pivot_longer(-SYMBOL, names_to = "sample_name") %>%
-            tidyr::pivot_wider(names_from = SYMBOL, values_from = value)
+    for (i in seq_along(event_df$sample_id)) {
+        loo_scale <- scale(t(filt_data[, -i]), center = TRUE, scale = FALSE)
+        loo_scale <- tibble::as_tibble(loo_scale, rownames = "sample_id")
+        loo_scale <- merge(loo_scale, event_df, by = "sample_id")
+        browser()
+        loo_x0 <- loo_scale[loo_scale$event == "X0",
+                            unlist(lapply(loo_scale, is.numeric), use.names = FALSE)]
+        loo_x1 <- loo_scale[loo_scale$event == "X1",
+                            unlist(lapply(loo_scale, is.numeric), use.names = FALSE)]
+        loo_centroids <- data.frame(x0 = colMeans(loo_x0),
+                                    x1 = colMeans(loo_x1))
+        loo_cor <- 1 - stats::cor(t(centered_data), loo_centroids,
+                                  method = "spearman")
+        loo_cor <- tibble::as_tibble(loo_cor, rownames = "sample_id")
+        loo_cor$cinsarc_class <- ifelse(loo_cor$x0 < loo_cor$x1, "C1", "C2")
+        result[[i]] <- loo_cor[i, ]
     }
 
-    expr_mat_centered <- expression_matrix %>%
-        tidy_transpose(CINSARC) %>%
-        dplyr::mutate(across(where(is.numeric), ~ .x - mean(.x))) %>%
-        tidyr::pivot_longer(-sample_name, names_to = "SYMBOL") %>%
-        tidyr::pivot_wider(names_from = sample_name, values_from = value) %>%
-        tibble::column_to_rownames("SYMBOL")
+    dplyr::bind_rows(result)
 
-    missing_genes <- setdiff(CINSARC, rownames(expr_mat_centered))
-
-    if (length(missing_genes) > 0) {
-        message("The following CINSARC genes are missing:\n", stringr::str_c(missing_genes, collapse = ", "))
-    }
-
-    class_pred <- tibble(sample_name = colnames(expr_mat_centered),
-                         X0 = NA_real_, X1 = NA_real_, CINSARC_pred = NA_character_)
-
-    for (i in 1:ncol(expr_mat_centered)) {
-
-        one_out_centers <- expression_matrix %>%
-            tidy_transpose(CINSARC) %>%
-            dplyr::slice(-i) %>%
-            dplyr::mutate(across(where(is.numeric), ~ .x - mean(.x))) %>%
-            dplyr::left_join(event_df, by = "sample_name") %>%
-            dplyr::group_by(event) %>%
-            dplyr::summarize(across(where(is.numeric), mean)) %>%
-            tidyr::pivot_longer(-event, names_to = "SYMBOL") %>%
-            tidyr::pivot_wider(names_from = event, values_from = value) %>%
-            tibble::column_to_rownames("SYMBOL")
-
-        pred_vec <- (1 - cor(expr_mat_centered, one_out_centers, method = "spearman")) %>%
-            as.data.frame() %>%
-            tibble::rownames_to_column("sample_name") %>%
-            dplyr::rowwise() %>%
-            dplyr::mutate(CINSARC_pred = ifelse(X0 < X1, "C1", "C2")) %>%
-            dplyr::ungroup() %>%
-            dplyr::slice(i)
-
-        class_pred <- class_pred %>% dplyr::rows_update(pred_vec, by = "sample_name")
-
-    }
-
-    class_pred
 }
