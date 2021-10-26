@@ -106,7 +106,7 @@ hack_sig <- function(expr_data, signatures = "all", method = "default", ...) {
     else if (is.character(signatures)) {
         sig_data <- hacksig::signatures_data
         if (signatures != "all") {
-            sig_data <- sig_data[grep(signatures, signatures_data$signature_id), ]
+            sig_data <- sig_data[grep(signatures, sig_data$signature_id), ]
             if (nrow(sig_data) == 0) {
                 stop("Provided keyword in 'signatures' does not match any class of signature.",
                      call. = FALSE)
