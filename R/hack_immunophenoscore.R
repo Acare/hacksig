@@ -1,8 +1,18 @@
-#' Immunophenoscore
+#' Hack the Immunophenoscore
 #'
+#' @description
 #' Obtain various immune biomarkers scores, which combined together give the
 #'  immunophenoscore (*Charoentong et al., 2017*).
 #'
+#' @details
+#' Immunophenoscore, is a score that was generated, through the use of machine learning, with The Cancer Genome Atlas data
+#' from 20 solid cancers. The Cancer Immunome Atlas was generated (https://tcia.at/) by the depiction of intratumoral immune landscapes.
+#' The score identifies the tumor immunogenicity, and it was able to predict the response to immunocheckpoint inhibitors
+#' (anti-cytotoxic T lymphocyte antigen-4 (CTLA-4) and anti-programmed cell death protein 1 (anti-PD-1) antibodies) in two validation cohorts.
+#'
+#' @param feature A string indicating whether you want a more granular output (`type`)
+#'   or a more aggregated one (`class`). Each of the two possible choices will give
+#'   the immunophenoscore anyway.
 #' @inheritParams hack_estimate
 #' @return A data frame with
 #'
@@ -15,7 +25,7 @@
 #'
 #' @importFrom rlang .data
 #' @export
-hack_immunophenoscore <- function(expr_data) {
+hack_immunophenoscore <- function(expr_data, feature = "type") {
     signatures_data <- hacksig::signatures_data
     biom_classes <- tibble::tibble(
         gene_type = c("B2M", "TAP1", "TAP2",
@@ -33,7 +43,6 @@ hack_immunophenoscore <- function(expr_data) {
     ips_data <- merge(ips_genes,
                       tibble::as_tibble(scaled_data, rownames = "gene_symbol"),
                       by = "gene_symbol")
-    # browser()
     ips_data <- tidyr::pivot_longer(
         ips_data,
         cols = -c("gene_symbol", "gene_type", "gene_weight", "gene_class"),
@@ -57,8 +66,10 @@ hack_immunophenoscore <- function(expr_data) {
         ips_score = dplyr::case_when(
             .data$raw_score <= 0 ~ 0,
             .data$raw_score >= 3 ~ 10,
-            dplyr::between(.data$raw_score, 0, 3) ~ round(.data$raw_score * 10 / 3, digits = 0)
+            .data$raw_score > 0 | .data$raw_score < 3 ~ round(.data$raw_score * 10 / 3, digits = 0)
             )
         )
+    browser()
+    # build two wide tibbles: one for type, other for class
     dplyr::left_join(result_type, result_class, by = c("sample_id", "gene_class"))
 }

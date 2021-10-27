@@ -3,7 +3,7 @@
 \docType{data}
 \name{signatures_data}
 \alias{signatures_data}
-\title{Gene-level information for each signature implemented.}
+\title{Gene-level information for each signature implemented}
 \format{
 A data frame with 53940 rows and 10 variables:
 \describe{
@@ -19,7 +19,7 @@ A data frame with 53940 rows and 10 variables:
 signatures_data
 }
 \description{
-A dataset containing information about signatures implemented in the \code{hacksig}
-package.
+A data set used by the \code{hacksig} functions to retrieve information about
+signatures implemented in the package.
 }
 \keyword{datasets}

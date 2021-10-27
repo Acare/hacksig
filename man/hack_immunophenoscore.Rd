@@ -2,13 +2,17 @@
 % Please edit documentation in R/hack_immunophenoscore.R
 \name{hack_immunophenoscore}
 \alias{hack_immunophenoscore}
-\title{Immunophenoscore}
+\title{Hack the Immunophenoscore}
 \usage{
-hack_immunophenoscore(expr_data)
+hack_immunophenoscore(expr_data, feature = "type")
 }
 \arguments{
 \item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
 row names and samples as columns.}
+
+\item{feature}{A string indicating whether you want a more granular output (\code{type})
+or a more aggregated one (\code{class}). Each of the two possible choices will give
+the immunophenoscore anyway.}
 }
 \value{
 A data frame with
@@ -16,6 +20,12 @@ A data frame with
 \description{
 Obtain various immune biomarkers scores, which combined together give the
 immunophenoscore (\emph{Charoentong et al., 2017}).
+}
+\details{
+Immunophenoscore, is a score that was generated, through the use of machine learning, with The Cancer Genome Atlas data
+from 20 solid cancers. The Cancer Immunome Atlas was generated (https://tcia.at/) by the depiction of intratumoral immune landscapes.
+The score identifies the tumor immunogenicity, and it was able to predict the response to immunocheckpoint inhibitors
+(anti-cytotoxic T lymphocyte antigen-4 (CTLA-4) and anti-programmed cell death protein 1 (anti-PD-1) antibodies) in two validation cohorts.
 }
 \references{
 Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,

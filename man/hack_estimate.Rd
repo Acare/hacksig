@@ -2,7 +2,7 @@
 % Please edit documentation in R/hack_estimate.R
 \name{hack_estimate}
 \alias{hack_estimate}
-\title{ESTIMATE}
+\title{Hack the ESTIMATE scores}
 \usage{
 hack_estimate(expr_data)
 }
@@ -11,15 +11,38 @@ hack_estimate(expr_data)
 row names and samples as columns.}
 }
 \value{
-A data frame with
+A tibble with one row for each sample in \code{expr_data} and five columns:
+\code{sample_id}, \code{immune_score}, \code{stroma_score}, \code{estimate_score} and \code{purity_score}.
 }
 \description{
-Obtain Immune, Stroma, ESTIMATE and Purity scores from a cohort of samples.
+Obtain \emph{Immune}, \emph{Stroma}, \emph{ESTIMATE} and \emph{Purity} scores from a cohort of samples,
+as implemented in \emph{Yoshihara et al., 2013}.
+}
+\details{
+ESTIMATE (\emph{Estimation of STromal and Immune cells in MAlignant Tumours using
+Expression data}) is a method that, through the use of gene expression signatures,
+infers the fraction of stromal and immune cells in tumor samples. Stromal and
+immune cells play an important biological role, but can lead a perturbation in
+gene expression signals. The ESTIMATE score is able to predict the tumour
+purity in tumour tissue. It was developed on The Cancer Genome Atlas data
+across 11 different tumor types (Bladder urothelial carcinoma, Breast cancer,
+Colon and rectal adenocarcinoma, Glioblastoma multiforme, Head and neck
+squamous cell carcinoma, Clear cell renal cell carcinoma, Lung adenocarcinoma,
+Lung squamous cell carcinoma, Ovarian serous cystadenocarcinoma, Uterine corpus
+endometrial carcinoma), and confirmed using 3,809 transcriptional profiles
+present in available public datasets.
 }
 \examples{
-
+hack_estimate(test_expr)
 }
 \references{
+Barbie, D. A., Tamayo, P., Boehm, J. S., Kim, S. Y., Moody, S. E., Dunn, I. F.,
+Schinzel, A. C., Sandy, P., Meylan, E., Scholl, C., Fröhling, S., Chan, E. M.,
+Sos, M. L., Michel, K., Mermel, C., Silver, S. J., Weir, B. A., Reiling, J. H.,
+Sheng, Q., Gupta, P. B., … Hahn, W. C. (2009). Systematic RNA interference
+reveals that oncogenic KRAS-driven cancers require TBK1. \emph{Nature}, 462(7269),
+108–112. \href{https://doi.org/10.1038/nature08460}{doi: 10.1038/nature08460}.
+
 Yoshihara, K., Shahmoradgoli, M., Martínez, E., Vegesna, R.,
 Kim, H., Torres-Garcia, W., Treviño, V., Shen, H., Laird, P. W., Levine, D. A.,
 Carter, S. L., Getz, G., Stemke-Hale, K., Mills, G. B., & Verhaak, R. G. (2013).

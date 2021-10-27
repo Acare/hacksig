@@ -1,6 +1,6 @@
 Package: hacksig
 Type: Package
-Title: A Tidy Framework to Hack Gene Expression Signatures
+Title: A Tidy Framework to Hack Gene Expression Signatures in R
 Version: 0.1.0
 Authors@R: c(person(given = "Andrea", 
                     family = "Carenzo", 
@@ -17,7 +17,7 @@ Authors@R: c(person(given = "Andrea",
                     email = "federico.pistore@istitutotumori.mi.it",
                     role = "aut",
                     comment = c(ORCID = "")))
-Description: A collection of gene expression signatures found in literature,
+Description: A collection of gene expression signatures manually curated from the literature,
     single sample methods with a tidy output.
 License: MIT + file LICENSE
 URL: https://github.com/Acare/hacksig

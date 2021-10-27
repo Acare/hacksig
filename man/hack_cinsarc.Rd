@@ -2,9 +2,9 @@
 % Please edit documentation in R/hack_cinsarc.R
 \name{hack_cinsarc}
 \alias{hack_cinsarc}
-\title{CINSARC}
+\title{Hack the CINSARC classification}
 \usage{
-hack_cinsarc(expr_data, dm_status)
+hack_cinsarc(expr_data, dm_status, loocv = TRUE)
 }
 \arguments{
 \item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
@@ -12,18 +12,34 @@ row names and samples as columns.}
 
 \item{dm_status}{A numeric vector specifying whether a sample has either (1)
 or not (0) developed distant metastasis.}
+
+\item{loocv}{A logical (\code{TRUE} by default) indicating whether to use leave-one-out
+cross validation to classify samples into C1/C2 CINSARC classes.}
 }
 \value{
-A data frame with
+A tibble with one row for each sample in \code{expr_data} and two columns:
+\code{sample_id} and \code{cinsarc_class}, which gives the CINSARC classification in
+one of two classes, \emph{C1} (risk) or \emph{C2} (risk).
 }
 \description{
 Given a gene expression data frame and a vector indicating the distant metastasis
-status of a sample, \code{hack_cinsarc()} classifies samples in one of two risk
-classes, C1 or C2, using the 67-gene signature CINSARC and the LOOCV method
-as implemented in \emph{Chibon et al. (2010), Lesluyes & Chibon (2020)}.
+status of samples, \code{hack_cinsarc()} classifies samples in one of two risk
+classes, C1 or C2, using the CINSARC signature as implemented in
+\emph{Chibon et al. (2010), Lesluyes & Chibon (2020)}.
+}
+\details{
+CINSARC (\emph{Complexity INdex in SARComa}) is a prognostic gene expression signature
+of 67 genes (related to mitosis and control of chromosome integrity).
+The signature expresses the tumor complexity and predicts metastasis outcome
+in sarcomas, gastrointestinal stromal tumors (GISTs), breast carcinomas and
+lymphomas. The signature showed a superiority in determining metastatic
+outcome for sarcoma patients to the Fédération Francaise des Centres de
+Lutte Contre le Cancer grading system.
 }
 \examples{
-hack_cinsarc
+set.seed(123)
+test_dm_status <- sample(c(0, 1), size = ncol(test_expr), replace = TRUE)
+hack_cinsarc(test_expr, test_dm_status)
 
 }
 \references{
