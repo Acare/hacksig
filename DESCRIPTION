@@ -17,8 +17,9 @@ Authors@R: c(person(given = "Andrea",
                     email = "federico.pistore@istitutotumori.mi.it",
                     role = "aut",
                     comment = c(ORCID = "")))
-Description: A collection of gene expression signatures manually curated from the literature,
-    single sample methods with a tidy output.
+Description: A collection of gene expression signatures manually curated from the 
+    literature. Also, a re-implementation of single sample scoring methods with a 
+    simple, unified and tidy interface.
 License: MIT + file LICENSE
 URL: https://github.com/Acare/hacksig
 BugReports: https://github.com/Acare/hacksig/issues

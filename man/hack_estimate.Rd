@@ -16,22 +16,30 @@ A tibble with one row for each sample in \code{expr_data} and five columns:
 }
 \description{
 Obtain \emph{Immune}, \emph{Stroma}, \emph{ESTIMATE} and \emph{Purity} scores from a cohort of samples,
-as implemented in \emph{Yoshihara et al., 2013}.
+using the method implemented in \emph{Yoshihara et al., 2013}.
 }
-\details{
-ESTIMATE (\emph{Estimation of STromal and Immune cells in MAlignant Tumours using
-Expression data}) is a method that, through the use of gene expression signatures,
-infers the fraction of stromal and immune cells in tumor samples. Stromal and
-immune cells play an important biological role, but can lead a perturbation in
-gene expression signals. The ESTIMATE score is able to predict the tumour
-purity in tumour tissue. It was developed on The Cancer Genome Atlas data
-across 11 different tumor types (Bladder urothelial carcinoma, Breast cancer,
-Colon and rectal adenocarcinoma, Glioblastoma multiforme, Head and neck
-squamous cell carcinoma, Clear cell renal cell carcinoma, Lung adenocarcinoma,
-Lung squamous cell carcinoma, Ovarian serous cystadenocarcinoma, Uterine corpus
-endometrial carcinoma), and confirmed using 3,809 transcriptional profiles
-present in available public datasets.
+\section{Aim}{
+
+The ESTIMATE (\emph{Estimation of STromal and Immune cells in MAlignant Tumors
+using Expression data}) method was developed with the aim to estimate the
+fraction of tumor cells in a sample by using gene expression instead of copy
+number data. The fundamental assumption of this method is that the tumor
+microenvironment is a very rich and dynamic ecosystem, in which immune
+infiltrating cells and stroma play a major role. The ESTIMATE score is
+defined as the combination (i.e. sum) of immune and stroma scores and can be
+thought of as a \emph{"non-tumor score"}. Consequently, a high ESTIMATE enrichment
+gives a low tumor purity score and viceversa.
 }
+
+\section{Algorithm}{
+
+Raw single sample GSEA scores (with rank normalization) are computed for the
+immune and stroma signatures, each composed of 141 genes (\emph{Barbie et al., 2009}).
+Then, the ESTIMATE score is computed by summing the immune and stroma scores.
+Finally, the purity score is computed with the following formula:
+\deqn{Purity = cos(0.6049872018 + 0.0001467884 * ESTIMATE)}
+}
+
 \examples{
 hack_estimate(test_expr)
 }

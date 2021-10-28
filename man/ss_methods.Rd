@@ -9,7 +9,13 @@
 \usage{
 compute_zscore(expr_data, signatures)
 
-compute_ssgsea(expr_data, signatures, norm = "raw", alpha = 0.25)
+compute_ssgsea(
+  expr_data,
+  signatures,
+  sample_norm = "raw",
+  rank_norm = "none",
+  alpha = 0.25
+)
 
 compute_singscore(expr_data, signatures, direction = "none")
 }
@@ -23,12 +29,20 @@ interferon gamma signatures respectively). The default (\code{all}) will cause t
 function to compute single sample scores for all the signatures implemented
 in \code{hacksig}.}
 
-\item{norm}{A character string specifying the type of normalization affecting
+\item{sample_norm}{A character string specifying the type of normalization affecting
 the \strong{single sample GSEA} scores. Can be one of:
 \itemize{
-\item \code{raw}, obtain raw scores (\emph{default});
-\item \code{separate}, normalize raw scores across samples for each signature separately.
+\item \code{raw}, obtain raw scores (default);
+\item \code{separate}, normalize raw scores in \eqn{[0, 1]} across samples for each signature separately.
 \item \code{all}, normalize raw scores both across samples and signatures.
+}}
+
+\item{rank_norm}{A character string specifying how gene expression ranks should
+be normalized. Valid choices are:
+\itemize{
+\item \code{none}, no rank normalization (default);
+\item \code{rank}, ranks are multiplied by \code{10000 / nrow(expr_data)};
+\item \code{logrank},
 }}
 
 \item{alpha}{A numeric scalar. Exponent in the running sum of the \strong{single sample GSEA}
@@ -57,9 +71,24 @@ or \strong{singscore} (\emph{Foroutan et al., 2018}).
 \code{compute_ssgsea} is called by \code{\link[=hack_estimate]{hack_estimate()}} whereas all the three
 methods are called by \code{\link{hack_sig}}.
 }
-\details{
+\section{Algorithm}{
 
+\subsection{Z-score:}{
+
+scale and sum z-scores
 }
+
+\subsection{Single sample GSEA:}{
+
+ranks and running sum
+}
+
+\subsection{Singscore:}{
+
+ranks and mean
+}
+}
+
 \references{
 Barbie, D. A., Tamayo, P., Boehm, J. S., Kim, S. Y., Moody, S. E., Dunn, I. F.,
 Schinzel, A. C., Sandy, P., Meylan, E., Scholl, C., Fröhling, S., Chan, E. M.,

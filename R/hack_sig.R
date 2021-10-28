@@ -18,18 +18,23 @@
 #' @examples
 #' # to obtain raw single sample GSEA scores for all signatures run:
 #' hack_sig(test_expr, method = "ssgsea")
+#'
 #' # to obtain normalized scores, instead run:
-#' hack_sig(test_expr, method = "ssgsea", norm = "separate")
+#' hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")
+#'
 #' # You can also change the exponent of the ssGSEA running sum with:
-#' hack_sig(test_expr, method = "ssgsea", norm = "separate", alpha = 0.5)
+#' hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)
 #'
 #' @export
 hack_sig <- function(expr_data, signatures = "all", method = "default",
-                     direction = "none", norm = "raw", alpha = 0.25) {
+                     direction = "none", sample_norm = "raw", rank_norm = "none",
+                     alpha = 0.25) {
     compute_ss_method <- function(ss_method) {
         switch (ss_method,
                 default = ,
-                ssgsea = compute_ssgsea(expr_data, signatures, norm = norm, alpha = alpha),
+                ssgsea = compute_ssgsea(expr_data, signatures,
+                                        sample_norm = sample_norm, rank_norm = rank_norm,
+                                        alpha = alpha),
                 zscore = compute_zscore(expr_data, signatures),
                 singscore = compute_singscore(expr_data, signatures, direction = direction),
                 stop("Valid choices for 'method' are 'default', 'zscore', 'ssgsea', 'singscore'",
@@ -87,7 +92,9 @@ hack_sig <- function(expr_data, signatures = "all", method = "default",
                     )
                     temp$signature_id <- i
                 } else {
-                    temp <- compute_ssgsea(expr_data, sig_list[i], norm = norm, alpha = alpha)
+                    temp <- compute_ssgsea(expr_data, sig_list[i],
+                                           sample_norm = sample_norm, rank_norm = rank_norm,
+                                           alpha = alpha)
                     temp$sig_score <- temp[, i, drop = TRUE]
                     temp[, i] <- NULL
                     temp$signature_id <- i

@@ -7,8 +7,13 @@
 #' `compute_ssgsea` is called by [hack_estimate()] whereas all the three
 #' methods are called by \code{\link{hack_sig}}.
 #'
-#' @details
-#'
+#' @section Algorithm:
+#' ## Z-score:
+#' scale and sum z-scores
+#' ## Single sample GSEA:
+#' ranks and running sum
+#' ## Singscore:
+#' ranks and mean
 #'
 #' @param expr_data A gene expression matrix (or data frame) with gene symbols as
 #'   row names and samples as columns.
@@ -19,17 +24,25 @@
 #'   in `hacksig`.
 #' @param direction A character specifying the **singscore** computation depending on the
 #'   direction of the signatures. Can be on of:
-#'    * `none`, undirected signatures, that is you don't know whether the genes are
+#'
+#'   * `none`, undirected signatures, that is you don't know whether the genes are
 #'     up- or down-regulated (default);
-#'    * `up`, all genes in the signature are supposed to be up-regulated;
-#'    * `down`, all genes in the signature are supposed to be down-regulated;
-#'    * `both`, a signature is composed of up- and down sub-signatures.
+#'   * `up`, all genes in the signature are supposed to be up-regulated;
+#'   * `down`, all genes in the signature are supposed to be down-regulated;
+#'   * `both`, a signature is composed of up- and down sub-signatures.
 #'     You must supply it as a nested list.
-#' @param norm A character string specifying the type of normalization affecting
+#' @param sample_norm A character string specifying the type of normalization affecting
 #'   the **single sample GSEA** scores. Can be one of:
-#'    * `raw`, obtain raw scores (_default_);
-#'    * `separate`, normalize raw scores across samples for each signature separately.
-#'    * `all`, normalize raw scores both across samples and signatures.
+#'
+#'   * `raw`, obtain raw scores (default);
+#'   * `separate`, normalize raw scores in \eqn{[0, 1]} across samples for each signature separately.
+#'   * `all`, normalize raw scores both across samples and signatures.
+#' @param rank_norm A character string specifying how gene expression ranks should
+#'   be normalized. Valid choices are:
+#'
+#'   * `none`, no rank normalization (default);
+#'   * `rank`, ranks are multiplied by `10000 / nrow(expr_data)`;
+#'   * `logrank`,
 #' @param alpha A numeric scalar. Exponent in the running sum of the **single sample GSEA**
 #'   score calculation which weights the gene ranks. Defaults to \eqn{\alpha = 0.25}.
 #'
@@ -100,7 +113,8 @@ compute_zscore <- function(expr_data, signatures) {
 }
 
 #' @rdname ss_methods
-compute_ssgsea <- function(expr_data, signatures, norm = "raw", alpha = 0.25) {
+compute_ssgsea <- function(expr_data, signatures, sample_norm = "raw",
+                           rank_norm = "none", alpha = 0.25) {
     if (is.matrix(expr_data) == TRUE) {
         expr_data <- as.data.frame(expr_data)
     }
@@ -112,6 +126,12 @@ compute_ssgsea <- function(expr_data, signatures, norm = "raw", alpha = 0.25) {
         # check rank options as in GSVA::gsva()
         # rank_vec <- rank(sample_data, na.last = "keep", ties.method = "average")
         rank_vec <- rank(sample_data)
+        if (rank_norm %in% c("rank", "logrank")) {
+            rank_vec <- 10000 / n_genes * rank_vec
+            if (rank_norm == "logrank") {
+                rank_vec <- log(rank_vec + exp(1))
+            }
+        }
         rank_vec <- rank_vec[order(rank_vec, decreasing = TRUE)]
         prob_in <- rep.int(0, length(rank_vec))
         prob_out <- rep.int(0, length(rank_vec))
@@ -135,7 +155,7 @@ compute_ssgsea <- function(expr_data, signatures, norm = "raw", alpha = 0.25) {
             single_sig_ssgsea(dataset = expr_data, genes = genes)
         }
     )
-    if (norm == "separate") {
+    if (sample_norm == "separate") {
         result <- lapply(
             result,
             FUN = function(dataset) {
@@ -148,7 +168,7 @@ compute_ssgsea <- function(expr_data, signatures, norm = "raw", alpha = 0.25) {
         )
     }
     result <- dplyr::bind_rows(result, .id = "signature_id")
-    if (norm == "all") {
+    if (sample_norm == "all") {
         result <- dplyr::mutate(
             result,
             ssgsea = .data$ssgsea /

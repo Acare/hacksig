@@ -9,7 +9,8 @@ hack_sig(
   signatures = "all",
   method = "default",
   direction = "none",
-  norm = "raw",
+  sample_norm = "raw",
+  rank_norm = "none",
   alpha = 0.25
 )
 }
@@ -43,12 +44,20 @@ up- or down-regulated (default);
 You must supply it as a nested list.
 }}
 
-\item{norm}{A character string specifying the type of normalization affecting
+\item{sample_norm}{A character string specifying the type of normalization affecting
 the \strong{single sample GSEA} scores. Can be one of:
 \itemize{
-\item \code{raw}, obtain raw scores (\emph{default});
-\item \code{separate}, normalize raw scores across samples for each signature separately.
+\item \code{raw}, obtain raw scores (default);
+\item \code{separate}, normalize raw scores in \eqn{[0, 1]} across samples for each signature separately.
 \item \code{all}, normalize raw scores both across samples and signatures.
+}}
+
+\item{rank_norm}{A character string specifying how gene expression ranks should
+be normalized. Valid choices are:
+\itemize{
+\item \code{none}, no rank normalization (default);
+\item \code{rank}, ranks are multiplied by \code{10000 / nrow(expr_data)};
+\item \code{logrank},
 }}
 
 \item{alpha}{A numeric scalar. Exponent in the running sum of the \strong{single sample GSEA}
@@ -69,10 +78,12 @@ for a signature or you can choose one of three single sample scoring methods:
 \examples{
 # to obtain raw single sample GSEA scores for all signatures run:
 hack_sig(test_expr, method = "ssgsea")
+
 # to obtain normalized scores, instead run:
-hack_sig(test_expr, method = "ssgsea", norm = "separate")
+hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")
+
 # You can also change the exponent of the ssGSEA running sum with:
-hack_sig(test_expr, method = "ssgsea", norm = "separate", alpha = 0.5)
+hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)
 
 }
 \references{

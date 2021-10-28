@@ -2,29 +2,39 @@
 #'
 #' @description
 #' Given a gene expression data frame and a vector indicating the distant metastasis
-#' status of samples, `hack_cinsarc()` classifies samples in one of two risk
+#' status of samples, `hack_cinsarc()` classifies samples into one of two risk
 #' classes, C1 or C2, using the CINSARC signature as implemented in
-#' *Chibon et al. (2010), Lesluyes & Chibon (2020)*.
+#' *Chibon et al., 2010*.
 #'
-#' @details
-#' CINSARC (*Complexity INdex in SARComa*) is a prognostic gene expression signature
-#' of 67 genes (related to mitosis and control of chromosome integrity).
+#' @section Aim:
+#' CINSARC (*Complexity INdex in SARComas*) is a prognostic gene expression signature
+#' of 67 genes related to mitosis and control of chromosome integrity.
 #' The signature expresses the tumor complexity and predicts metastasis outcome
 #' in sarcomas, gastrointestinal stromal tumors (GISTs), breast carcinomas and
 #' lymphomas. The signature showed a superiority in determining metastatic
-#' outcome for sarcoma patients to the Fédération Francaise des Centres de
-#' Lutte Contre le Cancer grading system.
+#' outcome for sarcoma patients to the *Fédération Francaise des Centres de
+#' Lutte Contre le Cancer* (FNCLCC) grading system.
+#'
+#' @section Algorithm:
+#' The CINSARC method implemented in `hacksig` makes use leave-one-out cross
+#' validation to classify samples into C1/C2 risk groups (see *Lesluyes & Chibon, 2020*).
+#' First, gene expression values are centered by their mean across samples.
+#' Then, mean normalized gene values are computed by metastasis group (find the centroids).
+#' Then, one minus the correlation between centered samples and centroids are computed.
+#' Finally, if a sample is more correlated to the non metastatic centroid, then it
+#' is assigned to the C1 class (low risk). Conversely, if a sample is more
+#' correlated to the metastatic centroid, then it is assigned to the C2 class (high
+#' risk).
+#' use
 #'
 #' @param expr_data A gene expression matrix (or data frame) with gene symbols as
-#'  row names and samples as columns.
+#'   row names and samples as columns.
 #' @param dm_status A numeric vector specifying whether a sample has either (1)
-#'  or not (0) developed distant metastasis.
-#' @param loocv A logical (`TRUE` by default) indicating whether to use leave-one-out
-#'  cross validation to classify samples into C1/C2 CINSARC classes.
+#'   or not (0) developed distant metastasis.
 #'
 #' @return A tibble with one row for each sample in `expr_data` and two columns:
 #'   `sample_id` and `cinsarc_class`, which gives the CINSARC classification in
-#'   one of two classes, *C1* (risk) or *C2* (risk).
+#'   one of two classes, *C1* (low risk) or *C2* (high risk).
 #'
 #' @references
 #' Chibon, F., Lagarde, P., Salas, S., Pérot, G., Brouste, V., Tirode, F.,
@@ -41,12 +51,13 @@
 #' 5282–5290. [doi: 10.1158/0008-5472.CAN-20-0512](https://doi.org/10.1158/0008-5472.CAN-20-0512).
 #'
 #' @examples
+#' # generate random distant metastasis outcome
 #' set.seed(123)
 #' test_dm_status <- sample(c(0, 1), size = ncol(test_expr), replace = TRUE)
-#' hack_cinsarc(test_expr, test_dm_status)
 #'
+#' hack_cinsarc(test_expr, test_dm_status)
 #' @export
-hack_cinsarc <- function(expr_data, dm_status, loocv = TRUE) {
+hack_cinsarc <- function(expr_data, dm_status) {
     sig_data <- hacksig::signatures_data
     event_df <- tibble::tibble(sample_id = colnames(expr_data),
                                event = as.factor(ifelse(dm_status == 0, "X0", "X1")))
@@ -55,25 +66,10 @@ hack_cinsarc <- function(expr_data, dm_status, loocv = TRUE) {
     filt_data <- expr_data[rownames(expr_data) %in% cinsarc_genes, ]
     centered_data <- scale(t(filt_data), center = TRUE, scale = FALSE)
 
-    if (loocv == TRUE) {
-        result <- vector("list", ncol(expr_data))
-        for (i in seq_along(event_df$sample_id)) {
-            loo_scale <- scale(t(filt_data[, -i]), center = TRUE, scale = FALSE)
-            loo_scale <- tibble::as_tibble(loo_scale, rownames = "sample_id")
-            loo_scale <- merge(loo_scale, event_df, by = "sample_id")
-            loo_x0 <- loo_scale[loo_scale$event == "X0",
-                                unlist(lapply(loo_scale, is.numeric), use.names = FALSE)]
-            loo_x1 <- loo_scale[loo_scale$event == "X1",
-                                unlist(lapply(loo_scale, is.numeric), use.names = FALSE)]
-            loo_centroids <- data.frame(x0 = colMeans(loo_x0), x1 = colMeans(loo_x1))
-            loo_cor <- 1 - stats::cor(t(centered_data), loo_centroids,
-                                      method = "spearman")
-            loo_cor <- tibble::as_tibble(loo_cor, rownames = "sample_id")
-            loo_cor$cinsarc_class <- ifelse(loo_cor$x0 < loo_cor$x1, "C1", "C2")
-            result[[i]] <- loo_cor[i, c("sample_id", "cinsarc_class")]
-        }
-    } else {
-        loo_scale <- tibble::as_tibble(centered_data, rownames = "sample_id")
+    result <- vector("list", ncol(expr_data))
+    for (i in seq_along(event_df$sample_id)) {
+        loo_scale <- scale(t(filt_data[, -i]), center = TRUE, scale = FALSE)
+        loo_scale <- tibble::as_tibble(loo_scale, rownames = "sample_id")
         loo_scale <- merge(loo_scale, event_df, by = "sample_id")
         loo_x0 <- loo_scale[loo_scale$event == "X0",
                             unlist(lapply(loo_scale, is.numeric), use.names = FALSE)]
@@ -84,7 +80,7 @@ hack_cinsarc <- function(expr_data, dm_status, loocv = TRUE) {
                                   method = "spearman")
         loo_cor <- tibble::as_tibble(loo_cor, rownames = "sample_id")
         loo_cor$cinsarc_class <- ifelse(loo_cor$x0 < loo_cor$x1, "C1", "C2")
-        result <- loo_cor[, c("sample_id", "cinsarc_class")]
+        result[[i]] <- loo_cor[i, c("sample_id", "cinsarc_class")]
     }
 
     dplyr::bind_rows(result)
