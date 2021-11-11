@@ -37,11 +37,26 @@ devtools::install_github("Acare/hacksig")
 
 ## Getting started
 
-This is a basic example which shows you how to solve a common problem:
+The first thing one should do before computing signature scores is to check how 
+much of the genes composing a signature are present in your gene expression matrix.
+To accomplish this, we can use `check_sig()`:
 
-```{r example, eval=FALSE}
+```{r example, eval=TRUE}
 library(hacksig)
-## basic example code
+check_sig(test_expr)
 ```
 
+By default, `check_sig()` will compute statistics for every signature implemented 
+in `hacksig`. You can filter for specific signatures by entering a keyword in the 
+`signatures` argument:
+
+```{r}
+check_sig(test_expr, signatures = "immune")
+```
+
+The set of available keywords associated to gene signatures can be retrieved with:
+
+```{r}
+get_sig_keywords()
+```
 
