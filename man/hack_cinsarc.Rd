@@ -3,6 +3,9 @@
 \name{hack_cinsarc}
 \alias{hack_cinsarc}
 \title{Hack the CINSARC classification}
+\source{
+\href{https://codeocean.com/capsule/4933686/tree/v4}{codeocean.com/capsule/4933686/tree/v4}
+}
 \usage{
 hack_cinsarc(expr_data, dm_status)
 }
@@ -26,8 +29,8 @@ classes, C1 or C2, using the CINSARC signature as implemented in
 }
 \section{Aim}{
 
-CINSARC (\emph{Complexity INdex in SARComas}) is a prognostic gene expression signature
-of 67 genes related to mitosis and control of chromosome integrity.
+CINSARC (\emph{Complexity INdex in SARComas}) is a prognostic 67-gene signature
+related to mitosis and control of chromosome integrity.
 The signature expresses the tumor complexity and predicts metastasis outcome
 in sarcomas, gastrointestinal stromal tumors (GISTs), breast carcinomas and
 lymphomas. The signature showed a superiority in determining metastatic
@@ -37,16 +40,15 @@ Lutte Contre le Cancer} (FNCLCC) grading system.
 
 \section{Algorithm}{
 
-The CINSARC method implemented in \code{hacksig} makes use leave-one-out cross
-validation to classify samples into C1/C2 risk groups (see \emph{Lesluyes & Chibon, 2020}).
+The CINSARC method implemented in \code{hacksig} makes use of leave-one-out cross
+validation (LOOCV) to classify samples into C1/C2 risk groups (see \emph{Lesluyes & Chibon, 2020}).
 First, gene expression values are centered by their mean across samples.
-Then, mean normalized gene values are computed by metastasis group (find the centroids).
-Then, one minus the correlation between centered samples and centroids are computed.
-Finally, if a sample is more correlated to the non metastatic centroid, then it
-is assigned to the C1 class (low risk). Conversely, if a sample is more
-correlated to the metastatic centroid, then it is assigned to the C2 class (high
-risk).
-use
+Then, for each iteration of the LOOCV, mean normalized gene values are computed
+by metastasis group (i.e. compute the metastatic centroids). Then, one minus the
+Spearman's correlation between centered samples and metastatic centroids are computed.
+Finally, if a sample is more correlated to the non-metastatic centroid, then
+it is assigned to the C1 class (low risk). Conversely, if a sample is more
+correlated to the metastatic centroid, then it is assigned to the C2 class (high risk).
 }
 
 \examples{

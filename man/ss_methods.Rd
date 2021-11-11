@@ -66,14 +66,14 @@ single sample scores.
 }
 \description{
 These are internal functions to compute single sample scores in three different
-ways: \strong{z-score} (\emph{Lee et al., 2008}), \strong{ssGSEA} (\emph{Barbie et al., 2009})
+ways: \strong{combined z-score} (\emph{Lee et al., 2008}), \strong{ssGSEA} (\emph{Barbie et al., 2009})
 or \strong{singscore} (\emph{Foroutan et al., 2018}).
 \code{compute_ssgsea} is called by \code{\link[=hack_estimate]{hack_estimate()}} whereas all the three
 methods are called by \code{\link{hack_sig}}.
 }
 \section{Algorithm}{
 
-\subsection{Z-score:}{
+\subsection{Combined z-score:}{
 
 scale and sum z-scores
 }

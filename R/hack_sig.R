@@ -1,7 +1,7 @@
 #' Score samples by gene signatures
 #'
 #' `hack_sig()` is the main function of the package, which computes single sample
-#'  scores in one of different ways. You can choose to apply the default method
+#'  scores in one of different ways. You can choose to apply the *original* method
 #'  for a signature or you can choose one of three single sample scoring methods:
 #'  **z-score** (*Lee et al., 2008*), **ssGSEA** (*Barbie et al., 2009*) or
 #'  **singscore** (*Foroutan et al., 2018*).
@@ -9,8 +9,8 @@
 #' @param method A character string specifying which method to use for computing
 #'  the single sample score for each signature. You can choose one of:
 #'
-#'  * `default`, the original method used by the authors of the signature;
-#'  * `zscore`, the z-score method implemented in `compute_zscore()`;
+#'  * `original`, the original method used by the authors of the signature;
+#'  * `zscore`, the combined z-score method implemented in `compute_zscore()`;
 #'  * `ssgsea`, the single sample GSEA method implemented in `compute_ssgsea()`;
 #'  * `singscore`, the singscore method implemented in `compute_singscore()`;
 #' @inherit ss_methods params return references
@@ -24,20 +24,20 @@
 #'
 #' # You can also change the exponent of the ssGSEA running sum with:
 #' hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)
-#'
+#' @seealso [check_sig()] for checking if signatures are applicable to your data.
 #' @export
-hack_sig <- function(expr_data, signatures = "all", method = "default",
+hack_sig <- function(expr_data, signatures = "all", method = "original",
                      direction = "none", sample_norm = "raw", rank_norm = "none",
                      alpha = 0.25) {
-    compute_ss_method <- function(ss_method) {
+    compute_ss_method <- function(sigs, ss_method) {
         switch (ss_method,
-                default = ,
-                ssgsea = compute_ssgsea(expr_data, signatures,
+                original = ,
+                ssgsea = compute_ssgsea(expr_data, sigs,
                                         sample_norm = sample_norm, rank_norm = rank_norm,
                                         alpha = alpha),
-                zscore = compute_zscore(expr_data, signatures),
-                singscore = compute_singscore(expr_data, signatures, direction = direction),
-                stop("Valid choices for 'method' are 'default', 'zscore', 'ssgsea', 'singscore'",
+                zscore = compute_zscore(expr_data, sigs),
+                singscore = compute_singscore(expr_data, sigs, direction = direction),
+                stop("Valid choices for 'method' are 'original', 'zscore', 'ssgsea', 'singscore'",
                      call. = FALSE)
         )
     }
@@ -46,15 +46,17 @@ hack_sig <- function(expr_data, signatures = "all", method = "default",
     }
     if (is.list(signatures)) {
         signatures <- lapply(signatures, FUN = unique)
+        signatures <- signatures[lapply(signatures, length) > 1]
         if (is.null(names(signatures)) == TRUE) {
             names(signatures) <- paste0("sig", seq_along(signatures))
         }
-        compute_ss_method(method)
+        compute_ss_method(signatures, method)
         }
     else if (is.character(signatures)) {
         sig_data <- hacksig::signatures_data
         if (signatures != "all") {
-            sig_data <- sig_data[grep(signatures, sig_data$signature_id), ]
+            sig_data <- sig_data[grep(signatures, sig_data$signature_keyword,
+                                      ignore.case = TRUE), ]
             if (nrow(sig_data) == 0) {
                 stop("Provided keyword in 'signatures' does not match any class of signature.",
                      call. = FALSE)
@@ -63,12 +65,13 @@ hack_sig <- function(expr_data, signatures = "all", method = "default",
         sig_list <- lapply(split(sig_data[, c("signature_id", "gene_symbol")],
                                  sig_data$signature_id),
                            FUN = `[[`, 2)
-        if (method != "default") {
-            compute_ss_method(method)
+        sig_list <- sig_list[lapply(sig_list, length) > 1]
+        if (method != "original") {
+            compute_ss_method(sig_list, method)
         } else {
             method_list <- tibble::deframe(
-                sig_data[!duplicated(sig_data[, c("signature_id", "method")]),
-                         c("signature_id", "method")]
+                sig_data[!duplicated(sig_data[, c("signature_id", "signature_method")]),
+                         c("signature_id", "signature_method")]
             )
             method_list <- method_list[match(names(sig_list), names(method_list))]
             weight_list <- lapply(split(sig_data[, c("signature_id", "gene_weight")],

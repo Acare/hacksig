@@ -1,5 +1,6 @@
 library(dplyr)
 library(org.Hs.eg.db) # version 3.12.0
+library(hgu133plus2.db) # version 3.2.3
 
 signatures_data <- readr::read_csv("~/Desktop/hacksig_ideas/temp_signatures.csv",
                                    col_types = "ccccnc") %>%
@@ -20,11 +21,17 @@ signatures_data <- readr::read_csv("~/Desktop/hacksig_ideas/temp_signatures.csv"
             TRUE ~ gene_symbol
         ))
 
-# add entrez ids
+# add entrez ids from gene symbols
 query <- select(org.Hs.eg.db,
                 keys = unique(signatures_data$gene_symbol),
                 columns = c("ENTREZID", "SYMBOL"),
                 keytype = "SYMBOL")
+
+# add gene symbols and entrez ids from probe ids
+# query <- select(hgu133plus2.db,
+#                 keys = unique(coso$signature_keyword),
+#                 columns = c("ENTREZID", "SYMBOL"),
+#                 keytype = "PROBEID")
 
 signatures_data <- signatures_data %>%
     left_join(query, by = c("gene_symbol" = "SYMBOL")) %>%

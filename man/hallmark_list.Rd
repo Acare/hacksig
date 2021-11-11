@@ -5,12 +5,19 @@
 \alias{hallmark_list}
 \title{Hallmark gene set list}
 \format{
-A named list of 50 signatures corresponding to the Hallmark gene sets.
+A named list storing the 50 Hallmark gene sets with gene symbols as
+gene identifiers.
+}
+\source{
+\url{http://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp?collection=H}
 }
 \usage{
 hallmark_list
 }
 \description{
 A gene expression matrix ...
+}
+\examples{
+hack_sig(test_expr, hallmark_list, method = "zscore")
 }
 \keyword{datasets}

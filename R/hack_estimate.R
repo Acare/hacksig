@@ -28,6 +28,8 @@
 #' @return A tibble with one row for each sample in `expr_data` and five columns:
 #'   `sample_id`, `immune_score`, `stroma_score`, `estimate_score` and `purity_score`.
 #'
+#' @source [bioinformatics.mdanderson.org/public-software/estimate/](https://bioinformatics.mdanderson.org/public-software/estimate/)
+#'
 #' @references
 #' Barbie, D. A., Tamayo, P., Boehm, J. S., Kim, S. Y., Moody, S. E., Dunn, I. F.,
 #' Schinzel, A. C., Sandy, P., Meylan, E., Scholl, C., Fröhling, S., Chan, E. M.,
@@ -48,15 +50,13 @@
 #' @export
 hack_estimate <- function(expr_data) {
     sig_data <- hacksig::signatures_data
-    estimate_df <- sig_data[sig_data$signature_id == "estimate",
-                            c("gene_type", "gene_symbol")]
     estimate_sigs <- list(
-        immune_score = estimate_df[estimate_df$gene_type == "immune",
-                                   "gene_symbol",
-                                   drop = TRUE],
-        stroma_score = estimate_df[estimate_df$gene_type == "stromal",
-                                   "gene_symbol",
-                                   drop = TRUE]
+        immune_score = sig_data[sig_data$signature_id == "estimate_immune",
+                                "gene_symbol",
+                                drop = TRUE],
+        stroma_score = sig_data[sig_data$signature_id == "estimate_stromal",
+                                "gene_symbol",
+                                drop = TRUE]
     )
     result <- compute_ssgsea(expr_data = expr_data, signatures = estimate_sigs,
                              sample_norm = "raw", rank_norm = "rank", alpha = 0.25)

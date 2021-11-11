@@ -3,6 +3,9 @@
 \name{hack_estimate}
 \alias{hack_estimate}
 \title{Hack the ESTIMATE scores}
+\source{
+\href{https://bioinformatics.mdanderson.org/public-software/estimate/}{bioinformatics.mdanderson.org/public-software/estimate/}
+}
 \usage{
 hack_estimate(expr_data)
 }

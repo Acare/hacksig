@@ -5,16 +5,18 @@
 #'  immunophenoscore (*Charoentong et al., 2017*).
 #'
 #' @details
-#' Immunophenoscore, is a score that was generated, through the use of machine learning, with The Cancer Genome Atlas data
+#' Immunophenoscore (IPS), is a score that was generated, through the use of machine learning, with The Cancer Genome Atlas data
 #' from 20 solid cancers. The Cancer Immunome Atlas was generated (https://tcia.at/) by the depiction of intratumoral immune landscapes.
 #' The score identifies the tumor immunogenicity, and it was able to predict the response to immunocheckpoint inhibitors
 #' (anti-cytotoxic T lymphocyte antigen-4 (CTLA-4) and anti-programmed cell death protein 1 (anti-PD-1) antibodies) in two validation cohorts.
 #'
 #' @param feature A string indicating whether you want a more granular output (`type`)
 #'   or a more aggregated one (`class`). Each of the two possible choices will give
-#'   the immunophenoscore anyway.
+#'   the raw and discrete immunophenoscores.
 #' @inheritParams hack_estimate
 #' @return A data frame with
+#'
+#' @source [github.com/icbi-lab/Immunophenogram](https://github.com/icbi-lab/Immunophenogram)
 #'
 #' @references
 #' Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
@@ -24,21 +26,28 @@
 #' [doi: 10.1016/j.celrep.2016.12.019](https://doi.org/10.1016/j.celrep.2016.12.019).
 #'
 #' @importFrom rlang .data
+#' @seealso [hack_sig()] to compute Immunophenoscore biomarkers in different
+#'   ways (use `signatures = "ips"`).
+#'
+#'   [check_sig()] to check if all/most of the Immunophenoscore biomarkers are
+#'   present in your expression matrix (use `signatures = "ips"`).
 #' @export
-hack_immunophenoscore <- function(expr_data, feature = "type") {
-    signatures_data <- hacksig::signatures_data
+hack_immunophenoscore <- function(expr_data, feature = "all") {
+    sig_data <- hacksig::signatures_data
     biom_classes <- tibble::tibble(
-        gene_type = c("B2M", "TAP1", "TAP2",
-                      paste0("HLA-", c(LETTERS[1:3], "DPA1", "DPB1", "E", "F")),
-                      "PD-1", "CTLA-4", "LAG3", "TIGIT", "TIM3", "PD-L1", "PD-L2",
-                      "CD27", "ICOS", "IDO1",
-                      "Act CD4", "Act CD8", "Tem CD4", "Tem CD8", "MDSC", "Treg"),
-        gene_class = c(rep(c("MHC", "CP"), each = 10),
-                       rep_len("EC", 4), "SC", "SC")
+        gene_type = c("b2m", "tap1", "tap2",
+                      paste0("hla_", c(letters[1:3], "dpa1", "dpb1", "e", "f")),
+                      "pd_1", "ctla_4", "lag3", "tigit", "tim3", "pd_l1", "pd_l2",
+                      "cd27", "icos", "ido1",
+                      "act_cd4", "act_cd8", "tem_cd4", "tem_cd8", "mdsc", "treg"),
+        gene_class = c(rep(c("mhc", "cp"), each = 10),
+                       rep_len("ec", 4), "sc", "sc")
     )
-    ips_genes <- signatures_data[signatures_data$signature_id == "immunophenoscore",
-                                 c("gene_type", "gene_symbol", "gene_weight")]
-    ips_genes <- merge(ips_genes, biom_classes, by = "gene_type")
+    ips_genes <- sig_data[grep("ips", sig_data$signature_id),
+                          c("signature_id", "gene_symbol", "gene_weight")]
+    ips_genes$signature_id <- gsub("ips_", "", ips_genes$signature_id)
+    names(ips_genes)[names(ips_genes) == "signature_id"] <- "gene_type"
+    ips_genes <- dplyr::left_join(ips_genes, biom_classes, by = "gene_type")
     scaled_data <- scale(expr_data, center = TRUE, scale = TRUE)
     ips_data <- merge(ips_genes,
                       tibble::as_tibble(scaled_data, rownames = "gene_symbol"),
@@ -62,14 +71,37 @@ hack_immunophenoscore <- function(expr_data, feature = "type") {
     result_class <- dplyr::distinct(dplyr::ungroup(result_class[, keep_cols]))
     result_class <- dplyr::mutate(
         dplyr::group_by(result_class, .data$sample_id),
-        raw_score = sum(.data$class_score),
-        ips_score = dplyr::case_when(
-            .data$raw_score <= 0 ~ 0,
-            .data$raw_score >= 3 ~ 10,
-            .data$raw_score > 0 | .data$raw_score < 3 ~ round(.data$raw_score * 10 / 3, digits = 0)
+        raw = sum(.data$class_score),
+        ips = dplyr::case_when(
+            .data$raw <= 0 ~ 0,
+            .data$raw >= 3 ~ 10,
+            .data$raw > 0 | .data$raw < 3 ~ round(.data$raw * 10 / 3, digits = 0)
             )
         )
-    browser()
-    # build two wide tibbles: one for type, other for class
-    dplyr::left_join(result_type, result_class, by = c("sample_id", "gene_class"))
+    result_class <- dplyr::ungroup(
+        tidyr::pivot_wider(
+            result_class,
+            c("sample_id", "raw", "ips"),
+            names_from = "gene_class",
+            values_from = "class_score"
+        )
+    )
+    names(result_class)[-1] <- paste0(names(result_class)[-1], "_score")
+    names(result_class) <- tolower(names(result_class))
+    result_type <- tidyr::pivot_wider(
+        result_type,
+        "sample_id",
+        names_from = "gene_type",
+        values_from = "weighted_type_score"
+    )
+    names(result_type) <- tolower(gsub(" |-", "_", names(result_type)))
+    names(result_type)[-1] <- paste0(names(result_type)[-1], "_score")
+    result <- dplyr::left_join(result_class, result_type, by = "sample_id")
+    if (feature == "class") {
+        result_class
+    } else if (feature == "type") {
+        result[, -c("ec_score", "mhc_score", "sc_score", "cp_score")]
+    } else {
+        result
+    }
 }

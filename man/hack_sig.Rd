@@ -7,7 +7,7 @@
 hack_sig(
   expr_data,
   signatures = "all",
-  method = "default",
+  method = "original",
   direction = "none",
   sample_norm = "raw",
   rank_norm = "none",
@@ -27,8 +27,8 @@ in \code{hacksig}.}
 \item{method}{A character string specifying which method to use for computing
 the single sample score for each signature. You can choose one of:
 \itemize{
-\item \code{default}, the original method used by the authors of the signature;
-\item \code{zscore}, the z-score method implemented in \code{compute_zscore()};
+\item \code{original}, the original method used by the authors of the signature;
+\item \code{zscore}, the combined z-score method implemented in \code{compute_zscore()};
 \item \code{ssgsea}, the single sample GSEA method implemented in \code{compute_ssgsea()};
 \item \code{singscore}, the singscore method implemented in \code{compute_singscore()};
 }}
@@ -70,7 +70,7 @@ single sample scores.
 }
 \description{
 \code{hack_sig()} is the main function of the package, which computes single sample
-scores in one of different ways. You can choose to apply the default method
+scores in one of different ways. You can choose to apply the \emph{original} method
 for a signature or you can choose one of three single sample scoring methods:
 \strong{z-score} (\emph{Lee et al., 2008}), \strong{ssGSEA} (\emph{Barbie et al., 2009}) or
 \strong{singscore} (\emph{Foroutan et al., 2018}).
@@ -84,7 +84,6 @@ hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")
 
 # You can also change the exponent of the ssGSEA running sum with:
 hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)
-
 }
 \references{
 Barbie, D. A., Tamayo, P., Boehm, J. S., Kim, S. Y., Moody, S. E., Dunn, I. F.,
@@ -114,4 +113,7 @@ Gillette, M. A., Paulovich, A., Pomeroy, S. L., Golub, T. R., Lander, E. S.,
 approach for interpreting genome-wide expression profiles.
 \emph{Proceedings of the National Academy of Sciences of the United States of America},
 102(43), 15545–15550. \href{https://doi.org/10.1073/pnas.0506580102}{doi: 10.1073/pnas.0506580102}.
+}
+\seealso{
+\code{\link[=check_sig]{check_sig()}} for checking if signatures are applicable to your data.
 }

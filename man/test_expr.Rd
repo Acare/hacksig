@@ -5,12 +5,16 @@
 \alias{test_expr}
 \title{A toy gene expression matrix}
 \format{
-A matrix with 20000 random gene symbols as rows and 20 samples as columns.
+A random normal data matrix with 20000 genes as rows and 20 samples as columns.
 }
 \usage{
 test_expr
 }
 \description{
-A gene expression matrix ...
+A gene expression matrix simulating expression profiles of 20 samples. It should
+be used for testing purpose.
+}
+\examples{
+hack_sig(test_expr)
 }
 \keyword{datasets}

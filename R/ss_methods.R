@@ -2,13 +2,13 @@
 #'
 #' @description
 #' These are internal functions to compute single sample scores in three different
-#' ways: **z-score** (*Lee et al., 2008*), **ssGSEA** (*Barbie et al., 2009*)
+#' ways: **combined z-score** (*Lee et al., 2008*), **ssGSEA** (*Barbie et al., 2009*)
 #' or **singscore** (*Foroutan et al., 2018*).
 #' `compute_ssgsea` is called by [hack_estimate()] whereas all the three
 #' methods are called by \code{\link{hack_sig}}.
 #'
 #' @section Algorithm:
-#' ## Z-score:
+#' ## Combined z-score:
 #' scale and sum z-scores
 #' ## Single sample GSEA:
 #' ranks and running sum
