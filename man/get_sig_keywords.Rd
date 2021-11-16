@@ -10,12 +10,12 @@ get_sig_keywords()
 A character vector with valid keywords.
 }
 \description{
-Obtain valid keywords to use in the argument \code{signatures} of \code{hack_sig()} and
-\code{check_sig()} in order to filter specific gene signatures.
+Obtain valid keywords for the argument \code{signatures} of \code{hack_sig()} and
+\code{check_sig()} in order to filter for specific gene signatures.
 Some of the returned strings are redundant, such as \code{"interferon gamma"} and \code{"ifng"}.
 }
 \examples{
-
+get_sig_keywords()
 }
 \seealso{
 \code{\link[=check_sig]{check_sig()}}, \code{\link[=hack_sig]{hack_sig()}}

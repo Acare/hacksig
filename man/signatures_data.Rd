@@ -20,7 +20,7 @@ signatures_data
 }
 \description{
 A data set used by the \code{hacksig} functions to retrieve gene-level information
-about XXX signatures implemented in the package.
+about XXX implemented signatures.
 }
 \details{
 Identifiers in \code{signature_id} correspond to the following DOIs:

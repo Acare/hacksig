@@ -5,18 +5,71 @@
 #'  immunophenoscore (*Charoentong et al., 2017*).
 #'
 #' @details
-#' Immunophenoscore (IPS), is a score that was generated, through the use of machine learning, with The Cancer Genome Atlas data
-#' from 20 solid cancers. The Cancer Immunome Atlas was generated (https://tcia.at/) by the depiction of intratumoral immune landscapes.
-#' The score identifies the tumor immunogenicity, and it was able to predict the response to immunocheckpoint inhibitors
-#' (anti-cytotoxic T lymphocyte antigen-4 (CTLA-4) and anti-programmed cell death protein 1 (anti-PD-1) antibodies) in two validation cohorts.
+#' The immunophenoscore is conceived as a quantification of tumor immunogenicity.
+#' It is obtained by aggregating multiple immune biomarkers scores, which are
+#' grouped into four major classes:
+#'   * _MHC molecules_ (__MHC__), expression of MHC class I, class II, and non-classical molecules;
+#'   * _Immunomodulators_ (__CP__), expression of certain co-inhibitory and co-stimulatory molecules;
+#'   * _Effector cells_ (__EC__), infiltration of activated CD8+/CD4+ T cells and Tem (effector memory) CD8+/CD4+ cells;
+#'   * _Suppressor cells_ (__SC__), infiltration of immunosuppressive cells (Tregs and MDSCs).
 #'
-#' @param feature A string indicating whether you want a more granular output (`type`)
-#'   or a more aggregated one (`class`). Each of the two possible choices will give
-#'   the raw and discrete immunophenoscores.
+#' The table below shows in detail the 26 immune biomarkers and cell types grouped
+#' by class together with the number of genes which represent them:
+#'
+#' | __Class__ \|| __Biomarker/cell type__ \|| __No. genes__ |
+#' | ----- |:-------------------:|:---------:|
+#' | MHC   | B2M                 | 1         |
+#' | MHC   | HLA-A               | 1         |
+#' | MHC   | HLA-B               | 1         |
+#' | MHC   | HLA-C               | 1         |
+#' | MHC   | HLA-DPA1            | 1         |
+#' | MHC   | HLA-DPB1            | 1         |
+#' | MHC   | HLA-E               | 1         |
+#' | MHC   | HLA-F               | 1         |
+#' | MHC   | TAP1                | 1         |
+#' | MHC   | TAP2                | 1         |
+#' | CP    | CD27                | 1         |
+#' | CP    | CTLA-4              | 1         |
+#' | CP    | ICOS                | 1         |
+#' | CP    | IDO1                | 1         |
+#' | CP    | LAG3                | 1         |
+#' | CP    | PD1                 | 1         |
+#' | CP    | PD-L1               | 1         |
+#' | CP    | PD-L2               | 1         |
+#' | CP    | TIGIT               | 1         |
+#' | CP    | TIM3                | 1         |
+#' | EC    | Act CD4             | 24        |
+#' | EC    | Act CD8             | 26        |
+#' | EC    | Tem CD4             | 27        |
+#' | EC    | Tem CD8             | 25        |
+#' | SC    | MDSC                | 20        |
+#' | SC    | Treg                | 20        |
+#'
+#' ## Algorithm
+#' Samplewise gene expression z-scores are obtained for each of 26 immune cell
+#' types and biomarkers. Then, weighted averaged z-scores are computed for each
+#' class and the raw immunophenoscore (\eqn{IPS-raw}) results as the sum of the
+#' four class scores. Finally, the immunophenoscore (\eqn{IPS}) is given as an
+#' integer value between 0 and 10 in the following way:
+#'
+#'   - \eqn{IPS = 0}, if \eqn{IPS-raw \le 0};
+#'   - \eqn{IPS = [10 * (IPS-raw / 3)]}, if \eqn{0 < IPS-raw < 3};
+#'   - \eqn{IPS = 10}, if \eqn{IPS-raw \ge 3}.
+#'
+#' @param extract A string controlling which type of biomarker scores you want to obtain.
+#'   Possible choices are:
+#'
+#'     * `"ips"` (default), only raw and discrete IPS scores;
+#'     * `"class"`, IPS scores together with the four summary class scores;
+#'     * `"all"`, all possible scores.
 #' @inheritParams hack_estimate
-#' @return A data frame with
+#' @return A tibble with one row for each sample in `expr_data`, a column `sample_id`
+#'   indicating sample identifiers and a number of additional columns depending
+#'   on the choice of `extract`.
 #'
 #' @source [github.com/icbi-lab/Immunophenogram](https://github.com/icbi-lab/Immunophenogram)
+#'
+#'   The Cancer Immunome Atlas [https://tcia.at/](https://tcia.at/)
 #'
 #' @references
 #' Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
@@ -25,15 +78,15 @@
 #' Predictors of Response to Checkpoint Blockade. *Cell reports*, 18(1), 248–262.
 #' [doi: 10.1016/j.celrep.2016.12.019](https://doi.org/10.1016/j.celrep.2016.12.019).
 #'
-#' @importFrom rlang .data
 #' @seealso [hack_sig()] to compute Immunophenoscore biomarkers in different
 #'   ways (use `signatures = "ips"`).
 #'
 #'   [check_sig()] to check if all/most of the Immunophenoscore biomarkers are
 #'   present in your expression matrix (use `signatures = "ips"`).
+#' @importFrom rlang .data
 #' @export
-hack_immunophenoscore <- function(expr_data, feature = "all") {
-    sig_data <- hacksig::signatures_data
+hack_immunophenoscore <- function(expr_data, extract = "ips") {
+    sig_info <- hacksig::signatures_data
     biom_classes <- tibble::tibble(
         gene_type = c("b2m", "tap1", "tap2",
                       paste0("hla_", c(letters[1:3], "dpa1", "dpb1", "e", "f")),
@@ -43,7 +96,7 @@ hack_immunophenoscore <- function(expr_data, feature = "all") {
         gene_class = c(rep(c("mhc", "cp"), each = 10),
                        rep_len("ec", 4), "sc", "sc")
     )
-    ips_genes <- sig_data[grep("ips", sig_data$signature_id),
+    ips_genes <- sig_info[grep("ips", sig_info$signature_id),
                           c("signature_id", "gene_symbol", "gene_weight")]
     ips_genes$signature_id <- gsub("ips_", "", ips_genes$signature_id)
     names(ips_genes)[names(ips_genes) == "signature_id"] <- "gene_type"
@@ -97,11 +150,12 @@ hack_immunophenoscore <- function(expr_data, feature = "all") {
     names(result_type) <- tolower(gsub(" |-", "_", names(result_type)))
     names(result_type)[-1] <- paste0(names(result_type)[-1], "_score")
     result <- dplyr::left_join(result_class, result_type, by = "sample_id")
-    if (feature == "class") {
+    if (extract == "class") {
         result_class
-    } else if (feature == "type") {
-        result[, -c("ec_score", "mhc_score", "sc_score", "cp_score")]
-    } else {
+    } else if (extract == "ips") {
+        result_class[, c("sample_id", "raw_score", "ips_score")]
+    } else if (extract == "all") {
         result
-    }
+    } else stop("Must provide a valid string for 'extract'.
+                Possible choices are 'ips', 'class', 'all'.", call. = FALSE)
 }

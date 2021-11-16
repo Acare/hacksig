@@ -7,8 +7,7 @@
 #' @param expr_data A gene expression matrix (or data frame) with gene symbols as
 #'   row names and samples as columns.
 #' @param signatures It can be a list of signatures or a character string indicating
-#'   a keyword for a group of signatures (e.g. "immune" or "ifng" for immune and
-#'   interferon gamma signatures respectively). The default (`all`) will cause the
+#'   a keyword for a group of signatures. The default (`"all"`) will cause the
 #'   function to check for all the signatures implemented in `hacksig`.
 #'
 #' @return A tibble with a number of rows equal to the number of input signatures
@@ -20,15 +19,16 @@
 #'
 #' @examples
 #' check_sig(test_expr)
-#' check_sig(test_expr, hallmark_list)
+#' check_sig(test_expr, "estimate")
 #'
 #' @importFrom rlang .data
+#' @seealso [get_sig_keywords()], [hack_sig()]
 #' @export
 check_sig <- function(expr_data, signatures = "all") {
     if (is.matrix(expr_data) == TRUE) {
         expr_data <- as.data.frame(expr_data)
     }
-    if (is.list(signatures)) {
+    if (is.list(signatures) == TRUE) {
         signatures <- lapply(signatures, FUN = unique)
         if (is.null(names(signatures)) == TRUE) {
             names(signatures) <- paste0("sig", seq_along(signatures))
@@ -38,7 +38,7 @@ check_sig <- function(expr_data, signatures = "all") {
             cols = "gene_symbol"
         )
     }
-    else if (is.character(signatures)) {
+    else if (is.character(signatures) == TRUE) {
         sig_data <- hacksig::signatures_data
         if (signatures != "all") {
             sig_data <- sig_data[grep(signatures, sig_data$signature_keyword), ]

@@ -15,7 +15,7 @@ parallel computation is supported through the \code{future} framework.
 }
 \section{Get gene signatures scores in different ways}{
 
-The main function of the package is \code{hack_sig()} and it can be used to:
+The main function of the package is \code{\link[=hack_sig]{hack_sig()}} and it can be used to:
 \itemize{
 \item obtain single sample scores with one of three methods (z-score, ssGSEA,
 singscore) for a custom list of gene signatures;
@@ -24,18 +24,21 @@ either with the original publication method or with one of the three single
 sample methods.
 }
 
+Once single sample scores are obtained, you can assign your samples into signature
+classes with \code{\link[=hack_class]{hack_class()}}.
+
 In addition, other more complex methods are implemented through:
 \itemize{
-\item \code{hack_cinsarc()}, for the CINSARC classification;
-\item \code{hack_estimate()}, for the ESTIMATE method;
-\item \code{hack_immunophenoscore()}, for the Immunophenoscore.
+\item \code{\link[=hack_cinsarc]{hack_cinsarc()}}, for the CINSARC classification;
+\item \code{\link[=hack_estimate]{hack_estimate()}}, for the ESTIMATE method;
+\item \code{\link[=hack_immunophenoscore]{hack_immunophenoscore()}}, for the Immunophenoscore.
 }
 }
 
 \section{Check if gene signatures are applicable to your data}{
 
 Sometimes your gene expression matrix can miss some genes due to some prior
-filtering procedure. The function \code{check_sig()} can be used to check how many
+filtering procedure. The function \code{\link[=check_sig]{check_sig()}} can be used to check how many
 genes your expression matrix contain for every input signature.
 }
 

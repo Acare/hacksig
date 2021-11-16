@@ -4,7 +4,7 @@
 #' Obtain *Immune*, *Stroma*, *ESTIMATE* and *Purity* scores from a cohort of samples,
 #' using the method implemented in *Yoshihara et al., 2013*.
 #'
-#' @section Aim:
+#' @details
 #' The ESTIMATE (*Estimation of STromal and Immune cells in MAlignant Tumors
 #' using Expression data*) method was developed with the aim to estimate the
 #' fraction of tumor cells in a sample by using gene expression instead of copy
@@ -15,11 +15,11 @@
 #' thought of as a *"non-tumor score"*. Consequently, a high ESTIMATE enrichment
 #' gives a low tumor purity score and viceversa.
 #'
-#' @section Algorithm:
-#' Raw single sample GSEA scores (with rank normalization) are computed for the
-#' immune and stroma signatures, each composed of 141 genes (*Barbie et al., 2009*).
+#' ## Algorithm
+#' Raw immune and stromal signatures scores are computed using single sample GSEA
+#' with rank normalization (*Barbie et al., 2009*).
 #' Then, the ESTIMATE score is computed by summing the immune and stroma scores.
-#' Finally, the purity score is computed with the following formula:
+#' Finally, the purity score is obtained with the following formula:
 #' \deqn{Purity = cos(0.6049872018 + 0.0001467884 * ESTIMATE)}
 #'
 #' @param expr_data A gene expression matrix (or data frame) with gene symbols as
@@ -49,12 +49,12 @@
 #' hack_estimate(test_expr)
 #' @export
 hack_estimate <- function(expr_data) {
-    sig_data <- hacksig::signatures_data
+    sig_info <- hacksig::signatures_data
     estimate_sigs <- list(
-        immune_score = sig_data[sig_data$signature_id == "estimate_immune",
+        immune_score = sig_info[sig_info$signature_id == "estimate_immune",
                                 "gene_symbol",
                                 drop = TRUE],
-        stroma_score = sig_data[sig_data$signature_id == "estimate_stromal",
+        stroma_score = sig_info[sig_info$signature_id == "estimate_stromal",
                                 "gene_symbol",
                                 drop = TRUE]
     )

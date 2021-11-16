@@ -15,6 +15,8 @@ A gene expression matrix simulating expression profiles of 20 samples. It should
 be used for testing purpose.
 }
 \examples{
+class(test_expr)
+dim(test_expr)
 hack_sig(test_expr)
 }
 \keyword{datasets}

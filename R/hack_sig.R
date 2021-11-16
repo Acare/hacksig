@@ -24,7 +24,9 @@
 #'
 #' # You can also change the exponent of the ssGSEA running sum with:
 #' hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)
-#' @seealso [check_sig()] for checking if signatures are applicable to your data.
+#' @seealso [get_sig_keywords()] to get valid keywords for signatures.
+#'
+#'   [check_sig()] for checking if signatures are applicable to your data.
 #' @export
 hack_sig <- function(expr_data, signatures = "all", method = "original",
                      direction = "none", sample_norm = "raw", rank_norm = "none",
@@ -50,32 +52,56 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
         if (is.null(names(signatures)) == TRUE) {
             names(signatures) <- paste0("sig", seq_along(signatures))
         }
+        check_info <- check_sig(expr_data = expr_data, signatures = signatures)
+        check_info <- check_info[check_info$n_present == 0,]
+        if (nrow(check_info) > 0) {
+            signatures <- signatures[!names(signatures) %in% check_info$signature_id]
+            rlang::warn(
+                rlang::format_error_bullets(
+                    c("i" = "No genes are present in 'expr_data' for the following signatures:",
+                      stats::setNames(check_info$signature_id, rep_len("x", nrow(check_info))))
+                )
+            )
+        }
         compute_ss_method(signatures, method)
         }
     else if (is.character(signatures)) {
-        sig_data <- hacksig::signatures_data
+        sig_info <- hacksig::signatures_data
         if (signatures != "all") {
-            sig_data <- sig_data[grep(signatures, sig_data$signature_keyword,
+            sig_info <- sig_info[grep(signatures, sig_info$signature_keyword,
                                       ignore.case = TRUE), ]
-            if (nrow(sig_data) == 0) {
+            if (nrow(sig_info) == 0) {
                 stop("Provided keyword in 'signatures' does not match any class of signature.",
                      call. = FALSE)
             }
         }
-        sig_list <- lapply(split(sig_data[, c("signature_id", "gene_symbol")],
-                                 sig_data$signature_id),
+        check_info <- check_sig(expr_data = expr_data, signatures = signatures)
+        check_info <- check_info[check_info$n_present == 0,]
+        if (nrow(check_info) > 0) {
+            sig_info <- sig_info[!sig_info$signature_id %in% check_info$signature_id, ]
+            rlang::warn(
+                rlang::format_error_bullets(
+                    c("i" = "No genes are present in 'expr_data' for the following signatures:",
+                      stats::setNames(check_info$signature_id, rep_len("x", nrow(check_info))))
+                )
+            )
+        }
+        sig_list <- lapply(split(sig_info[, c("signature_id", "gene_symbol")],
+                                 sig_info$signature_id),
                            FUN = `[[`, 2)
         sig_list <- sig_list[lapply(sig_list, length) > 1]
         if (method != "original") {
             compute_ss_method(sig_list, method)
         } else {
+            sig_info <- sig_info[!grepl("cinsarc|estimate|ips", sig_info$signature_keyword), ]
+            sig_list <- sig_list[!grepl("cinsarc|estimate|ips", names(sig_list))]
             method_list <- tibble::deframe(
-                sig_data[!duplicated(sig_data[, c("signature_id", "signature_method")]),
+                sig_info[!duplicated(sig_info[, c("signature_id", "signature_method")]),
                          c("signature_id", "signature_method")]
             )
             method_list <- method_list[match(names(sig_list), names(method_list))]
-            weight_list <- lapply(split(sig_data[, c("signature_id", "gene_weight")],
-                                        sig_data$signature_id),
+            weight_list <- lapply(split(sig_info[, c("signature_id", "gene_weight")],
+                                        sig_info$signature_id),
                                   FUN = `[[`, 2)
             result <- vector("list", length = length(sig_list))
             for (i in names(method_list)) {

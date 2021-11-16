@@ -1,7 +1,7 @@
 #' Gene-level information for each signature implemented
 #'
 #' A data set used by the `hacksig` functions to retrieve gene-level information
-#' about XXX signatures implemented in the package.
+#' about XXX implemented signatures.
 #'
 #' @format A tibble with six columns:
 #'
@@ -33,20 +33,9 @@
 #'
 #' @format A random normal data matrix with 20000 genes as rows and 20 samples as columns.
 #' @examples
+#' class(test_expr)
+#' dim(test_expr)
 #' hack_sig(test_expr)
 #' @docType data
 #' @keywords datasets
 "test_expr"
-
-#' Hallmark gene set list
-#'
-#' A gene expression matrix ...
-#'
-#' @format A named list storing the 50 Hallmark gene sets with gene symbols as
-#'   gene identifiers.
-#' @examples
-#' hack_sig(test_expr, hallmark_list, method = "zscore")
-#' @docType data
-#' @keywords datasets
-#' @source \url{http://www.gsea-msigdb.org/gsea/msigdb/genesets.jsp?collection=H}
-"hallmark_list"

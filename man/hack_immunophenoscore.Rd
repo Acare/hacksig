@@ -5,30 +5,86 @@
 \title{Hack the Immunophenoscore}
 \source{
 \href{https://github.com/icbi-lab/Immunophenogram}{github.com/icbi-lab/Immunophenogram}
+
+The Cancer Immunome Atlas \url{https://tcia.at/}
 }
 \usage{
-hack_immunophenoscore(expr_data, feature = "all")
+hack_immunophenoscore(expr_data, extract = "ips")
 }
 \arguments{
 \item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
 row names and samples as columns.}
 
-\item{feature}{A string indicating whether you want a more granular output (\code{type})
-or a more aggregated one (\code{class}). Each of the two possible choices will give
-the raw and discrete immunophenoscores.}
+\item{extract}{A string controlling which type of biomarker scores you want to obtain.
+Possible choices are:\preformatted{* `"ips"` (default), only raw and discrete IPS scores;
+* `"class"`, IPS scores together with the four summary class scores;
+* `"all"`, all possible scores.
+}}
 }
 \value{
-A data frame with
+A tibble with one row for each sample in \code{expr_data}, a column \code{sample_id}
+indicating sample identifiers and a number of additional columns depending
+on the choice of \code{extract}.
 }
 \description{
 Obtain various immune biomarkers scores, which combined together give the
 immunophenoscore (\emph{Charoentong et al., 2017}).
 }
 \details{
-Immunophenoscore (IPS), is a score that was generated, through the use of machine learning, with The Cancer Genome Atlas data
-from 20 solid cancers. The Cancer Immunome Atlas was generated (https://tcia.at/) by the depiction of intratumoral immune landscapes.
-The score identifies the tumor immunogenicity, and it was able to predict the response to immunocheckpoint inhibitors
-(anti-cytotoxic T lymphocyte antigen-4 (CTLA-4) and anti-programmed cell death protein 1 (anti-PD-1) antibodies) in two validation cohorts.
+The immunophenoscore is conceived as a quantification of tumor immunogenicity.
+It is obtained by aggregating multiple immune biomarkers scores, which are
+grouped into four major classes:
+\itemize{
+\item \emph{MHC molecules} (\strong{MHC}), expression of MHC class I, class II, and non-classical molecules;
+\item \emph{Immunomodulators} (\strong{CP}), expression of certain co-inhibitory and co-stimulatory molecules;
+\item \emph{Effector cells} (\strong{EC}), infiltration of activated CD8+/CD4+ T cells and Tem (effector memory) CD8+/CD4+ cells;
+\item \emph{Suppressor cells} (\strong{SC}), infiltration of immunosuppressive cells (Tregs and MDSCs).
+}
+
+The table below shows in detail the 26 immune biomarkers and cell types grouped
+by class together with the number of genes which represent them:\tabular{lcc}{
+   \strong{Class} | \tab \strong{Biomarker/cell type} | \tab \strong{No. genes} \cr
+   MHC \tab B2M \tab 1 \cr
+   MHC \tab HLA-A \tab 1 \cr
+   MHC \tab HLA-B \tab 1 \cr
+   MHC \tab HLA-C \tab 1 \cr
+   MHC \tab HLA-DPA1 \tab 1 \cr
+   MHC \tab HLA-DPB1 \tab 1 \cr
+   MHC \tab HLA-E \tab 1 \cr
+   MHC \tab HLA-F \tab 1 \cr
+   MHC \tab TAP1 \tab 1 \cr
+   MHC \tab TAP2 \tab 1 \cr
+   CP \tab CD27 \tab 1 \cr
+   CP \tab CTLA-4 \tab 1 \cr
+   CP \tab ICOS \tab 1 \cr
+   CP \tab IDO1 \tab 1 \cr
+   CP \tab LAG3 \tab 1 \cr
+   CP \tab PD1 \tab 1 \cr
+   CP \tab PD-L1 \tab 1 \cr
+   CP \tab PD-L2 \tab 1 \cr
+   CP \tab TIGIT \tab 1 \cr
+   CP \tab TIM3 \tab 1 \cr
+   EC \tab Act CD4 \tab 24 \cr
+   EC \tab Act CD8 \tab 26 \cr
+   EC \tab Tem CD4 \tab 27 \cr
+   EC \tab Tem CD8 \tab 25 \cr
+   SC \tab MDSC \tab 20 \cr
+   SC \tab Treg \tab 20 \cr
+}
+
+\subsection{Algorithm}{
+
+Samplewise gene expression z-scores are obtained for each of 26 immune cell
+types and biomarkers. Then, weighted averaged z-scores are computed for each
+class and the raw immunophenoscore (\eqn{IPS-raw}) results as the sum of the
+four class scores. Finally, the immunophenoscore (\eqn{IPS}) is given as an
+integer value between 0 and 10 in the following way:
+\itemize{
+\item \eqn{IPS = 0}, if \eqn{IPS-raw \le 0};
+\item \eqn{IPS = [10 * (IPS-raw / 3)]}, if \eqn{0 < IPS-raw < 3};
+\item \eqn{IPS = 10}, if \eqn{IPS-raw \ge 3}.
+}
+}
 }
 \references{
 Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,

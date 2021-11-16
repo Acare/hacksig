@@ -1,21 +1,19 @@
 #' Hack the CINSARC classification
 #'
 #' @description
-#' Given a gene expression data frame and a vector indicating the distant metastasis
+#' Given a gene expression matrix and a 0-1 vector indicating the distant metastasis
 #' status of samples, `hack_cinsarc()` classifies samples into one of two risk
 #' classes, C1 or C2, using the CINSARC signature as implemented in
 #' *Chibon et al., 2010*.
 #'
-#' @section Aim:
+#' @details
 #' CINSARC (*Complexity INdex in SARComas*) is a prognostic 67-gene signature
 #' related to mitosis and control of chromosome integrity.
-#' The signature expresses the tumor complexity and predicts metastasis outcome
-#' in sarcomas, gastrointestinal stromal tumors (GISTs), breast carcinomas and
-#' lymphomas. The signature showed a superiority in determining metastatic
-#' outcome for sarcoma patients to the *Fédération Francaise des Centres de
-#' Lutte Contre le Cancer* (FNCLCC) grading system.
+#' It was developed to improve metastatic outcome prediction in soft tissue
+#' sarcomas over the FNCLCC (*Fédération Francaise des Centres de Lutte Contre
+#' le Cancer*) grading system.
 #'
-#' @section Algorithm:
+#' ## Algorithm
 #' The CINSARC method implemented in `hacksig` makes use of leave-one-out cross
 #' validation (LOOCV) to classify samples into C1/C2 risk groups (see *Lesluyes & Chibon, 2020*).
 #' First, gene expression values are centered by their mean across samples.
@@ -26,14 +24,12 @@
 #' it is assigned to the C1 class (low risk). Conversely, if a sample is more
 #' correlated to the metastatic centroid, then it is assigned to the C2 class (high risk).
 #'
-#' @param expr_data A gene expression matrix (or data frame) with gene symbols as
-#'   row names and samples as columns.
 #' @param dm_status A numeric vector specifying whether a sample has either (1)
 #'   or not (0) developed distant metastasis.
+#' @inheritParams hack_estimate
 #'
 #' @return A tibble with one row for each sample in `expr_data` and two columns:
-#'   `sample_id` and `cinsarc_class`, which gives the CINSARC classification in
-#'   one of two classes, *C1* (low risk) or *C2* (high risk).
+#'   `sample_id` and `cinsarc_class`, which gives the CINSARC C1 or C2.
 #'
 #' @source [codeocean.com/capsule/4933686/tree/v4](https://codeocean.com/capsule/4933686/tree/v4)
 #'
@@ -59,10 +55,10 @@
 #' hack_cinsarc(test_expr, test_dm_status)
 #' @export
 hack_cinsarc <- function(expr_data, dm_status) {
-    sig_data <- hacksig::signatures_data
+    sig_info <- hacksig::signatures_data
     event_df <- tibble::tibble(sample_id = colnames(expr_data),
                                event = as.factor(ifelse(dm_status == 0, "X0", "X1")))
-    cinsarc_genes <- sig_data[sig_data$signature_id == "cinsarc",
+    cinsarc_genes <- sig_info[sig_info$signature_id == "cinsarc",
                               "gene_symbol", drop = TRUE]
     filt_data <- expr_data[rownames(expr_data) %in% cinsarc_genes, ]
     centered_data <- scale(t(filt_data), center = TRUE, scale = FALSE)

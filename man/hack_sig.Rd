@@ -20,7 +20,7 @@ row names and samples as columns.}
 
 \item{signatures}{It can be a list of signatures or a character string indicating
 a keyword for a group of signatures (e.g. "immune" or "ifng" for immune and
-interferon gamma signatures respectively). The default (\code{all}) will cause the
+interferon gamma signatures respectively). The default (\code{"all"}) will cause the
 function to compute single sample scores for all the signatures implemented
 in \code{hacksig}.}
 
@@ -36,28 +36,29 @@ the single sample score for each signature. You can choose one of:
 \item{direction}{A character specifying the \strong{singscore} computation depending on the
 direction of the signatures. Can be on of:
 \itemize{
-\item \code{none}, undirected signatures, that is you don't know whether the genes are
-up- or down-regulated (default);
-\item \code{up}, all genes in the signature are supposed to be up-regulated;
-\item \code{down}, all genes in the signature are supposed to be down-regulated;
-\item \code{both}, a signature is composed of up- and down sub-signatures.
+\item \code{"none"} (default), undirected signatures, that is you don't know whether
+the genes are up- or down-regulated;
+\item \code{"up"}, all genes in the signature are supposed to be up-regulated;
+\item \code{"down"}, all genes in the signature are supposed to be down-regulated;
+\item \code{"both"}, a signature is composed of up- and down sub-signatures.
 You must supply it as a nested list.
 }}
 
-\item{sample_norm}{A character string specifying the type of normalization affecting
-the \strong{single sample GSEA} scores. Can be one of:
+\item{sample_norm}{A character string specifying the type of normalization
+affecting the \strong{single sample GSEA} scores. Can be one of:
 \itemize{
-\item \code{raw}, obtain raw scores (default);
-\item \code{separate}, normalize raw scores in \eqn{[0, 1]} across samples for each signature separately.
-\item \code{all}, normalize raw scores both across samples and signatures.
+\item \code{"raw"} (default), obtain raw scores;
+\item \code{"separate"}, normalize raw scores in \eqn{[0, 1]} across samples for
+each signature separately.
+\item \code{"all"}, normalize raw scores both across samples and signatures.
 }}
 
 \item{rank_norm}{A character string specifying how gene expression ranks should
-be normalized. Valid choices are:
+be normalized in the \strong{single sample GSEA} procedure. Valid choices are:
 \itemize{
-\item \code{none}, no rank normalization (default);
-\item \code{rank}, ranks are multiplied by \code{10000 / nrow(expr_data)};
-\item \code{logrank},
+\item \code{"none"} (default), no rank normalization;
+\item \code{"rank"}, ranks are multiplied by \code{10000 / nrow(expr_data)};
+\item \code{"logrank"}, normalized ranks are logged.
 }}
 
 \item{alpha}{A numeric scalar. Exponent in the running sum of the \strong{single sample GSEA}
@@ -115,5 +116,7 @@ approach for interpreting genome-wide expression profiles.
 102(43), 15545–15550. \href{https://doi.org/10.1073/pnas.0506580102}{doi: 10.1073/pnas.0506580102}.
 }
 \seealso{
+\code{\link[=get_sig_keywords]{get_sig_keywords()}} to get valid keywords for signatures.
+
 \code{\link[=check_sig]{check_sig()}} for checking if signatures are applicable to your data.
 }

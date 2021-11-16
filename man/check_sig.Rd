@@ -11,8 +11,7 @@ check_sig(expr_data, signatures = "all")
 row names and samples as columns.}
 
 \item{signatures}{It can be a list of signatures or a character string indicating
-a keyword for a group of signatures (e.g. "immune" or "ifng" for immune and
-interferon gamma signatures respectively). The default (\code{all}) will cause the
+a keyword for a group of signatures. The default (\code{"all"}) will cause the
 function to check for all the signatures implemented in \code{hacksig}.}
 }
 \value{
@@ -29,6 +28,9 @@ prior to testing your gene signatures.
 }
 \examples{
 check_sig(test_expr)
-check_sig(test_expr, hallmark_list)
+check_sig(test_expr, "estimate")
 
+}
+\seealso{
+\code{\link[=get_sig_keywords]{get_sig_keywords()}}, \code{\link[=hack_sig]{hack_sig()}}
 }

@@ -4,8 +4,8 @@
 #' These are internal functions to compute single sample scores in three different
 #' ways: **combined z-score** (*Lee et al., 2008*), **ssGSEA** (*Barbie et al., 2009*)
 #' or **singscore** (*Foroutan et al., 2018*).
-#' `compute_ssgsea` is called by [hack_estimate()] whereas all the three
-#' methods are called by \code{\link{hack_sig}}.
+#' `compute_ssgsea()` is called by [hack_estimate()] whereas all the three
+#' methods are called by [hack_sig()].
 #'
 #' @section Algorithm:
 #' ## Combined z-score:
@@ -15,37 +15,36 @@
 #' ## Singscore:
 #' ranks and mean
 #'
-#' @param expr_data A gene expression matrix (or data frame) with gene symbols as
-#'   row names and samples as columns.
 #' @param signatures It can be a list of signatures or a character string indicating
 #'   a keyword for a group of signatures (e.g. "immune" or "ifng" for immune and
-#'   interferon gamma signatures respectively). The default (`all`) will cause the
+#'   interferon gamma signatures respectively). The default (`"all"`) will cause the
 #'   function to compute single sample scores for all the signatures implemented
 #'   in `hacksig`.
 #' @param direction A character specifying the **singscore** computation depending on the
 #'   direction of the signatures. Can be on of:
 #'
-#'   * `none`, undirected signatures, that is you don't know whether the genes are
-#'     up- or down-regulated (default);
-#'   * `up`, all genes in the signature are supposed to be up-regulated;
-#'   * `down`, all genes in the signature are supposed to be down-regulated;
-#'   * `both`, a signature is composed of up- and down sub-signatures.
+#'   * `"none"` (default), undirected signatures, that is you don't know whether
+#'     the genes are up- or down-regulated;
+#'   * `"up"`, all genes in the signature are supposed to be up-regulated;
+#'   * `"down"`, all genes in the signature are supposed to be down-regulated;
+#'   * `"both"`, a signature is composed of up- and down sub-signatures.
 #'     You must supply it as a nested list.
-#' @param sample_norm A character string specifying the type of normalization affecting
-#'   the **single sample GSEA** scores. Can be one of:
+#' @param sample_norm A character string specifying the type of normalization
+#'   affecting the **single sample GSEA** scores. Can be one of:
 #'
-#'   * `raw`, obtain raw scores (default);
-#'   * `separate`, normalize raw scores in \eqn{[0, 1]} across samples for each signature separately.
-#'   * `all`, normalize raw scores both across samples and signatures.
+#'   * `"raw"` (default), obtain raw scores;
+#'   * `"separate"`, normalize raw scores in \eqn{[0, 1]} across samples for
+#'     each signature separately.
+#'   * `"all"`, normalize raw scores both across samples and signatures.
 #' @param rank_norm A character string specifying how gene expression ranks should
-#'   be normalized. Valid choices are:
+#'   be normalized in the **single sample GSEA** procedure. Valid choices are:
 #'
-#'   * `none`, no rank normalization (default);
-#'   * `rank`, ranks are multiplied by `10000 / nrow(expr_data)`;
-#'   * `logrank`,
+#'   * `"none"` (default), no rank normalization;
+#'   * `"rank"`, ranks are multiplied by `10000 / nrow(expr_data)`;
+#'   * `"logrank"`, normalized ranks are logged.
 #' @param alpha A numeric scalar. Exponent in the running sum of the **single sample GSEA**
 #'   score calculation which weights the gene ranks. Defaults to \eqn{\alpha = 0.25}.
-#'
+#' @inheritParams hack_estimate
 #' @return A tibble with one row for each sample in `expr_data`, a column `sample_id`
 #'   indicating sample identifiers and one column for each input signature giving
 #'   single sample scores.
@@ -212,42 +211,21 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
             min_score <- (n_in + 1) / 2
             max_score <- (2 * n_genes - n_in + 1) / 2
             (score - min_score) / (max_score - min_score)
-        } else if (direction == "both") {
-            rank_up <- rank(sample_data)
-            rank_down <- rank(-sample_data)
-            min_up <- (n_up + 1) / 2
-            max_up <- (2 * n_genes - n_up + 1) / 2
-            min_down <- (n_down + 1) / 2
-            max_down <- (2 * n_genes - n_down + 1) / 2
-            score_up <- sum(rank_up[names(rank_up) %in% geneset]) / n_up
-            score_down <- sum(rank_down[names(rank_down) %in% geneset]) / n_down
-            score_up <- (score_up - min_up) / (max_up - min_up)
-            score_down <- (score_down - min_down) / (max_down - min_down)
-            score_up + score_down
-        }
-
-        # if (direction == "none") {
-        #     rank_vec <- rank(sample_data)
-        #     for (i in seq_along(rank_vec)) {
-        #         rank_vec[[i]] <- abs(rank_vec[[i]] - rank_center)
-        #     }
-        #     score <- sum(rank_vec[names(rank_vec) %in% geneset]) / n_in
-        #     min_score <- (ceiling(n_in / 2) + 1) / 2
-        #     max_score <- (n_genes - ceiling(n_in / 2) + 1) / 2
-        #     (score - min_score) / (max_score - min_score)
-        # } else if (direction == "up" | direction == "down") {
-        #     if (direction == "up") {
-        #         rank_vec <- rank(sample_data)
-        #     } else {
-        #         rank_vec <- rank(-sample_data)
-        #     }
-        #     score <- sum(rank_vec[names(rank_vec) %in% geneset]) / n_in
-        #     min_score <- (n_in + 1) / 2
-        #     max_score <- (2 * n_genes - n_in + 1) / 2
-        #     (score - min_score) / (max_score - min_score)
+        } else stop("Valid choices for 'direction' are 'none', 'up', 'down'",
+                    call. = FALSE)
+        # else if (direction == "both") {
+        #     rank_up <- rank(sample_data)
+        #     rank_down <- rank(-sample_data)
+        #     min_up <- (n_up + 1) / 2
+        #     max_up <- (2 * n_genes - n_up + 1) / 2
+        #     min_down <- (n_down + 1) / 2
+        #     max_down <- (2 * n_genes - n_down + 1) / 2
+        #     score_up <- sum(rank_up[names(rank_up) %in% geneset]) / n_up
+        #     score_down <- sum(rank_down[names(rank_down) %in% geneset]) / n_down
+        #     score_up <- (score_up - min_up) / (max_up - min_up)
+        #     score_down <- (score_down - min_down) / (max_down - min_down)
+        #     score_up + score_down
         # }
-
-
     }
 
     single_sig_singscore <- function(dataset, genes) {

@@ -25,24 +25,25 @@ row names and samples as columns.}
 
 \item{signatures}{It can be a list of signatures or a character string indicating
 a keyword for a group of signatures (e.g. "immune" or "ifng" for immune and
-interferon gamma signatures respectively). The default (\code{all}) will cause the
+interferon gamma signatures respectively). The default (\code{"all"}) will cause the
 function to compute single sample scores for all the signatures implemented
 in \code{hacksig}.}
 
-\item{sample_norm}{A character string specifying the type of normalization affecting
-the \strong{single sample GSEA} scores. Can be one of:
+\item{sample_norm}{A character string specifying the type of normalization
+affecting the \strong{single sample GSEA} scores. Can be one of:
 \itemize{
-\item \code{raw}, obtain raw scores (default);
-\item \code{separate}, normalize raw scores in \eqn{[0, 1]} across samples for each signature separately.
-\item \code{all}, normalize raw scores both across samples and signatures.
+\item \code{"raw"} (default), obtain raw scores;
+\item \code{"separate"}, normalize raw scores in \eqn{[0, 1]} across samples for
+each signature separately.
+\item \code{"all"}, normalize raw scores both across samples and signatures.
 }}
 
 \item{rank_norm}{A character string specifying how gene expression ranks should
-be normalized. Valid choices are:
+be normalized in the \strong{single sample GSEA} procedure. Valid choices are:
 \itemize{
-\item \code{none}, no rank normalization (default);
-\item \code{rank}, ranks are multiplied by \code{10000 / nrow(expr_data)};
-\item \code{logrank},
+\item \code{"none"} (default), no rank normalization;
+\item \code{"rank"}, ranks are multiplied by \code{10000 / nrow(expr_data)};
+\item \code{"logrank"}, normalized ranks are logged.
 }}
 
 \item{alpha}{A numeric scalar. Exponent in the running sum of the \strong{single sample GSEA}
@@ -51,11 +52,11 @@ score calculation which weights the gene ranks. Defaults to \eqn{\alpha = 0.25}.
 \item{direction}{A character specifying the \strong{singscore} computation depending on the
 direction of the signatures. Can be on of:
 \itemize{
-\item \code{none}, undirected signatures, that is you don't know whether the genes are
-up- or down-regulated (default);
-\item \code{up}, all genes in the signature are supposed to be up-regulated;
-\item \code{down}, all genes in the signature are supposed to be down-regulated;
-\item \code{both}, a signature is composed of up- and down sub-signatures.
+\item \code{"none"} (default), undirected signatures, that is you don't know whether
+the genes are up- or down-regulated;
+\item \code{"up"}, all genes in the signature are supposed to be up-regulated;
+\item \code{"down"}, all genes in the signature are supposed to be down-regulated;
+\item \code{"both"}, a signature is composed of up- and down sub-signatures.
 You must supply it as a nested list.
 }}
 }
@@ -68,8 +69,8 @@ single sample scores.
 These are internal functions to compute single sample scores in three different
 ways: \strong{combined z-score} (\emph{Lee et al., 2008}), \strong{ssGSEA} (\emph{Barbie et al., 2009})
 or \strong{singscore} (\emph{Foroutan et al., 2018}).
-\code{compute_ssgsea} is called by \code{\link[=hack_estimate]{hack_estimate()}} whereas all the three
-methods are called by \code{\link{hack_sig}}.
+\code{compute_ssgsea()} is called by \code{\link[=hack_estimate]{hack_estimate()}} whereas all the three
+methods are called by \code{\link[=hack_sig]{hack_sig()}}.
 }
 \section{Algorithm}{
 
