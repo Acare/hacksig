@@ -13,6 +13,7 @@
 #'   `n_genes` gives the number of genes composing a signature.
 #'   `n_present` and `frac_present` are the number and fraction of genes in a
 #'   signature which are present in `expr_data`, respectively.
+#'   `missing_genes` returns a named list of missing gene symbols for each signature.
 #' @examples
 #' check_sig(test_expr)
 #' check_sig(test_expr, "estimate")
@@ -50,11 +51,14 @@ check_sig <- function(expr_data, signatures = "all") {
         sig_data_group,
         n_genes = length(.data$gene_symbol),
         n_present = length(intersect(.data$gene_symbol, rownames(expr_data))),
-        frac_present = .data$n_present / .data$n_genes
+        frac_present = .data$n_present / .data$n_genes,
+        missing_genes = list(setdiff(.data$gene_symbol, rownames(expr_data))),
+        missing_genes = stats::setNames(.data$missing_genes, .data$signature_id)
     )
-    result <- dplyr::ungroup(
-        dplyr::distinct(
-            sig_data_group[, c("signature_id", "n_genes", "n_present", "frac_present")]
+    keep_cols <- c("signature_id", "n_genes", "n_present", "frac_present", "missing_genes")
+    result <- unique(
+        dplyr::ungroup(
+            sig_data_group[, keep_cols]
         )
     )
     dplyr::arrange(result, -.data$frac_present)

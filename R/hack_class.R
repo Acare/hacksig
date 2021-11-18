@@ -51,11 +51,11 @@ hack_class <- function(sig_data, cutoff = "original") {
         result
     } else if (cutoff %in% c("mean", "median")) {
         result <- apply(
-            matrix(tibble::column_to_rownames(sig_data, "sample_id"),
-                   dimnames = list(sig_data$sample_id)),
+            tibble::column_to_rownames(sig_data, "sample_id"),
             MARGIN = 2,
             FUN = function(x) ifelse(x < do.call(cutoff, list(x = x, na.rm = TRUE)),
-                                     "low", "high"))
+                                     "low", "high")
+        )
         tibble::as_tibble(result, rownames = "sample_id")
     } else if (cutoff == "tertiles") {
         dplyr::mutate(

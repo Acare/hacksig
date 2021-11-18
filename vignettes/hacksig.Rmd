@@ -18,6 +18,29 @@ knitr::opts_chunk$set(
 library(hacksig)
 ```
 
+This document will show you how to getting started with hacksig.
+We will use `test_expr` as a gene expression matrix
+We must load also these packages.
+
+```{r, message=FALSE}
+library(dplyr)
+library(future)
+library(ggplot2)
+library(msigdbr)
+library(purrr)
+library(tibble)
+library(tidyr)
+```
+
+## Getting information about the hacksig signatures
+
+hacksig is a collection of gene signatures and methods found in the cancer 
+transcriptomics literature. You can find 
+
+```{r}
+get_sig_info()
+```
+
 
 
 ```{r}

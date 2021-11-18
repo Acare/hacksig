@@ -21,6 +21,7 @@ and four columns: \code{signature_id}, \code{n_genes}, \code{n_present} and \cod
 \code{n_genes} gives the number of genes composing a signature.
 \code{n_present} and \code{frac_present} are the number and fraction of genes in a
 signature which are present in \code{expr_data}, respectively.
+\code{missing_genes} returns a named list of missing gene symbols for each signature.
 }
 \description{
 \code{check_sig()} is a helper function that shows useful information prior to

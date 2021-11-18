@@ -72,13 +72,13 @@ get_sig_info()
 ### Check your signatures
 
 ```{r}
-check_sig(test_expr, signatures = "immune")
+check_sig(test_expr, signatures = "estimate")
 ```
 
 ### Compute single sample scores
 
 ```{r}
-hack_sig(test_expr, signatures = c("estimate", "cinsarc"), method = "zscore")
+hack_sig(test_expr, signatures = c("ifng", "cinsarc"), method = "zscore")
 ```
 
 ### Classify your samples
@@ -86,7 +86,7 @@ hack_sig(test_expr, signatures = c("estimate", "cinsarc"), method = "zscore")
 ```{r}
 test_expr %>% 
     hack_sig("estimate", method = "singscore", direction = "up") %>% 
-    hack_class()
+    hack_class(cutoff = "median")
 ```
 
 ### Speed-up computation time
@@ -101,6 +101,4 @@ hack_sig(test_expr, method = "ssgsea")
 
 If you have any suggestions about adding new features to `hacksig`, please 
 open an issue request on [GitHub](https://github.com/Acare/hacksig/issues).
-Gene-level information about gene signatures are stored in the R object 
-`signatures_data` and can be used as a template for requests.
-
+Gene-level information about gene signatures are stored in `data-raw/hacksig_signatures.csv` and can be used as a template for requests.

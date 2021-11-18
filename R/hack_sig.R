@@ -22,23 +22,23 @@
 #' @param method A character string specifying which method to use for computing
 #'   the single sample score for each signature. You can choose one of:
 #'
-#'   * `original`, the original method used by the authors of the signature;
-#'   * `zscore`, the combined z-score method implemented in `compute_zscore()`;
-#'   * `ssgsea`, the single sample GSEA method implemented in `compute_ssgsea()`;
-#'   * `singscore`, the singscore method implemented in `compute_singscore()`;
+#'   * `"original"`, the original method used by the authors of the signature;
+#'   * `"zscore"`, the combined z-score method implemented in `compute_zscore()`;
+#'   * `"ssgsea"`, the single sample GSEA method implemented in `compute_ssgsea()`;
+#'   * `"singscore"`, the singscore method implemented in `compute_singscore()`;
 #' @inherit ss_methods params return references
 #' @examples
 #' # to obtain raw single sample GSEA scores for all signatures run:
-#' hack_sig(test_expr, method = "ssgsea")
+#' \dontrun{hack_sig(test_expr, method = "ssgsea")}
 #'
 #' # to obtain normalized scores, instead run:
-#' hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")
+#' \dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")}
 #'
 #' # You can also change the exponent of the ssGSEA running sum with:
-#' hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)
-#' @seealso [get_sig_info()] to get valid keywords for signatures.
+#' \dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)}
+#' @seealso [get_sig_info()] to get information about all implemented signatures.
 #'
-#'   [check_sig()] for getting information about gene signatures..
+#'   [check_sig()] to check if signatures are applicable to your data.
 #' @export
 hack_sig <- function(expr_data, signatures = "all", method = "original",
                      direction = "none", sample_norm = "raw", rank_norm = "none",

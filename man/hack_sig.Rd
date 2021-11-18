@@ -26,10 +26,10 @@ in \code{hacksig}.}
 \item{method}{A character string specifying which method to use for computing
 the single sample score for each signature. You can choose one of:
 \itemize{
-\item \code{original}, the original method used by the authors of the signature;
-\item \code{zscore}, the combined z-score method implemented in \code{compute_zscore()};
-\item \code{ssgsea}, the single sample GSEA method implemented in \code{compute_ssgsea()};
-\item \code{singscore}, the singscore method implemented in \code{compute_singscore()};
+\item \code{"original"}, the original method used by the authors of the signature;
+\item \code{"zscore"}, the combined z-score method implemented in \code{compute_zscore()};
+\item \code{"ssgsea"}, the single sample GSEA method implemented in \code{compute_ssgsea()};
+\item \code{"singscore"}, the singscore method implemented in \code{compute_singscore()};
 }}
 
 \item{direction}{A character specifying the \strong{singscore} computation method
@@ -140,13 +140,13 @@ package \code{singscore} (\emph{Foroutan et al., 2018}).
 
 \examples{
 # to obtain raw single sample GSEA scores for all signatures run:
-hack_sig(test_expr, method = "ssgsea")
+\dontrun{hack_sig(test_expr, method = "ssgsea")}
 
 # to obtain normalized scores, instead run:
-hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")
+\dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")}
 
 # You can also change the exponent of the ssGSEA running sum with:
-hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)
+\dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)}
 }
 \references{
 Barbie, D. A., Tamayo, P., Boehm, J. S., Kim, S. Y., Moody, S. E., Dunn, I. F.,
@@ -170,7 +170,7 @@ pathway activity toward precise disease classification.
 \doi{10.1371/journal.pcbi.1000217}.
 }
 \seealso{
-\code{\link[=get_sig_info]{get_sig_info()}} to get valid keywords for signatures.
+\code{\link[=get_sig_info]{get_sig_info()}} to get information about all implemented signatures.
 
-\code{\link[=check_sig]{check_sig()}} for getting information about gene signatures..
+\code{\link[=check_sig]{check_sig()}} to check if signatures are applicable to your data.
 }

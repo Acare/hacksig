@@ -70,30 +70,26 @@ get_sig_info()
 ### Check your signatures
 
 ``` r
-check_sig(test_expr, signatures = "immune")
-#> # A tibble: 31 × 4
-#>   signature_id n_genes n_present frac_present
-#>   <chr>          <int>     <int>        <dbl>
-#> 1 ips_b2m            1         1            1
-#> 2 ips_pd_1           1         1            1
-#> 3 ips_tigit          1         1            1
-#> 4 ips_pd_l2          1         1            1
-#> 5 ips_cd27           1         1            1
-#> # … with 26 more rows
+check_sig(test_expr, signatures = "estimate")
+#> # A tibble: 2 × 5
+#>   signature_id     n_genes n_present frac_present missing_genes
+#>   <chr>              <int>     <int>        <dbl> <named list> 
+#> 1 estimate_stromal     141        91        0.645 <chr [50]>   
+#> 2 estimate_immune      141        74        0.525 <chr [67]>
 ```
 
 ### Compute single sample scores
 
 ``` r
-hack_sig(test_expr, signatures = c("estimate", "cinsarc"), method = "zscore")
-#> # A tibble: 20 × 4
-#>   sample_id cinsarc estimate_immune estimate_stromal
-#>   <chr>       <dbl>           <dbl>            <dbl>
-#> 1 sample1    -0.482          -2.65            -0.262
-#> 2 sample2    -2.61            1.19            -0.717
-#> 3 sample3     1.44           -0.455            0.254
-#> 4 sample4    -0.538          -0.722            2.19 
-#> 5 sample5    -0.537          -1.07             0.112
+hack_sig(test_expr, signatures = c("ifng", "cinsarc"), method = "zscore")
+#> # A tibble: 20 × 3
+#>   sample_id cinsarc muro2016_ifng
+#>   <chr>       <dbl>         <dbl>
+#> 1 sample1    -0.482       -0.511 
+#> 2 sample2    -2.61         0.400 
+#> 3 sample3     1.44         0.347 
+#> 4 sample4    -0.538        0.0849
+#> 5 sample5    -0.537        0.390 
 #> # … with 15 more rows
 ```
 
@@ -102,7 +98,7 @@ hack_sig(test_expr, signatures = c("estimate", "cinsarc"), method = "zscore")
 ``` r
 test_expr %>% 
     hack_sig("estimate", method = "singscore", direction = "up") %>% 
-    hack_class()
+    hack_class(cutoff = "median")
 #> # A tibble: 20 × 3
 #>   sample_id estimate_immune estimate_stromal
 #>   <chr>     <chr>           <chr>           
@@ -154,5 +150,6 @@ hack_sig(test_expr, method = "ssgsea")
 If you have any suggestions about adding new features to `hacksig`,
 please open an issue request on
 [GitHub](https://github.com/Acare/hacksig/issues). Gene-level
-information about gene signatures are stored in the R object
-`signatures_data` and can be used as a template for requests.
+information about gene signatures are stored in
+`data-raw/hacksig_signatures.csv` and can be used as a template for
+requests.
