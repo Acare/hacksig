@@ -5,7 +5,7 @@
 \alias{compute_zscore}
 \alias{compute_ssgsea}
 \alias{compute_singscore}
-\title{Single sample methods}
+\title{Single sample scoring methods}
 \usage{
 compute_zscore(expr_data, signatures)
 
@@ -23,11 +23,7 @@ compute_singscore(expr_data, signatures, direction = "none")
 \item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
 row names and samples as columns.}
 
-\item{signatures}{It can be a list of signatures or a character string indicating
-a keyword for a group of signatures (e.g. "immune" or "ifng" for immune and
-interferon gamma signatures respectively). The default (\code{"all"}) will cause the
-function to compute single sample scores for all the signatures implemented
-in \code{hacksig}.}
+\item{signatures}{A named list of gene signatures.}
 
 \item{sample_norm}{A character string specifying the type of normalization
 affecting the \strong{single sample GSEA} scores. Can be one of:
@@ -47,17 +43,15 @@ be normalized in the \strong{single sample GSEA} procedure. Valid choices are:
 }}
 
 \item{alpha}{A numeric scalar. Exponent in the running sum of the \strong{single sample GSEA}
-score calculation which weights the gene ranks. Defaults to \eqn{\alpha = 0.25}.}
+score calculation which weighs the gene ranks. Defaults to \eqn{\alpha = 0.25}.}
 
-\item{direction}{A character specifying the \strong{singscore} computation depending on the
-direction of the signatures. Can be on of:
+\item{direction}{A character specifying the \strong{singscore} computation method
+depending on the direction of the signatures. Can be on of:
 \itemize{
 \item \code{"none"} (default), undirected signatures, that is you don't know whether
 the genes are up- or down-regulated;
 \item \code{"up"}, all genes in the signature are supposed to be up-regulated;
 \item \code{"down"}, all genes in the signature are supposed to be down-regulated;
-\item \code{"both"}, a signature is composed of up- and down sub-signatures.
-You must supply it as a nested list.
 }}
 }
 \value{
@@ -66,27 +60,70 @@ indicating sample identifiers and one column for each input signature giving
 single sample scores.
 }
 \description{
-These are internal functions to compute single sample scores in three different
-ways: \strong{combined z-score} (\emph{Lee et al., 2008}), \strong{ssGSEA} (\emph{Barbie et al., 2009})
-or \strong{singscore} (\emph{Foroutan et al., 2018}).
+These are internal functions to compute single sample scores from a list of
+gene signatures in three different ways:
+\itemize{
+\item \strong{combined z-score} (\emph{Lee et al., 2008});
+\item \strong{single sample GSEA} (\emph{Barbie et al., 2009});
+\item \strong{singscore} (\emph{Foroutan et al., 2018}).
+}
+
 \code{compute_ssgsea()} is called by \code{\link[=hack_estimate]{hack_estimate()}} whereas all the three
 methods are called by \code{\link[=hack_sig]{hack_sig()}}.
 }
 \section{Algorithm}{
 
-\subsection{Combined z-score:}{
+This section gives a brief explanation of how single sample scores are obtained
+from different methods.
+\subsection{Combined z-score}{
 
-scale and sum z-scores
+Gene expression values are centered by their mean value and scaled by their
+standard deviation across samples for each gene (z-scores). Then, for each
+sample and signature, corresponding z-scores are added up and divided by the
+square root of the signature size (i.e. the number of genes composing a signature).
+
+The combined z-score method is also implemented in the R package \code{GSVA}
+(\emph{Hänzelmann et al., 2013}).
 }
 
-\subsection{Single sample GSEA:}{
+\subsection{Single sample GSEA}{
 
-ranks and running sum
+For each sample, genes are ranked by expression value in decreasing order and
+rank normalization may follow (see argument \code{rank_norm}). Then, two probability-like
+vectors are computed for each sample and signature:
+\itemize{
+\item \eqn{P_{in}}, the cumulative sum of weighted ranks divided by their total
+sum for genes in the signature;
+\item \eqn{P_{out}}, the cumulative sum of ones (indicating genes not in the signature)
+divided by the number of genes not in the signature.
 }
 
-\subsection{Singscore:}{
+The single sample GSEA score is obtained by adding up the elements of the
+vector difference \eqn{P_{in} - P_{out}}.
+Finally, single sample scores could be normalized either across samples or across
+gene signatures and samples.
 
-ranks and mean
+The single sample GSEA method is also implemented in the R package \code{GSVA}
+(\emph{Hänzelmann et al., 2013}).
+}
+
+\subsection{Singscore}{
+
+For signatures whose genes are supposed to be up- or down-regulated, genes
+are ranked by expression value in increasing or decreasing order, respectively.
+For signatures whose direction is unknown, genes are ranked by absolute expression
+in increasing order and are median-centered.
+Enrichment scores are then computed for each sample and signature by averaging
+gene ranks for genes in the signature.
+Finally, normalized scores are obtained by subtracting the theoretical minimum
+mean rank from the score and dividing by the difference between the theoretical
+maximum and minimum mean ranks.
+
+The \code{hacksig} implementation of this method works only with unidirectional (i.e.
+all genes up- or down-regulated) and undirected gene signatures.
+If you want to get single sample scores for bidirectional gene signatures (i.e.
+signatures composed of both up- and down-regulated genes), please use the R
+package \code{singscore} (\emph{Foroutan et al., 2018}).
 }
 }
 
@@ -96,30 +133,22 @@ Schinzel, A. C., Sandy, P., Meylan, E., Scholl, C., Fröhling, S., Chan, E. M.,
 Sos, M. L., Michel, K., Mermel, C., Silver, S. J., Weir, B. A., Reiling, J. H.,
 Sheng, Q., Gupta, P. B., … Hahn, W. C. (2009). Systematic RNA interference
 reveals that oncogenic KRAS-driven cancers require TBK1. \emph{Nature}, 462(7269),
-108–112. \href{https://doi.org/10.1038/nature08460}{doi: 10.1038/nature08460}.
+108–112. \doi{10.1038/nature08460}.
 
 Foroutan, M., Bhuva, D. D., Lyu, R., Horan, K., Cursons, J., &
 Davis, M. J. (2018). Single sample scoring of molecular phenotypes.
-\emph{BMC bioinformatics}, 19(1), 404.
-\href{https://doi.org/10.1186/s12859-018-2435-4}{doi: 10.1186/s12859-018-2435-4}.
+\emph{BMC bioinformatics}, 19(1), 404. \doi{10.1186/s12859-018-2435-4}.
 
 Hänzelmann, S., Castelo, R., & Guinney, J. (2013). GSVA: gene set variation
 analysis for microarray and RNA-seq data. \emph{BMC bioinformatics}, 14, 7.
-\href{https://doi.org/10.1186/1471-2105-14-7}{doi: 10.1186/1471-2105-14-7}.
+\doi{10.1186/1471-2105-14-7}.
 
 Lee, E., Chuang, H. Y., Kim, J. W., Ideker, T., & Lee, D. (2008). Inferring
 pathway activity toward precise disease classification.
 \emph{PLoS computational biology}, 4(11), e1000217.
-\href{https://doi.org/10.1371/journal.pcbi.1000217}{doi: 10.1371/journal.pcbi.1000217}.
-
-Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L.,
-Gillette, M. A., Paulovich, A., Pomeroy, S. L., Golub, T. R., Lander, E. S.,
-& Mesirov, J. P. (2005). Gene set enrichment analysis: a knowledge-based
-approach for interpreting genome-wide expression profiles.
-\emph{Proceedings of the National Academy of Sciences of the United States of America},
-102(43), 15545–15550. \href{https://doi.org/10.1073/pnas.0506580102}{doi: 10.1073/pnas.0506580102}.
+\doi{10.1371/journal.pcbi.1000217}.
 }
 \seealso{
-\code{\link[=hack_sig]{hack_sig()}}, \code{\link[=hack_estimate]{hack_estimate()}}
+\code{\link[=hack_sig]{hack_sig()}}, \code{\link[=hack_estimate]{hack_estimate()}}, \code{\link[GSVA:gsva]{GSVA::gsva()}}, \code{\link[singscore:multiScore]{singscore::multiScore()}}
 }
 \keyword{internal}

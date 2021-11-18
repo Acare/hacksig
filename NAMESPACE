@@ -2,7 +2,7 @@
 
 export(check_sig)
 export(get_sig_genes)
-export(get_sig_keywords)
+export(get_sig_info)
 export(hack_cinsarc)
 export(hack_class)
 export(hack_estimate)

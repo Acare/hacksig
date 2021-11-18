@@ -2,82 +2,80 @@
 #'
 #' @description
 #' Obtain various immune biomarkers scores, which combined together give the
-#'  immunophenoscore (*Charoentong et al., 2017*).
-#'
+#'   immunophenoscore (*Charoentong et al., 2017*).
 #' @details
 #' The immunophenoscore is conceived as a quantification of tumor immunogenicity.
-#' It is obtained by aggregating multiple immune biomarkers scores, which are
-#' grouped into four major classes:
+#'   It is obtained by aggregating multiple immune biomarkers scores, which are
+#'   grouped into four major classes:
+#'
 #'   * _MHC molecules_ (__MHC__), expression of MHC class I, class II, and non-classical molecules;
 #'   * _Immunomodulators_ (__CP__), expression of certain co-inhibitory and co-stimulatory molecules;
 #'   * _Effector cells_ (__EC__), infiltration of activated CD8+/CD4+ T cells and Tem (effector memory) CD8+/CD4+ cells;
 #'   * _Suppressor cells_ (__SC__), infiltration of immunosuppressive cells (Tregs and MDSCs).
 #'
-#' The table below shows in detail the 26 immune biomarkers and cell types grouped
-#' by class together with the number of genes which represent them:
+#'   The table below shows in detail the 26 immune biomarkers and cell types grouped
+#'   by class together with the number of genes which represent them:
 #'
-#' | __Class__ \|| __Biomarker/cell type__ \|| __No. genes__ |
-#' | ----- |:-------------------:|:---------:|
-#' | MHC   | B2M                 | 1         |
-#' | MHC   | HLA-A               | 1         |
-#' | MHC   | HLA-B               | 1         |
-#' | MHC   | HLA-C               | 1         |
-#' | MHC   | HLA-DPA1            | 1         |
-#' | MHC   | HLA-DPB1            | 1         |
-#' | MHC   | HLA-E               | 1         |
-#' | MHC   | HLA-F               | 1         |
-#' | MHC   | TAP1                | 1         |
-#' | MHC   | TAP2                | 1         |
-#' | CP    | CD27                | 1         |
-#' | CP    | CTLA-4              | 1         |
-#' | CP    | ICOS                | 1         |
-#' | CP    | IDO1                | 1         |
-#' | CP    | LAG3                | 1         |
-#' | CP    | PD1                 | 1         |
-#' | CP    | PD-L1               | 1         |
-#' | CP    | PD-L2               | 1         |
-#' | CP    | TIGIT               | 1         |
-#' | CP    | TIM3                | 1         |
-#' | EC    | Act CD4             | 24        |
-#' | EC    | Act CD8             | 26        |
-#' | EC    | Tem CD4             | 27        |
-#' | EC    | Tem CD8             | 25        |
-#' | SC    | MDSC                | 20        |
-#' | SC    | Treg                | 20        |
-#'
-#' ## Algorithm
+#'   | __Class__ \|| __Biomarker/cell type__ \|| __No. genes__ |
+#'   | ----- |:-------------------:|:---------:|
+#'   | MHC   | B2M                 | 1         |
+#'   | MHC   | HLA-A               | 1         |
+#'   | MHC   | HLA-B               | 1         |
+#'   | MHC   | HLA-C               | 1         |
+#'   | MHC   | HLA-DPA1            | 1         |
+#'   | MHC   | HLA-DPB1            | 1         |
+#'   | MHC   | HLA-E               | 1         |
+#'   | MHC   | HLA-F               | 1         |
+#'   | MHC   | TAP1                | 1         |
+#'   | MHC   | TAP2                | 1         |
+#'   | CP    | CD27                | 1         |
+#'   | CP    | CTLA-4              | 1         |
+#'   | CP    | ICOS                | 1         |
+#'   | CP    | IDO1                | 1         |
+#'   | CP    | LAG3                | 1         |
+#'   | CP    | PD1                 | 1         |
+#'   | CP    | PD-L1               | 1         |
+#'   | CP    | PD-L2               | 1         |
+#'   | CP    | TIGIT               | 1         |
+#'   | CP    | TIM3                | 1         |
+#'   | EC    | Act CD4             | 24        |
+#'   | EC    | Act CD8             | 26        |
+#'   | EC    | Tem CD4             | 27        |
+#'   | EC    | Tem CD8             | 25        |
+#'   | SC    | MDSC                | 20        |
+#'   | SC    | Treg                | 20        |
+#' @section Algorithm:
 #' Samplewise gene expression z-scores are obtained for each of 26 immune cell
-#' types and biomarkers. Then, weighted averaged z-scores are computed for each
-#' class and the raw immunophenoscore (\eqn{IPS-raw}) results as the sum of the
-#' four class scores. Finally, the immunophenoscore (\eqn{IPS}) is given as an
-#' integer value between 0 and 10 in the following way:
+#'   types and biomarkers. Then, weighted averaged z-scores are computed for each
+#'   class and the raw immunophenoscore (\eqn{IPS-raw}) results as the sum of the
+#'   four class scores. Finally, the immunophenoscore (\eqn{IPS}) is given as an
+#'   integer value between 0 and 10 in the following way:
 #'
 #'   - \eqn{IPS = 0}, if \eqn{IPS-raw \le 0};
 #'   - \eqn{IPS = [10 * (IPS-raw / 3)]}, if \eqn{0 < IPS-raw < 3};
 #'   - \eqn{IPS = 10}, if \eqn{IPS-raw \ge 3}.
-#'
 #' @param extract A string controlling which type of biomarker scores you want to obtain.
 #'   Possible choices are:
 #'
-#'     * `"ips"` (default), only raw and discrete IPS scores;
-#'     * `"class"`, IPS scores together with the four summary class scores;
-#'     * `"all"`, all possible scores.
+#'   - `"ips"` (default), only raw and discrete IPS scores;
+#'   - `"class"`, IPS scores together with the four summary class scores;
+#'   - `"all"`, all possible biomarker scores.
 #' @inheritParams hack_estimate
 #' @return A tibble with one row for each sample in `expr_data`, a column `sample_id`
 #'   indicating sample identifiers and a number of additional columns depending
 #'   on the choice of `extract`.
-#'
+#' @examples
+#' hack_immunophenoscore(test_expr)
+#' hack_immunophenoscore(test_expr, extract = "class")
 #' @source [github.com/icbi-lab/Immunophenogram](https://github.com/icbi-lab/Immunophenogram)
 #'
-#'   The Cancer Immunome Atlas [https://tcia.at/](https://tcia.at/)
-#'
+#'   The Cancer Immunome Atlas [https://tcia.at/about](https://tcia.at/about)
 #' @references
 #' Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
 #' Efremova, M., Rieder, D., Hackl, H., & Trajanoski, Z. (2017). Pan-cancer
 #' Immunogenomic Analyses Reveal Genotype-Immunophenotype Relationships and
 #' Predictors of Response to Checkpoint Blockade. *Cell reports*, 18(1), 248–262.
-#' [doi: 10.1016/j.celrep.2016.12.019](https://doi.org/10.1016/j.celrep.2016.12.019).
-#'
+#' \doi{10.1016/j.celrep.2016.12.019}.
 #' @seealso [hack_sig()] to compute Immunophenoscore biomarkers in different
 #'   ways (use `signatures = "ips"`).
 #'
@@ -86,7 +84,7 @@
 #' @importFrom rlang .data
 #' @export
 hack_immunophenoscore <- function(expr_data, extract = "ips") {
-    sig_info <- hacksig::signatures_data
+    sig_data <- signatures_data
     biom_classes <- tibble::tibble(
         gene_type = c("b2m", "tap1", "tap2",
                       paste0("hla_", c(letters[1:3], "dpa1", "dpb1", "e", "f")),
@@ -96,7 +94,7 @@ hack_immunophenoscore <- function(expr_data, extract = "ips") {
         gene_class = c(rep(c("mhc", "cp"), each = 10),
                        rep_len("ec", 4), "sc", "sc")
     )
-    ips_genes <- sig_info[grep("ips", sig_info$signature_id),
+    ips_genes <- sig_data[grep("ips", sig_data$signature_id),
                           c("signature_id", "gene_symbol", "gene_weight")]
     ips_genes$signature_id <- gsub("ips_", "", ips_genes$signature_id)
     names(ips_genes)[names(ips_genes) == "signature_id"] <- "gene_type"
@@ -118,8 +116,10 @@ hack_immunophenoscore <- function(expr_data, extract = "ips") {
     result_type <- dplyr::distinct(dplyr::ungroup(ips_data[, keep_cols]))
     result_type$weighted_type_score <- result_type$type_weight * result_type$type_score
     result_type$type_weight <- NULL
-    result_class <- dplyr::mutate(dplyr::group_by(result_type, .data$sample_id, .data$gene_class),
-                                  class_score = mean(.data$weighted_type_score))
+    result_class <- dplyr::mutate(
+        dplyr::group_by(result_type, .data$sample_id, .data$gene_class),
+        class_score = mean(.data$weighted_type_score)
+    )
     keep_cols <- c("sample_id", "gene_class", "class_score")
     result_class <- dplyr::distinct(dplyr::ungroup(result_class[, keep_cols]))
     result_class <- dplyr::mutate(

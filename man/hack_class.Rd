@@ -10,16 +10,19 @@ hack_class(sig_data, cutoff = "original")
 \item{sig_data}{A tibble result of a call to \code{\link[=hack_sig]{hack_sig()}}.}
 
 \item{cutoff}{A character specifying which function to use to categorize
-samples by signature scores. Can be one of:\preformatted{* `"original"` (default), apply the original publication method;
-* `"mean"/"median"`, samples will be classified as `"low"` or `"high"` with respect
-  to the mean/median signature score value, respectively;
-* `"tertiles"`, samples will be classified as `"<= T1"` (score lower than
-  first tertile), `"(T1, T2]"` (score between first and second tertiles),
-  `"> T2"` (score higher than second tertile);
-* `"quartiles"`, samples will be classified as `"<= Q1"` (score lower than
-  first quartile), `"(Q1, Q2]"` (score between first and second quartiles),
-  `"(Q2, Q3]"` (score between second and third quartiles), `"> Q3"` (score
-  higher than third quartile).
+samples by signature scores. Can be one of:
+\itemize{
+\item \code{"original"} (default), apply the original publication method; if
+categorization is not expected, the median score is used;
+\item \code{"mean"/"median"}, samples will be classified as \code{"low"} or \code{"high"} with respect
+to the mean/median signature score, respectively;
+\item \code{"tertiles"}, samples will be classified as \code{"<= T1"} (score lower than
+first tertile), \code{"(T1, T2]"} (score between first and second tertiles),
+\code{"> T2"} (score higher than second tertile);
+\item \code{"quartiles"}, samples will be classified as \code{"<= Q1"} (score lower than
+first quartile), \code{"(Q1, Q2]"} (score between first and second quartiles),
+\code{"(Q2, Q3]"} (score between second and third quartiles), \code{"> Q3"} (score
+higher than third quartile).
 }}
 }
 \value{
@@ -34,7 +37,6 @@ order to classify your samples in one of two or more signature classes.
 \examples{
 library(dplyr)
 hack_sig(test_expr, "immune") \%>\% hack_class()
-
 }
 \seealso{
 \code{\link[=hack_sig]{hack_sig()}}

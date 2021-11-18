@@ -18,8 +18,8 @@ A tibble with one row for each sample in \code{expr_data} and five columns:
 \code{sample_id}, \code{immune_score}, \code{stroma_score}, \code{estimate_score} and \code{purity_score}.
 }
 \description{
-Obtain \emph{Immune}, \emph{Stroma}, \emph{ESTIMATE} and \emph{Purity} scores from a cohort of samples,
-using the method implemented in \emph{Yoshihara et al., 2013}.
+Obtain \emph{Immune}, \emph{Stroma}, \emph{ESTIMATE} and \emph{Tumor Purity} scores from a cohort
+of samples, using the method implemented in \emph{Yoshihara et al., 2013}.
 }
 \details{
 The ESTIMATE (\emph{Estimation of STromal and Immune cells in MAlignant Tumors
@@ -31,15 +31,16 @@ infiltrating cells and stroma play a major role. The ESTIMATE score is
 defined as the combination (i.e. sum) of immune and stroma scores and can be
 thought of as a \emph{"non-tumor score"}. Consequently, a high ESTIMATE enrichment
 gives a low tumor purity score and viceversa.
-\subsection{Algorithm}{
+}
+\section{Algorithm}{
 
 Raw immune and stromal signatures scores are computed using single sample GSEA
 with rank normalization (\emph{Barbie et al., 2009}).
 Then, the ESTIMATE score is computed by summing the immune and stroma scores.
-Finally, the purity score is obtained with the following formula:
+Finally, the tumor purity score is obtained with the following formula:
 \deqn{Purity = cos(0.6049872018 + 0.0001467884 * ESTIMATE)}
 }
-}
+
 \examples{
 hack_estimate(test_expr)
 }
@@ -49,12 +50,11 @@ Schinzel, A. C., Sandy, P., Meylan, E., Scholl, C., Fröhling, S., Chan, E. M.,
 Sos, M. L., Michel, K., Mermel, C., Silver, S. J., Weir, B. A., Reiling, J. H.,
 Sheng, Q., Gupta, P. B., … Hahn, W. C. (2009). Systematic RNA interference
 reveals that oncogenic KRAS-driven cancers require TBK1. \emph{Nature}, 462(7269),
-108–112. \href{https://doi.org/10.1038/nature08460}{doi: 10.1038/nature08460}.
+108–112. \doi{10.1038/nature08460}.
 
 Yoshihara, K., Shahmoradgoli, M., Martínez, E., Vegesna, R.,
 Kim, H., Torres-Garcia, W., Treviño, V., Shen, H., Laird, P. W., Levine, D. A.,
 Carter, S. L., Getz, G., Stemke-Hale, K., Mills, G. B., & Verhaak, R. G. (2013).
 Inferring tumour purity and stromal and immune cell admixture from
-expression data. \emph{Nature communications}, 4, 2612.
-\href{https://doi.org/10.1038/ncomms3612}{doi: 10.1038/ncomms3612}
+expression data. \emph{Nature communications}, 4, 2612. \doi{10.1038/ncomms3612}.
 }

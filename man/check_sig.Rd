@@ -10,8 +10,8 @@ check_sig(expr_data, signatures = "all")
 \item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
 row names and samples as columns.}
 
-\item{signatures}{It can be a list of signatures or a character string indicating
-a keyword for a group of signatures. The default (\code{"all"}) will cause the
+\item{signatures}{It can be a list of signatures or a character vector indicating
+keywords for a group of signatures. The default (\code{"all"}) will cause the
 function to check for all the signatures implemented in \code{hacksig}.}
 }
 \value{
@@ -20,17 +20,16 @@ and four columns: \code{signature_id}, \code{n_genes}, \code{n_present} and \cod
 
 \code{n_genes} gives the number of genes composing a signature.
 \code{n_present} and \code{frac_present} are the number and fraction of genes in a
-signature which are present in the expression matrix \code{expr_data}, respectively.
+signature which are present in \code{expr_data}, respectively.
 }
 \description{
-\code{check_sig()} is a helper function that permits to obtain useful information
-prior to testing your gene signatures.
+\code{check_sig()} is a helper function that shows useful information prior to
+obtain gene signature scores.
 }
 \examples{
 check_sig(test_expr)
 check_sig(test_expr, "estimate")
-
 }
 \seealso{
-\code{\link[=get_sig_keywords]{get_sig_keywords()}}, \code{\link[=hack_sig]{hack_sig()}}
+\code{\link[=get_sig_info]{get_sig_info()}}, \code{\link[=hack_sig]{hack_sig()}}
 }

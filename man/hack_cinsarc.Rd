@@ -18,7 +18,7 @@ or not (0) developed distant metastasis.}
 }
 \value{
 A tibble with one row for each sample in \code{expr_data} and two columns:
-\code{sample_id} and \code{cinsarc_class}, which gives the CINSARC C1 or C2.
+\code{sample_id} and \code{cinsarc_class}.
 }
 \description{
 Given a gene expression matrix and a 0-1 vector indicating the distant metastasis
@@ -32,7 +32,8 @@ related to mitosis and control of chromosome integrity.
 It was developed to improve metastatic outcome prediction in soft tissue
 sarcomas over the FNCLCC (\emph{Fédération Francaise des Centres de Lutte Contre
 le Cancer}) grading system.
-\subsection{Algorithm}{
+}
+\section{Algorithm}{
 
 The CINSARC method implemented in \code{hacksig} makes use of leave-one-out cross
 validation (LOOCV) to classify samples into C1/C2 risk groups (see \emph{Lesluyes & Chibon, 2020}).
@@ -44,7 +45,7 @@ Finally, if a sample is more correlated to the non-metastatic centroid, then
 it is assigned to the C1 class (low risk). Conversely, if a sample is more
 correlated to the metastatic centroid, then it is assigned to the C2 class (high risk).
 }
-}
+
 \examples{
 # generate random distant metastasis outcome
 set.seed(123)
@@ -59,10 +60,9 @@ Bonvalot, S., Le Cesne, A., Vince-Ranchère, D., Blay, J. Y., Collin, F.,
 Guillou, L., Leroux, A., Coindre, J. M., & Aurias, A. (2010). Validated
 prediction of clinical outcome in sarcomas and multiple types of cancer on
 the basis of a gene expression signature related to genome complexity.
-\emph{Nature medicine}, 16(7), 781–787.
-\href{https://doi.org/10.1038/nm.2174}{doi: 10.1038/nm.2174}.
+\emph{Nature medicine}, 16(7), 781–787. \doi{10.1038/nm.2174}.
 
 Lesluyes, T., & Chibon, F. (2020). A Global and Integrated
 Analysis of CINSARC-Associated Genetic Defects. \emph{Cancer research}, 80(23),
-5282–5290. \href{https://doi.org/10.1158/0008-5472.CAN-20-0512}{doi: 10.1158/0008-5472.CAN-20-0512}.
+5282–5290. \doi{10.1158/0008-5472.CAN-20-0512}.
 }

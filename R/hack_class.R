@@ -2,34 +2,32 @@
 #'
 #' @description
 #' `hack_class()` is supposed to be used in combination after [hack_sig()] in
-#' order to classify your samples in one of two or more signature classes.
-#'
+#'   order to classify your samples in one of two or more signature classes.
 #' @param sig_data A tibble result of a call to [hack_sig()].
 #' @param cutoff A character specifying which function to use to categorize
 #'   samples by signature scores. Can be one of:
 #'
-#'     * `"original"` (default), apply the original publication method;
-#'     * `"mean"/"median"`, samples will be classified as `"low"` or `"high"` with respect
-#'       to the mean/median signature score value, respectively;
-#'     * `"tertiles"`, samples will be classified as `"<= T1"` (score lower than
-#'       first tertile), `"(T1, T2]"` (score between first and second tertiles),
-#'       `"> T2"` (score higher than second tertile);
-#'     * `"quartiles"`, samples will be classified as `"<= Q1"` (score lower than
-#'       first quartile), `"(Q1, Q2]"` (score between first and second quartiles),
-#'       `"(Q2, Q3]"` (score between second and third quartiles), `"> Q3"` (score
-#'       higher than third quartile).
+#'   * `"original"` (default), apply the original publication method; if
+#'     categorization is not expected, the median score is used;
+#'   * `"mean"/"median"`, samples will be classified as `"low"` or `"high"` with respect
+#'     to the mean/median signature score, respectively;
+#'   * `"tertiles"`, samples will be classified as `"<= T1"` (score lower than
+#'     first tertile), `"(T1, T2]"` (score between first and second tertiles),
+#'     `"> T2"` (score higher than second tertile);
+#'   * `"quartiles"`, samples will be classified as `"<= Q1"` (score lower than
+#'     first quartile), `"(Q1, Q2]"` (score between first and second quartiles),
+#'     `"(Q2, Q3]"` (score between second and third quartiles), `"> Q3"` (score
+#'     higher than third quartile).
 #' @return A tibble with the same dimension as `sig_data`, a column `sample_id`
 #'   indicating sample identifiers and one column for each input signature giving
 #'   signature classes.
-#'
 #' @examples
 #' library(dplyr)
 #' hack_sig(test_expr, "immune") %>% hack_class()
-#'
 #' @seealso [hack_sig()]
 #' @export
 hack_class <- function(sig_data, cutoff = "original") {
-    sig_info <- hacksig::signatures_data
+    sig_info <- signatures_data
     sig_info <- sig_info[sig_info$signature_id %in% names(sig_data), ]
     if (cutoff == "original") {
         method_list <- tibble::deframe(

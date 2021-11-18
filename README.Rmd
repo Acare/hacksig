@@ -11,24 +11,32 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+options(tibble.print_min = 5L, tibble.print_max = 5L)
 ```
 
 # hacksig
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/hacksig)](https://CRAN.R-project.org/package=hacksig)
 [![Codecov test coverage](https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Acare/hacksig?branch=master)
 <!-- badges: end -->
 
-The goal of `hacksig` is to provide a simple and tidy interface to compute gene 
-expression signature scores in a number of ways. Several gene signatures and 
-methods are implemented, including:
+The goal of `hacksig` is to provide a simple and tidy interface to compute single 
+sample scores for a manually curated collection of gene signatures and methods 
+applied in cancer transcriptomics.
 
-  * [CINSARC](https://doi.org/10.1038/nm.2174)
-  * [ESTIMATE](https://doi.org/10.1038/ncomms3612)
-  * [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019)
-  * [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033)
-  * and many more (see `?signatures_data` for a complete list of gene signatures implemented)
+Several gene signatures and methods are implemented, including:
+
+  * [CINSARC](https://doi.org/10.1038/nm.2174);
+  * [ESTIMATE](https://doi.org/10.1038/ncomms3612);
+  * [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019);
+  * [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033);
+  * and many more (use `get_sig_info()` for a complete list of gene signatures implemented)
+
+One can choose to apply either the original publication method or one of three 
+single sample scoring alternatives, namely: combined z-score, single sample GSEA 
+and singscore.
 
 ## Installation
 
@@ -52,111 +60,28 @@ To show example usage of the package, we will use a simulated gene expression ma
 ```{r, message=FALSE}
 library(hacksig)
 library(dplyr)
-library(tidyr)
-library(purrr)
-library(tibble)
 library(future)
-library(msigdbr)
+```
+
+### Get available signatures
+
+```{r}
+get_sig_info()
 ```
 
 ### Check your signatures
-
-The first thing you should do before computing signature scores is to check how 
-much of the genes composing a signature are present in your gene expression matrix.
-To accomplish this, we can use `check_sig()`:
-
-```{r}
-check_sig(test_expr)
-```
-
-By default, `check_sig()` will compute statistics for every signature implemented 
-in `hacksig`. You can filter for specific signatures by entering a keyword in the 
-`signatures` argument:
 
 ```{r}
 check_sig(test_expr, signatures = "immune")
 ```
 
-The set of available keywords associated to gene signatures can be retrieved with:
-
-```{r}
-get_sig_keywords()
-```
-
-We can also check for signatures not implemented in hacksig, that is custom signatures.
-For example, we can use the `msigdbr` package to download the *Hallmark* gene set collection.
-
-```{r}
-hallmark_list <- msigdbr(species = "Homo sapiens", category = "H") %>%
-    distinct(gs_name, gene_symbol) %>%
-    nest(genes = c(gene_symbol)) %>%
-    mutate(genes = map(genes, compose(as_vector, unname))) %>%
-    deframe()
-check_sig(test_expr, hallmark_list)
-```
-
 ### Compute single sample scores
 
-The main function of the package is `hack_sig()` and it permits to obtain single 
-sample scores from gene signatures.
-By default, `hack_sig()` will compute scores for all the signatures implemented 
-in the package with the original publication method (e.g. weighted sum of expression 
-values and model coefficients).
-
 ```{r}
-hack_sig(test_expr)
+hack_sig(test_expr, signatures = c("estimate", "cinsarc"), method = "zscore")
 ```
-
-You can also filter for specific signatures (e.g. the immune and stromal ESTIMATE 
-signatures) and choose a particular single sample method:
-
-```{r}
-hack_sig(test_expr, signatures = "estimate", method = "zscore")
-```
-
-Valid choices for single sample `method`s are:
-
-  * `zscore`, for the combined z-score;
-  * `ssgsea`, for the single sample GSEA;
-  * `singscore`, for the singscore method.
-  
-Run `?hack_sig` to see references for these methods.
-
-As in `check_sig()`, the argument `signatures` can also be a list of gene signatures.
-For example, we can compute normalized single sample GSEA scores for the Hallmark gene sets:
-
-```{r}
-hack_sig(test_expr, hallmark_list, 
-         method = "ssgsea", sample_norm = "separate", alpha = 0.5)
-```
-
-There are three methods for which `hack_sig()` cannot be used to compute gene signature
-scores with the original method. These are: CINSARC, ESTIMATE and the Immunophenoscore.
-
-For the CINSARC classification, you must provide a vector with distant metastasis status:
-
-```{r}
-rand_dm <- sample(c(0, 1), size = ncol(test_expr), replace = TRUE)
-hack_cinsarc(test_expr, rand_dm)
-```
-
-Immune, stromal, ESTIMATE and tumor purity scores from the ESTIMATE method can be obtained with: 
-
-```{r}
-hack_estimate(test_expr)
-```
-
-Finally, the raw immunophenoscore and its discrete counterpart can be obtained with:
-
-```{r}
-hack_immunophenoscore(test_expr)
-```
-
 
 ### Classify your samples
-
-If you want to categorize your samples into two or more signature classes based 
-on a score cutoff, you can use `hack_class()` after `hack_sig()`:
 
 ```{r}
 test_expr %>% 
@@ -166,14 +91,9 @@ test_expr %>%
 
 ### Speed-up computation time
 
-`hacksig` supports the `future` framework for parallel computation. Our single sample 
-method implementations based on ranks (i.e. single sample GSEA and singscore) are 
-slower than their counterparts implemented in `GSVA` and `singscore`.
-Hence, to speed-up computation time you can use the `future` package:
-
 ```{r}
 plan(multisession)
-hack_sig(test_expr, hallmark_list, method = "ssgsea")
+hack_sig(test_expr, method = "ssgsea")
 ```
 
 

@@ -6,7 +6,7 @@
 \source{
 \href{https://github.com/icbi-lab/Immunophenogram}{github.com/icbi-lab/Immunophenogram}
 
-The Cancer Immunome Atlas \url{https://tcia.at/}
+The Cancer Immunome Atlas \url{https://tcia.at/about}
 }
 \usage{
 hack_immunophenoscore(expr_data, extract = "ips")
@@ -16,9 +16,11 @@ hack_immunophenoscore(expr_data, extract = "ips")
 row names and samples as columns.}
 
 \item{extract}{A string controlling which type of biomarker scores you want to obtain.
-Possible choices are:\preformatted{* `"ips"` (default), only raw and discrete IPS scores;
-* `"class"`, IPS scores together with the four summary class scores;
-* `"all"`, all possible scores.
+Possible choices are:
+\itemize{
+\item \code{"ips"} (default), only raw and discrete IPS scores;
+\item \code{"class"}, IPS scores together with the four summary class scores;
+\item \code{"all"}, all possible biomarker scores.
 }}
 }
 \value{
@@ -71,8 +73,8 @@ by class together with the number of genes which represent them:\tabular{lcc}{
    SC \tab MDSC \tab 20 \cr
    SC \tab Treg \tab 20 \cr
 }
-
-\subsection{Algorithm}{
+}
+\section{Algorithm}{
 
 Samplewise gene expression z-scores are obtained for each of 26 immune cell
 types and biomarkers. Then, weighted averaged z-scores are computed for each
@@ -85,13 +87,17 @@ integer value between 0 and 10 in the following way:
 \item \eqn{IPS = 10}, if \eqn{IPS-raw \ge 3}.
 }
 }
+
+\examples{
+hack_immunophenoscore(test_expr)
+hack_immunophenoscore(test_expr, extract = "class")
 }
 \references{
 Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
 Efremova, M., Rieder, D., Hackl, H., & Trajanoski, Z. (2017). Pan-cancer
 Immunogenomic Analyses Reveal Genotype-Immunophenotype Relationships and
 Predictors of Response to Checkpoint Blockade. \emph{Cell reports}, 18(1), 248–262.
-\href{https://doi.org/10.1016/j.celrep.2016.12.019}{doi: 10.1016/j.celrep.2016.12.019}.
+\doi{10.1016/j.celrep.2016.12.019}.
 }
 \seealso{
 \code{\link[=hack_sig]{hack_sig()}} to compute Immunophenoscore biomarkers in different

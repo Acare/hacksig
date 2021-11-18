@@ -22,5 +22,5 @@ get_sig_genes()
 get_sig_genes("estimate")
 }
 \seealso{
-\code{\link[=get_sig_keywords]{get_sig_keywords()}} to get valid keywords for signatures.
+\code{\link[=get_sig_info]{get_sig_info()}} to get valid keywords for signatures.
 }

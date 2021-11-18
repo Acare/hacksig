@@ -12,11 +12,11 @@ test_expr
 }
 \description{
 A gene expression matrix simulating expression profiles of 20 samples. It should
-be used for testing purpose.
+be used only for testing purpose.
 }
 \examples{
 class(test_expr)
 dim(test_expr)
-hack_sig(test_expr)
+check_sig(test_expr)
 }
 \keyword{datasets}

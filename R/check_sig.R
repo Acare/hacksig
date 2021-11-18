@@ -1,28 +1,23 @@
 #' Check signatures feasibility
 #'
 #' @description
-#' `check_sig()` is a helper function that permits to obtain useful information
-#' prior to testing your gene signatures.
-#'
-#' @param expr_data A gene expression matrix (or data frame) with gene symbols as
-#'   row names and samples as columns.
-#' @param signatures It can be a list of signatures or a character string indicating
-#'   a keyword for a group of signatures. The default (`"all"`) will cause the
+#' `check_sig()` is a helper function that shows useful information prior to
+#'   obtain gene signature scores.
+#' @param signatures It can be a list of signatures or a character vector indicating
+#'   keywords for a group of signatures. The default (`"all"`) will cause the
 #'   function to check for all the signatures implemented in `hacksig`.
-#'
+#' @inheritParams hack_estimate
 #' @return A tibble with a number of rows equal to the number of input signatures
 #'   and four columns: `signature_id`, `n_genes`, `n_present` and `frac_present`.
 #'
 #'   `n_genes` gives the number of genes composing a signature.
 #'   `n_present` and `frac_present` are the number and fraction of genes in a
-#'   signature which are present in the expression matrix `expr_data`, respectively.
-#'
+#'   signature which are present in `expr_data`, respectively.
 #' @examples
 #' check_sig(test_expr)
 #' check_sig(test_expr, "estimate")
-#'
 #' @importFrom rlang .data
-#' @seealso [get_sig_keywords()], [hack_sig()]
+#' @seealso [get_sig_info()], [hack_sig()]
 #' @export
 check_sig <- function(expr_data, signatures = "all") {
     if (is.matrix(expr_data) == TRUE) {
@@ -39,9 +34,10 @@ check_sig <- function(expr_data, signatures = "all") {
         )
     }
     else if (is.character(signatures) == TRUE) {
-        sig_data <- hacksig::signatures_data
+        sig_data <- signatures_data
+        signatures <- paste0(signatures, collapse = "|")
         if (signatures != "all") {
-            sig_data <- sig_data[grep(signatures, sig_data$signature_keyword), ]
+            sig_data <- sig_data[grep(signatures, sig_data$signature_keywords), ]
             if (nrow(sig_data) == 0) {
                 stop("Provided keyword in 'signatures' does not match any class of signature.",
                      call. = FALSE)
