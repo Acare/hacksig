@@ -81,7 +81,7 @@ check_sig(test_expr, signatures = "estimate")
 hack_sig(test_expr, signatures = c("ifng", "cinsarc"), method = "zscore")
 ```
 
-### Classify your samples
+### Stratify your samples
 
 ```{r}
 test_expr %>% 

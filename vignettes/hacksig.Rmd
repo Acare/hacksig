@@ -12,68 +12,93 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(tibble.print_min = 5L, tibble.print_max = 5L)
 ```
 
-```{r setup}
-library(hacksig)
-```
+Hacksig is a collection of cancer transcriptomics gene signatures as well as a 
+simple and tidy interface to compute single sample enrichment scores.
 
-This document will show you how to getting started with hacksig.
-We will use `test_expr` as a gene expression matrix
-We must load also these packages.
+This document will show you how to getting started with hacksig, but before we 
+start, we must load the following packages:
 
 ```{r, message=FALSE}
+library(hacksig)
+
+# to plot and transform data
 library(dplyr)
-library(future)
 library(ggplot2)
-library(msigdbr)
 library(purrr)
 library(tibble)
 library(tidyr)
+
+# to get the MSigDB gene signatures
+library(msigdbr)
+
+# to parallelize computations
+library(future)
 ```
 
-## Getting information about the hacksig signatures
 
-hacksig is a collection of gene signatures and methods found in the cancer 
-transcriptomics literature. You can find 
+## Get implemented signatures
+
+In order to get a complete list of the implemented signatures, you can use 
+`get_sig_info()`. It returns a tibble with very useful information:
+
+- the `signature_id`;
+- a string of keywords associated to a signature;
+- the `publication_doi` linking to the original publication;
+- a brief `description`.
 
 ```{r}
 get_sig_info()
 ```
 
+To get a full view of the tibble, use:
 
-
-```{r}
-# usa purrr::map() per far vedere come ottenere output per diversi valori dei parametri
-# usa ggplot2 per mostrare i risultati
+```{r, eval=FALSE}
+get_sig_info() %>% print(n = Inf)
+# or
+View(get_sig_info())
 ```
 
-### Check your signatures
+If you want to get the list of gene symbols for one or more of the implemented 
+signatures, then use `get_sig_genes()` with valid keywords:
 
-The first thing you should do before computing signature scores is to check how 
-much of the genes composing a signature are present in your gene expression matrix.
-To accomplish this, we can use `check_sig()`:
+```{r}
+get_sig_genes("ifng")
+```
+
+
+## Check your signatures
+
+The first thing you should do before computing scores for a signature is to check how 
+many of its genes are present in your data.
+To accomplish this, we can use `check_sig()` on a gene expression matrix (either
+microarray or RNA-seq normalized data).
+
+For this tutorial, we will use `test_expr` (an R object included in hacksig) as an example 
+gene expression matrix with 20 simulated samples.
+
+By default, `check_sig()` will compute statistics for every signature implemented 
+in `hacksig`.
 
 ```{r}
 check_sig(test_expr)
 ```
 
-By default, `check_sig()` will compute statistics for every signature implemented 
-in `hacksig`. You can filter for specific signatures by entering a keyword in the 
-`signatures` argument:
+You can filter for specific signatures by entering keywords in the 
+`signatures` argument (partial match will work):
 
 ```{r}
-check_sig(test_expr, signatures = "immune")
+check_sig(test_expr, signatures = c("metab", "cinsarc"))
 ```
 
-The set of available keywords associated to gene signatures can be retrieved with:
-
-```{r}
-get_sig_info()
-```
+Partial match for `signatures` will work. Keyword `"metab"` does partially match 
+keywords associated to the `"wu2020_metabolic"` signature.
 
 We can also check for signatures not implemented in hacksig, that is custom signatures.
-For example, we can use the `msigdbr` package to download the *Hallmark* gene set collection.
+For example, we can use the `msigdbr` package to download the *Hallmark* gene set 
+collection:
 
 ```{r}
 hallmark_list <- msigdbr(species = "Homo sapiens", category = "H") %>%
@@ -81,14 +106,26 @@ hallmark_list <- msigdbr(species = "Homo sapiens", category = "H") %>%
     nest(genes = c(gene_symbol)) %>%
     mutate(genes = map(genes, compose(as_vector, unname))) %>%
     deframe()
+
 check_sig(test_expr, hallmark_list)
 ```
 
-### Compute single sample scores
+Let's see which genes are missing for the `HALLMARK_NOTCH_SIGNALING` gene set:
 
-The main function of the package is `hack_sig()` and it permits to obtain single 
+```{r}
+check_sig(test_expr, hallmark_list) %>% 
+    filter(signature_id == "HALLMARK_NOTCH_SIGNALING") %>% 
+    pull(missing_genes)
+```
+
+
+## Compute single sample scores
+
+### hack_sig
+
+The main function of the package, `hack_sig()`, permits to obtain single 
 sample scores from gene signatures.
-By default, `hack_sig()` will compute scores for all the signatures implemented 
+By default, it will compute scores for all the signatures implemented 
 in the package with the original publication method (e.g. weighted sum of expression 
 values and model coefficients).
 
@@ -105,11 +142,11 @@ hack_sig(test_expr, signatures = "estimate", method = "zscore")
 
 Valid choices for single sample `method`s are:
 
-  * `zscore`, for the combined z-score;
-  * `ssgsea`, for the single sample GSEA;
-  * `singscore`, for the singscore method.
+  * `"zscore"`, for the combined z-score;
+  * `"ssgsea"`, for the single sample GSEA;
+  * `"singscore"`, for the singscore method.
   
-Run `?hack_sig` to see references for these methods.
+Run `?hack_sig` to see additional parameter specifications for these methods.
 
 As in `check_sig()`, the argument `signatures` can also be a list of gene signatures.
 For example, we can compute normalized single sample GSEA scores for the Hallmark gene sets:
@@ -122,12 +159,17 @@ hack_sig(test_expr, hallmark_list,
 There are three methods for which `hack_sig()` cannot be used to compute gene signature
 scores with the original method. These are: CINSARC, ESTIMATE and the Immunophenoscore.
 
+### hack_cinsarc
+
 For the CINSARC classification, you must provide a vector with distant metastasis status:
 
 ```{r}
+set.seed(123)
 rand_dm <- sample(c(0, 1), size = ncol(test_expr), replace = TRUE)
 hack_cinsarc(test_expr, rand_dm)
 ```
+
+### hack_estimate
 
 Immune, stromal, ESTIMATE and tumor purity scores from the ESTIMATE method can be obtained with: 
 
@@ -135,14 +177,22 @@ Immune, stromal, ESTIMATE and tumor purity scores from the ESTIMATE method can b
 hack_estimate(test_expr)
 ```
 
+### hack_immunophenoscore
+
 Finally, the raw immunophenoscore and its discrete counterpart can be obtained with:
 
 ```{r}
 hack_immunophenoscore(test_expr)
 ```
 
+You can also obtain all biomarker scores with:
 
-### Classify your samples
+```{r}
+hack_immunophenoscore(test_expr, extract = "all")
+```
+
+
+### Stratify your samples
 
 If you want to categorize your samples into two or more signature classes based 
 on a score cutoff, you can use `hack_class()` after `hack_sig()`:

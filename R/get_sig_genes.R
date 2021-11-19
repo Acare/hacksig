@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Obtain gene signatures implemented in `hacksig` as a named list.
-#' @param keyword A character string indicating a keyword for a group of signatures.
+#' @param keywords A character vector indicating keywords for a group of signatures.
 #'   The default (`"all"`) will cause the function to check for all the signatures
 #'   implemented in `hacksig`.
 #' @return A named list of gene signatures.
@@ -11,13 +11,14 @@
 #' get_sig_genes()
 #' get_sig_genes("estimate")
 #' @export
-get_sig_genes <- function(keyword = "all") {
+get_sig_genes <- function(keywords = "all") {
     sig_data <- signatures_data
-    if (keyword != "all") {
-        sig_data <- sig_data[grep(keyword, sig_data$signature_keywords,
+    keywords <- paste0(keywords, collapse = "|")
+    if (keywords != "all") {
+        sig_data <- sig_data[grep(keywords, sig_data$signature_keywords,
                                   ignore.case = TRUE), ]
         if (nrow(sig_data) == 0) {
-            stop("Provided keyword does not match any class of signature.",
+            stop("Provided keywords does not match any class of signature.",
                  call. = FALSE)
         }
     }

@@ -93,7 +93,7 @@ hack_sig(test_expr, signatures = c("ifng", "cinsarc"), method = "zscore")
 #> # … with 15 more rows
 ```
 
-### Classify your samples
+### Stratify your samples
 
 ``` r
 test_expr %>% 
