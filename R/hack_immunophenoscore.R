@@ -96,6 +96,7 @@ hack_immunophenoscore <- function(expr_data, extract = "ips") {
     )
     ips_genes <- sig_data[grep("ips", sig_data$signature_id),
                           c("signature_id", "gene_symbol", "gene_weight")]
+    browser()
     ips_genes$signature_id <- gsub("ips_", "", ips_genes$signature_id)
     names(ips_genes)[names(ips_genes) == "signature_id"] <- "gene_type"
     ips_genes <- dplyr::left_join(ips_genes, biom_classes, by = "gene_type")

@@ -119,8 +119,12 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
             result <- vector("list", length = length(sig_list))
             for (i in names(method_list)) {
                 if (grepl("weighted_sum", method_list[[i]])) {
+                    expr_mat <- expr_data
+                    if (method_list[[i]] == "weighted_sum_rank") {
+                        expr_mat <- apply(expr_data, 2, rank)
+                    }
                     temp <- tibble::enframe(
-                        colSums(expr_data[sig_list[[i]], ] * weight_list[[i]],
+                        colSums(expr_mat[sig_list[[i]], ] * weight_list[[i]],
                                 na.rm = TRUE),
                         name = "sample_id",
                         value = "sig_score"

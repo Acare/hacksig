@@ -19,5 +19,20 @@ get_sig_info <- function() {
     sig_data <- signatures_data
     keep_cols <- c("signature_id", "signature_keywords", "publication_doi", "description")
     sig_data <- unique(sig_data[, keep_cols])
-    dplyr::arrange(sig_data, .data$signature_id)
+    split_kwrds <- dplyr::mutate(
+        dplyr::rowwise(sig_data),
+        signature_keywords = list(strsplit(.data$signature_keywords, "\\|"))
+    )
+    split_kwrds <- dplyr::summarise(
+        dplyr::group_by(split_kwrds, .data$signature_id),
+        signature_keywords = list(unique(unlist(lapply(.data$signature_keywords, `[[`, 1))))
+    )
+    split_kwrds <- dplyr::mutate(
+        dplyr::group_by(split_kwrds, .data$signature_id),
+        signature_keywords = paste0(sort(unlist(signature_keywords)), collapse = "|")
+    )
+    sig_data <- dplyr::left_join(split_kwrds,
+                                 unique(sig_data[, keep_cols[-2]]),
+                                 by = "signature_id")
+    dplyr::arrange(dplyr::ungroup(sig_data), .data$signature_id)
 }
