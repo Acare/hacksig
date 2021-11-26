@@ -34,9 +34,9 @@ query <- select(hgu133plus2.db,
                 columns = c("ENTREZID", "SYMBOL"),
                 keytype = "PROBEID")
 
-signatures_data <- signatures_data %>%
-    left_join(query, by = c("gene_symbol" = "SYMBOL")) %>%
-    mutate(entrez_gene_id = ENTREZID, .keep = "unused")
+# signatures_data <- signatures_data %>%
+#     left_join(query, by = c("gene_symbol" = "SYMBOL")) %>%
+#     mutate(entrez_gene_id = ENTREZID, .keep = "unused")
 
 signatures_data %>% readr::write_csv("data-raw/hacksig_signatures.csv")
 

@@ -4,10 +4,10 @@
 \alias{get_sig_genes}
 \title{Get signature gene identifiers}
 \usage{
-get_sig_genes(keyword = "all")
+get_sig_genes(keywords = "all")
 }
 \arguments{
-\item{keyword}{A character string indicating a keyword for a group of signatures.
+\item{keywords}{A character vector indicating keywords for a group of signatures.
 The default (\code{"all"}) will cause the function to check for all the signatures
 implemented in \code{hacksig}.}
 }

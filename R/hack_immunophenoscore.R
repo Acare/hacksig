@@ -85,21 +85,13 @@
 #' @export
 hack_immunophenoscore <- function(expr_data, extract = "ips") {
     sig_data <- signatures_data
-    biom_classes <- tibble::tibble(
-        gene_type = c("b2m", "tap1", "tap2",
-                      paste0("hla_", c(letters[1:3], "dpa1", "dpb1", "e", "f")),
-                      "pd_1", "ctla_4", "lag3", "tigit", "tim3", "pd_l1", "pd_l2",
-                      "cd27", "icos", "ido1",
-                      "act_cd4", "act_cd8", "tem_cd4", "tem_cd8", "mdsc", "treg"),
-        gene_class = c(rep(c("mhc", "cp"), each = 10),
-                       rep_len("ec", 4), "sc", "sc")
-    )
     ips_genes <- sig_data[grep("ips", sig_data$signature_id),
-                          c("signature_id", "gene_symbol", "gene_weight")]
-    browser()
+                          c("signature_keywords", "signature_id", "gene_symbol", "gene_weight")]
+    ips_genes$signature_keywords <- gsub("\\|.*", "", ips_genes$signature_keywords)
+    ips_genes$signature_keywords <- gsub(" |-", "_", ips_genes$signature_keywords)
     ips_genes$signature_id <- gsub("ips_", "", ips_genes$signature_id)
-    names(ips_genes)[names(ips_genes) == "signature_id"] <- "gene_type"
-    ips_genes <- dplyr::left_join(ips_genes, biom_classes, by = "gene_type")
+    names(ips_genes)[names(ips_genes) == "signature_keywords"] <- "gene_type"
+    names(ips_genes)[names(ips_genes) == "signature_id"] <- "gene_class"
     scaled_data <- scale(expr_data, center = TRUE, scale = TRUE)
     ips_data <- merge(ips_genes,
                       tibble::as_tibble(scaled_data, rownames = "gene_symbol"),

@@ -9,7 +9,7 @@
 #'   * `signature_keywords`, valid keywords to use in the `signatures` argument of
 #'   `hack_sig()` and `check_sig()`;
 #'   * `publication_doi`, the original publication DOI;
-#'   * `description`, a brief description about the signature usage.
+#'   * `description`, a brief description about the signature.
 #' @seealso [check_sig()], [hack_sig()]
 #' @examples
 #' get_sig_info()
@@ -29,7 +29,8 @@ get_sig_info <- function() {
     )
     split_kwrds <- dplyr::mutate(
         dplyr::group_by(split_kwrds, .data$signature_id),
-        signature_keywords = paste0(sort(unlist(signature_keywords)), collapse = "|")
+        signature_keywords = paste0(sort(unlist(.data$signature_keywords)),
+                                    collapse = "|")
     )
     sig_data <- dplyr::left_join(split_kwrds,
                                  unique(sig_data[, keep_cols[-2]]),

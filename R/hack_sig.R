@@ -106,6 +106,12 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
         if (method != "original") {
             compute_ss_method(sig_list, method)
         } else {
+            rlang::inform(
+                rlang::format_error_bullets(
+                    c("i" = "To obtain CINSARC, ESTIMATE and Immunophenoscore with the original procedures, see:",
+                      c("?hack_cinsarc", "?hack_estimate", "?hack_immunophenoscore"))
+                )
+            )
             sig_data <- sig_data[!grepl("cinsarc|estimate|ips", sig_data$signature_keywords), ]
             sig_list <- sig_list[!grepl("cinsarc|estimate|ips", names(sig_list))]
             method_list <- tibble::deframe(
@@ -113,6 +119,7 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
                          c("signature_id", "signature_method")]
             )
             method_list <- method_list[match(names(sig_list), names(method_list))]
+            method_list <- gsub("\\|.*", "", method_list)
             weight_list <- lapply(split(sig_data[, c("signature_id", "gene_weight")],
                                         sig_data$signature_id),
                                   FUN = `[[`, 2)
@@ -121,7 +128,9 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
                 if (grepl("weighted_sum", method_list[[i]])) {
                     expr_mat <- expr_data
                     if (method_list[[i]] == "weighted_sum_rank") {
-                        expr_mat <- apply(expr_data, 2, rank)
+                        expr_mat <- apply(expr_mat[sig_list[[i]], ], MARGIN = 2,
+                                          FUN = rank, na.last = "keep")
+                        expr_mat <- as.data.frame(expr_mat)
                     }
                     temp <- tibble::enframe(
                         colSums(expr_mat[sig_list[[i]], ] * weight_list[[i]],
@@ -133,6 +142,14 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
                 } else if (grepl("mean", method_list[[i]])) {
                     temp <- tibble::enframe(
                         colMeans(expr_data[sig_list[[i]], ], na.rm = TRUE),
+                        name = "sample_id",
+                        value = "sig_score"
+                    )
+                    temp$signature_id <- i
+                } else if (grepl("median", method_list[[i]])) {
+                    temp <- tibble::enframe(
+                        apply(expr_data[sig_list[[i]], ], MARGIN = 2,
+                              FUN = stats::median, na.rm = TRUE),
                         name = "sample_id",
                         value = "sig_score"
                     )

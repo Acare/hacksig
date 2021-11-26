@@ -13,7 +13,7 @@ A tibble with one row per signature and four columns:
 \item \code{signature_keywords}, valid keywords to use in the \code{signatures} argument of
 \code{hack_sig()} and \code{check_sig()};
 \item \code{publication_doi}, the original publication DOI;
-\item \code{description}, a brief description about the signature usage.
+\item \code{description}, a brief description about the signature.
 }
 }
 \description{
