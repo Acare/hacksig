@@ -24,8 +24,8 @@ either with the original publication method or with one of the three single
 sample methods.
 }
 
-Once single sample scores are obtained, you can assign your samples into signature
-classes with \code{\link[=hack_class]{hack_class()}}.
+Once single sample scores are obtained, you can assign your samples into
+signature classes with \code{\link[=hack_class]{hack_class()}}.
 
 In addition, other more complex methods are implemented through:
 \itemize{

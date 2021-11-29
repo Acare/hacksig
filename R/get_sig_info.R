@@ -5,12 +5,13 @@
 #'   `hacksig`.
 #' @return A tibble with one row per signature and four columns:
 #'
-#'   * `signature_id`;
+#'   * `signature_id`, a unique identifier associated to a signature;
 #'   * `signature_keywords`, valid keywords to use in the `signatures` argument of
-#'   `hack_sig()` and `check_sig()`;
+#'   `hack_sig()` and `check_sig()` as well as in the `keywords` argument of
+#'   `get_sig_genes()`;
 #'   * `publication_doi`, the original publication DOI;
 #'   * `description`, a brief description about the signature.
-#' @seealso [check_sig()], [hack_sig()]
+#' @seealso [check_sig()], [hack_sig()], [get_sig_genes()]
 #' @examples
 #' get_sig_info()
 #' @importFrom rlang .data

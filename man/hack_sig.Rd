@@ -15,8 +15,8 @@ hack_sig(
 )
 }
 \arguments{
-\item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
-row names and samples as columns.}
+\item{expr_data}{A normalized gene expression matrix (or data frame) with
+gene symbols as row names and samples as columns.}
 
 \item{signatures}{It can be a list of signatures or a character vector indicating
 keywords for a group of signatures. The default (\code{"all"}) will cause the
@@ -27,15 +27,15 @@ in \code{hacksig}.}
 the single sample score for each signature. You can choose one of:
 \itemize{
 \item \code{"original"}, the original method used by the authors of the signature;
-\item \code{"zscore"}, the combined z-score method implemented in \code{compute_zscore()};
-\item \code{"ssgsea"}, the single sample GSEA method implemented in \code{compute_ssgsea()};
-\item \code{"singscore"}, the singscore method implemented in \code{compute_singscore()};
+\item \code{"zscore"}, the combined z-score method;
+\item \code{"ssgsea"}, the single sample GSEA method;
+\item \code{"singscore"}, the singscore method;
 }}
 
-\item{direction}{A character specifying the \strong{singscore} computation method
-depending on the direction of the signatures. Can be on of:
+\item{direction}{A character string specifying the \strong{singscore} computation
+method depending on the direction of the signatures. Can be on of:
 \itemize{
-\item \code{"none"} (default), undirected signatures, that is you don't know whether
+\item \code{"none"} (default), undirected signatures, that is you do not know whether
 the genes are up- or down-regulated;
 \item \code{"up"}, all genes in the signature are supposed to be up-regulated;
 \item \code{"down"}, all genes in the signature are supposed to be down-regulated;
@@ -73,14 +73,16 @@ sample scoring methods: the combined z-score (\emph{Lee et al., 2008}), the sing
 sample GSEA (\emph{Barbie et al., 2009}) or the singscore method (\emph{Foroutan et al., 2018}).
 }
 \details{
-\code{hack_sig()}
-For \code{"original"} method, it is intended the procedure used in the original
-publication by the authors for computing the signature score. For example,
-it can be a weighted sum of gene expression values and model coefficients or
-a simple average of gene expression values for a signature.
 \code{hack_sig()} can compute signature scores with the original method only if
-this is a relatively simple procedure (e.g weighted sum or average expression).
-For more complex methods
+this is a relatively simple procedure (e.g weighted sum of fitted model
+coefficients and expression values).
+For \code{"original"} method, it is intended the procedure used in the original
+publication by the authors for computing the signature score.
+If \code{signatures} is a custom list of gene signatures, then the \code{"ssgsea"}
+method will be applied by default.
+
+For more complex methods, such as CINSARC, ESTIMATE and Immunophenoscore,
+use the dedicated functions.
 }
 \section{Algorithm}{
 
@@ -99,7 +101,7 @@ The combined z-score method is also implemented in the R package \code{GSVA}
 
 \subsection{Single sample GSEA}{
 
-For each sample, genes are ranked by expression value in decreasing order and
+For each sample, genes are ranked by expression value in increasing order and
 rank normalization may follow (see argument \code{rank_norm}). Then, two probability-like
 vectors are computed for each sample and signature:
 \itemize{
@@ -139,14 +141,19 @@ package \code{singscore} (\emph{Foroutan et al., 2018}).
 }
 
 \examples{
-# to obtain raw single sample GSEA scores for all signatures run:
+# Raw ssGSEA scores for all implemented signatures can be obtained with:
 \dontrun{hack_sig(test_expr, method = "ssgsea")}
 
-# to obtain normalized scores, instead run:
+# To obtain 0-1 normalized ssGSEA scores, use:
 \dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")}
 
 # You can also change the exponent of the ssGSEA running sum with:
 \dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)}
+
+# To obtain combined z-scores for custom gene signatures, use:
+custom_list <- list(rand_sig1 = rownames(test_expr)[1:5],
+                    rand_sig2 = c(rownames(test_expr)[6:8], "RANDOMGENE"))
+hack_sig(test_expr, custom_list, method = "zscore")
 }
 \references{
 Barbie, D. A., Tamayo, P., Boehm, J. S., Kim, S. Y., Moody, S. E., Dunn, I. F.,
@@ -173,4 +180,10 @@ pathway activity toward precise disease classification.
 \code{\link[=get_sig_info]{get_sig_info()}} to get information about all implemented signatures.
 
 \code{\link[=check_sig]{check_sig()}} to check if signatures are applicable to your data.
+
+\code{\link[=hack_cinsarc]{hack_cinsarc()}} to apply the original CINSARC procedure.
+
+\code{\link[=hack_estimate]{hack_estimate()}} to obtain the original ESTIMATE scores.
+
+\code{\link[=hack_immunophenoscore]{hack_immunophenoscore()}} to apply the original Immunophenoscore procedure.
 }

@@ -20,8 +20,8 @@ compute_ssgsea(
 compute_singscore(expr_data, signatures, direction = "none")
 }
 \arguments{
-\item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
-row names and samples as columns.}
+\item{expr_data}{A normalized gene expression matrix (or data frame) with
+gene symbols as row names and samples as columns.}
 
 \item{signatures}{A named list of gene signatures.}
 
@@ -45,10 +45,10 @@ be normalized in the \strong{single sample GSEA} procedure. Valid choices are:
 \item{alpha}{A numeric scalar. Exponent in the running sum of the \strong{single sample GSEA}
 score calculation which weighs the gene ranks. Defaults to \eqn{\alpha = 0.25}.}
 
-\item{direction}{A character specifying the \strong{singscore} computation method
-depending on the direction of the signatures. Can be on of:
+\item{direction}{A character string specifying the \strong{singscore} computation
+method depending on the direction of the signatures. Can be on of:
 \itemize{
-\item \code{"none"} (default), undirected signatures, that is you don't know whether
+\item \code{"none"} (default), undirected signatures, that is you do not know whether
 the genes are up- or down-regulated;
 \item \code{"up"}, all genes in the signature are supposed to be up-regulated;
 \item \code{"down"}, all genes in the signature are supposed to be down-regulated;
@@ -88,7 +88,7 @@ The combined z-score method is also implemented in the R package \code{GSVA}
 
 \subsection{Single sample GSEA}{
 
-For each sample, genes are ranked by expression value in decreasing order and
+For each sample, genes are ranked by expression value in increasing order and
 rank normalization may follow (see argument \code{rank_norm}). Then, two probability-like
 vectors are computed for each sample and signature:
 \itemize{

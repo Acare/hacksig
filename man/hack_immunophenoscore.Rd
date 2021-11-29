@@ -12,11 +12,11 @@ The Cancer Immunome Atlas \url{https://tcia.at/about}
 hack_immunophenoscore(expr_data, extract = "ips")
 }
 \arguments{
-\item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
-row names and samples as columns.}
+\item{expr_data}{A normalized gene expression matrix (or data frame) with
+gene symbols as row names and samples as columns.}
 
-\item{extract}{A string controlling which type of biomarker scores you want to obtain.
-Possible choices are:
+\item{extract}{A string controlling which type of biomarker scores you want
+to obtain. Possible choices are:
 \itemize{
 \item \code{"ips"} (default), only raw and discrete IPS scores;
 \item \code{"class"}, IPS scores together with the four summary class scores;
@@ -101,7 +101,7 @@ Predictors of Response to Checkpoint Blockade. \emph{Cell reports}, 18(1), 248â€
 }
 \seealso{
 \code{\link[=hack_sig]{hack_sig()}} to compute Immunophenoscore biomarkers in different
-ways (use \code{signatures = "ips"}).
+ways (e.g. use \code{signatures = "ips"} and \code{method = "singscore"}).
 
 \code{\link[=check_sig]{check_sig()}} to check if all/most of the Immunophenoscore biomarkers are
 present in your expression matrix (use \code{signatures = "ips"}).

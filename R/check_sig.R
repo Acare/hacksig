@@ -1,19 +1,19 @@
 #' Check signatures feasibility
 #'
 #' @description
-#' `check_sig()` is a helper function that shows useful information prior to
-#'   obtain gene signature scores.
+#' `check_sig()` is a helper function that shows useful information about signatures
+#'   that you want to test on your gene expression matrix.
 #' @param signatures It can be a list of signatures or a character vector indicating
 #'   keywords for a group of signatures. The default (`"all"`) will cause the
 #'   function to check for all the signatures implemented in `hacksig`.
 #' @inheritParams hack_estimate
 #' @return A tibble with a number of rows equal to the number of input signatures
-#'   and four columns: `signature_id`, `n_genes`, `n_present` and `frac_present`.
+#'   and five columns:
 #'
-#'   `n_genes` gives the number of genes composing a signature.
-#'   `n_present` and `frac_present` are the number and fraction of genes in a
-#'   signature which are present in `expr_data`, respectively.
-#'   `missing_genes` returns a named list of missing gene symbols for each signature.
+#'   * `n_genes` gives the number of genes composing a signature;
+#'   * `n_present` and `frac_present` are the number and fraction of genes in a
+#'     signature which are present in `expr_data`, respectively;
+#'   * `missing_genes` returns a named list of missing gene symbols for each signature.
 #' @examples
 #' check_sig(test_expr)
 #' check_sig(test_expr, "estimate")

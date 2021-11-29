@@ -15,7 +15,7 @@ implemented in \code{hacksig}.}
 A named list of gene signatures.
 }
 \description{
-Obtain gene signatures implemented in \code{hacksig} as a named list.
+Obtain gene signatures implemented in \code{hacksig} as a named list of gene symbols.
 }
 \examples{
 get_sig_genes()

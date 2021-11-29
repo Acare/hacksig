@@ -46,6 +46,8 @@ To show example usage of the package, we will use a simulated gene
 expression matrix `test_expr`, which is stored as an R object in
 `hacksig`.
 
+You can learn more about usage of the package in `vignette("hacksig")`.
+
 ``` r
 library(hacksig)
 library(dplyr)
@@ -56,15 +58,15 @@ library(future)
 
 ``` r
 get_sig_info()
-#> # A tibble: 35 × 4
-#>   signature_id     signature_keywords             publication_doi    description
-#>   <chr>            <chr>                          <chr>              <chr>      
-#> 1 ayers2017_immexp ayers2017_immexp|immune        10.1172/JCI91190   <NA>       
-#> 2 cinsarc          cinsarc|sarcoma|sts|metastasis 10.1038/nm.2174    <NA>       
-#> 3 estimate_immune  estimate|immune                10.1038/ncomms3612 <NA>       
-#> 4 estimate_stromal estimate|stromal               10.1038/ncomms3612 <NA>       
-#> 5 fang2020_irgs    fang2020_irgs|immune           10.18632/aging.20… <NA>       
-#> # … with 30 more rows
+#> # A tibble: 20 × 4
+#>   signature_id       signature_keywords     publication_doi   description       
+#>   <chr>              <chr>                  <chr>             <chr>             
+#> 1 ayers2017_immexp   ayers2017_immexp|immu… 10.1172/JCI91190  Immune expanded g…
+#> 2 bai2019_immune     bai2019_immune|head a… 10.1155/2019/386… Immune/inflammato…
+#> 3 cinsarc            cinsarc|metastasis|sa… 10.1038/nm.2174   Biomarker aimed a…
+#> 4 dececco2014_int172 dececco2014_int172|he… 10.1093/annonc/m… Signature aimed a…
+#> 5 eschrich2009_rsi   eschrich2009_rsi|radi… 10.1016/j.ijrobp… Genes aimed at pr…
+#> # … with 15 more rows
 ```
 
 ### Check your signatures
@@ -116,32 +118,20 @@ test_expr %>%
 plan(multisession)
 hack_sig(test_expr, method = "ssgsea")
 #> Warning: ℹ No genes are present in 'expr_data' for the following signatures:
-#> x rooney2015_cytoact
-#> x ips_tap1
-#> x ips_tap2
-#> x ips_hla_a
-#> x ips_hla_b
-#> x ips_hla_c
-#> x ips_hla_dpa1
-#> x ips_hla_dpb1
-#> x ips_hla_e
-#> x ips_hla_f
-#> x ips_ctla_4
-#> x ips_lag3
-#> x ips_tim3
-#> x ips_pd_l1
-#> x ips_ido1
-#> # A tibble: 20 × 15
-#>   sample_id ayers2017_immexp cinsarc estimate_immune estimate_stromal
-#>   <chr>                <dbl>   <dbl>           <dbl>            <dbl>
-#> 1 sample1             -3914.   -13.5           -636.             778.
-#> 2 sample2             -3348. -1070.            2118.             703.
-#> 3 sample3              1697.  1805.             725.             805.
-#> 4 sample4               366.   326.             737.            2031.
-#> 5 sample5               969.   290.             181.            1129.
-#> # … with 15 more rows, and 10 more variables: fang2020_irgs <dbl>,
-#> #   ips_act_cd4 <dbl>, ips_act_cd8 <dbl>, ips_mdsc <dbl>, ips_tem_cd4 <dbl>,
-#> #   ips_tem_cd8 <dbl>, ips_treg <dbl>, muro2016_ifng <dbl>, she2020_irgs <dbl>,
+#> x rooney2015_cyt
+#> # A tibble: 20 × 20
+#>   sample_id ayers2017_immexp bai2019_immune cinsarc dececco2014_int172
+#>   <chr>                <dbl>          <dbl>   <dbl>              <dbl>
+#> 1 sample1             -3914.          2316.   -13.5              1288.
+#> 2 sample2             -3348.          1350. -1070.               1322.
+#> 3 sample3              1697.          1829.  1805.                685.
+#> 4 sample4               366.          5611.   326.               1684.
+#> 5 sample5               969.          1224.   290.                718.
+#> # … with 15 more rows, and 15 more variables: eschrich2009_rsi <dbl>,
+#> #   estimate_immune <dbl>, estimate_stromal <dbl>, eustace2013_hypoxia <dbl>,
+#> #   fang2021_irgs <dbl>, ips_cp <dbl>, ips_ec <dbl>, ips_mhc <dbl>,
+#> #   ips_sc <dbl>, liu2020_immune <dbl>, lohavanichbutr2013_hpvneg <dbl>,
+#> #   muro2016_ifng <dbl>, qiang2021_irgs <dbl>, she2020_irgs <dbl>,
 #> #   wu2020_metabolic <dbl>
 ```
 

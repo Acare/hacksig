@@ -8,9 +8,9 @@
 #'   samples by signature scores. Can be one of:
 #'
 #'   * `"original"` (default), apply the original publication method; if
-#'     categorization is not expected, the median score is used;
-#'   * `"mean"/"median"`, samples will be classified as `"low"` or `"high"` with respect
-#'     to the mean/median signature score, respectively;
+#'     categorization is not expected, the median score is used as a threshold;
+#'   * `"mean"/"median"`, samples will be classified as `"low"` or `"high"` with
+#'     respect to the mean/median signature score, respectively;
 #'   * `"tertiles"`, samples will be classified as `"<= T1"` (score lower than
 #'     first tertile), `"(T1, T2]"` (score between first and second tertiles),
 #'     `"> T2"` (score higher than second tertile);

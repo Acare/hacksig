@@ -861,3 +861,19 @@ lohavanichbutr2013_hpvneg,lohavanichbutr2013_hpvneg|hpv negative|oscc|hnscc|head
 lohavanichbutr2013_hpvneg,lohavanichbutr2013_hpvneg|hpv negative|oscc|hnscc|head and neck,TPPP,11076,-0.124634,weighted_sum|median,10.1158/1078-0432.CCR-12-2647,Signature prognostic of HPV-negative oral squamous cell carcinoma.
 lohavanichbutr2013_hpvneg,lohavanichbutr2013_hpvneg|hpv negative|oscc|hnscc|head and neck,LIPI,149998,0.864964,weighted_sum|median,10.1158/1078-0432.CCR-12-2647,Signature prognostic of HPV-negative oral squamous cell carcinoma.
 lohavanichbutr2013_hpvneg,lohavanichbutr2013_hpvneg|hpv negative|oscc|hnscc|head and neck,PLEKHA7,144100,-0.438477,weighted_sum|median,10.1158/1078-0432.CCR-12-2647,Signature prognostic of HPV-negative oral squamous cell carcinoma.
+hu2021_derbp,hu2021_derbp|rna-binding protein|hnscc|head and neck,NCBP2,,0.0215,weighted_sum|median,10.3389/fgene.2020.571403,Prognostic signature of genes related to RNA-binding proteins for HNSCC.
+hu2021_derbp,hu2021_derbp|rna-binding protein|hnscc|head and neck,MKRN3,,0.3196,weighted_sum|median,10.3389/fgene.2020.571403,Prognostic signature of genes related to RNA-binding proteins for HNSCC.
+hu2021_derbp,hu2021_derbp|rna-binding protein|hnscc|head and neck,MRPL47,,0.0086,weighted_sum|median,10.3389/fgene.2020.571403,Prognostic signature of genes related to RNA-binding proteins for HNSCC.
+hu2021_derbp,hu2021_derbp|rna-binding protein|hnscc|head and neck,AZGP1,,-0.0301,weighted_sum|median,10.3389/fgene.2020.571403,Prognostic signature of genes related to RNA-binding proteins for HNSCC.
+hu2021_derbp,hu2021_derbp|rna-binding protein|hnscc|head and neck,IGF2BP2,,0.0013,weighted_sum|median,10.3389/fgene.2020.571403,Prognostic signature of genes related to RNA-binding proteins for HNSCC.
+hu2021_derbp,hu2021_derbp|rna-binding protein|hnscc|head and neck,EZH2,,-0.0842,weighted_sum|median,10.3389/fgene.2020.571403,Prognostic signature of genes related to RNA-binding proteins for HNSCC.
+liu2021_mgs,liu2021_mgs|myeloid cells|immune|hnscc|head and neck,CCL13,,0.038,weighted_sum|median,10.3389/fimmu.2021.659184,Prognostic signature of myeloid-related genes for HNSCC.
+liu2021_mgs,liu2021_mgs|myeloid cells|immune|hnscc|head and neck,CCR7,,-0.1049,weighted_sum|median,10.3389/fimmu.2021.659184,Prognostic signature of myeloid-related genes for HNSCC.
+liu2021_mgs,liu2021_mgs|myeloid cells|immune|hnscc|head and neck,CD276,,0.0073,weighted_sum|median,10.3389/fimmu.2021.659184,Prognostic signature of myeloid-related genes for HNSCC.
+liu2021_mgs,liu2021_mgs|myeloid cells|immune|hnscc|head and neck,IL1B,,0.0034,weighted_sum|median,10.3389/fimmu.2021.659184,Prognostic signature of myeloid-related genes for HNSCC.
+liu2021_mgs,liu2021_mgs|myeloid cells|immune|hnscc|head and neck,LYVE1,,0.0673,weighted_sum|median,10.3389/fimmu.2021.659184,Prognostic signature of myeloid-related genes for HNSCC.
+liu2021_mgs,liu2021_mgs|myeloid cells|immune|hnscc|head and neck,VEGFC,,0.002,weighted_sum|median,10.3389/fimmu.2021.659184,Prognostic signature of myeloid-related genes for HNSCC.
+li2021_irgs,li2021_irgs|thyroid cancer dedifferentiation|immune exhaustion,PLAUR,,0.15251,weighted_sum|,10.1210/clinem/dgab132 ,Immune-related genes associated to dedifferentiation and immune exhaustion in thyroid cancer.
+li2021_irgs,li2021_irgs|thyroid cancer dedifferentiation|immune exhaustion,PSMD2,,0.13893,weighted_sum|,10.1210/clinem/dgab132 ,Immune-related genes associated to dedifferentiation and immune exhaustion in thyroid cancer.
+li2021_irgs,li2021_irgs|thyroid cancer dedifferentiation|immune exhaustion,BMP7,,-0.1709,weighted_sum|,10.1210/clinem/dgab132 ,Immune-related genes associated to dedifferentiation and immune exhaustion in thyroid cancer.
+li2021_irgs,li2021_irgs|thyroid cancer dedifferentiation|immune exhaustion,PRKCQ,,-0.34564,weighted_sum|,10.1210/clinem/dgab132 ,Immune-related genes associated to dedifferentiation and immune exhaustion in thyroid cancer.

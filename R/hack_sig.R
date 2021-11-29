@@ -6,14 +6,16 @@
 #'   sample scoring methods: the combined z-score (*Lee et al., 2008*), the single
 #'   sample GSEA (*Barbie et al., 2009*) or the singscore method (*Foroutan et al., 2018*).
 #' @details
-#' `hack_sig()`
-#' For `"original"` method, it is intended the procedure used in the original
-#'   publication by the authors for computing the signature score. For example,
-#'   it can be a weighted sum of gene expression values and model coefficients or
-#'   a simple average of gene expression values for a signature.
-#'   `hack_sig()` can compute signature scores with the original method only if
-#'   this is a relatively simple procedure (e.g weighted sum or average expression).
-#'   For more complex methods
+#' `hack_sig()` can compute signature scores with the original method only if
+#'   this is a relatively simple procedure (e.g weighted sum of fitted model
+#'   coefficients and expression values).
+#'   For `"original"` method, it is intended the procedure used in the original
+#'   publication by the authors for computing the signature score.
+#'   If `signatures` is a custom list of gene signatures, then the `"ssgsea"`
+#'   method will be applied by default.
+#'
+#'   For more complex methods, such as CINSARC, ESTIMATE and Immunophenoscore,
+#'   use the dedicated functions.
 #' @inheritSection ss_methods Algorithm
 #' @param signatures It can be a list of signatures or a character vector indicating
 #'   keywords for a group of signatures. The default (`"all"`) will cause the
@@ -23,22 +25,33 @@
 #'   the single sample score for each signature. You can choose one of:
 #'
 #'   * `"original"`, the original method used by the authors of the signature;
-#'   * `"zscore"`, the combined z-score method implemented in `compute_zscore()`;
-#'   * `"ssgsea"`, the single sample GSEA method implemented in `compute_ssgsea()`;
-#'   * `"singscore"`, the singscore method implemented in `compute_singscore()`;
+#'   * `"zscore"`, the combined z-score method;
+#'   * `"ssgsea"`, the single sample GSEA method;
+#'   * `"singscore"`, the singscore method;
 #' @inherit ss_methods params return references
 #' @examples
-#' # to obtain raw single sample GSEA scores for all signatures run:
+#' # Raw ssGSEA scores for all implemented signatures can be obtained with:
 #' \dontrun{hack_sig(test_expr, method = "ssgsea")}
 #'
-#' # to obtain normalized scores, instead run:
+#' # To obtain 0-1 normalized ssGSEA scores, use:
 #' \dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")}
 #'
 #' # You can also change the exponent of the ssGSEA running sum with:
 #' \dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)}
+#'
+#' # To obtain combined z-scores for custom gene signatures, use:
+#' custom_list <- list(rand_sig1 = rownames(test_expr)[1:5],
+#'                     rand_sig2 = c(rownames(test_expr)[6:8], "RANDOMGENE"))
+#' hack_sig(test_expr, custom_list, method = "zscore")
 #' @seealso [get_sig_info()] to get information about all implemented signatures.
 #'
 #'   [check_sig()] to check if signatures are applicable to your data.
+#'
+#'   [hack_cinsarc()] to apply the original CINSARC procedure.
+#'
+#'   [hack_estimate()] to obtain the original ESTIMATE scores.
+#'
+#'   [hack_immunophenoscore()] to apply the original Immunophenoscore procedure.
 #' @export
 hack_sig <- function(expr_data, signatures = "all", method = "original",
                      direction = "none", sample_norm = "raw", rank_norm = "none",

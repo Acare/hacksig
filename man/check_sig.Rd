@@ -7,8 +7,8 @@
 check_sig(expr_data, signatures = "all")
 }
 \arguments{
-\item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
-row names and samples as columns.}
+\item{expr_data}{A normalized gene expression matrix (or data frame) with
+gene symbols as row names and samples as columns.}
 
 \item{signatures}{It can be a list of signatures or a character vector indicating
 keywords for a group of signatures. The default (\code{"all"}) will cause the
@@ -16,16 +16,17 @@ function to check for all the signatures implemented in \code{hacksig}.}
 }
 \value{
 A tibble with a number of rows equal to the number of input signatures
-and four columns: \code{signature_id}, \code{n_genes}, \code{n_present} and \code{frac_present}.
-
-\code{n_genes} gives the number of genes composing a signature.
-\code{n_present} and \code{frac_present} are the number and fraction of genes in a
-signature which are present in \code{expr_data}, respectively.
-\code{missing_genes} returns a named list of missing gene symbols for each signature.
+and five columns:
+\itemize{
+\item \code{n_genes} gives the number of genes composing a signature;
+\item \code{n_present} and \code{frac_present} are the number and fraction of genes in a
+signature which are present in \code{expr_data}, respectively;
+\item \code{missing_genes} returns a named list of missing gene symbols for each signature.
+}
 }
 \description{
-\code{check_sig()} is a helper function that shows useful information prior to
-obtain gene signature scores.
+\code{check_sig()} is a helper function that shows useful information about signatures
+that you want to test on your gene expression matrix.
 }
 \examples{
 check_sig(test_expr)

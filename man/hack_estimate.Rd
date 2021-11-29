@@ -10,8 +10,8 @@
 hack_estimate(expr_data)
 }
 \arguments{
-\item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
-row names and samples as columns.}
+\item{expr_data}{A normalized gene expression matrix (or data frame) with
+gene symbols as row names and samples as columns.}
 }
 \value{
 A tibble with one row for each sample in \code{expr_data} and five columns:

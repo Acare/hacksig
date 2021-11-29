@@ -9,9 +9,10 @@ get_sig_info()
 \value{
 A tibble with one row per signature and four columns:
 \itemize{
-\item \code{signature_id};
+\item \code{signature_id}, a unique identifier associated to a signature;
 \item \code{signature_keywords}, valid keywords to use in the \code{signatures} argument of
-\code{hack_sig()} and \code{check_sig()};
+\code{hack_sig()} and \code{check_sig()} as well as in the \code{keywords} argument of
+\code{get_sig_genes()};
 \item \code{publication_doi}, the original publication DOI;
 \item \code{description}, a brief description about the signature.
 }
@@ -24,5 +25,5 @@ A tibble with one row per signature and four columns:
 get_sig_info()
 }
 \seealso{
-\code{\link[=check_sig]{check_sig()}}, \code{\link[=hack_sig]{hack_sig()}}
+\code{\link[=check_sig]{check_sig()}}, \code{\link[=hack_sig]{hack_sig()}}, \code{\link[=get_sig_genes]{get_sig_genes()}}
 }

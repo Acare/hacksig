@@ -13,9 +13,9 @@ hack_class(sig_data, cutoff = "original")
 samples by signature scores. Can be one of:
 \itemize{
 \item \code{"original"} (default), apply the original publication method; if
-categorization is not expected, the median score is used;
-\item \code{"mean"/"median"}, samples will be classified as \code{"low"} or \code{"high"} with respect
-to the mean/median signature score, respectively;
+categorization is not expected, the median score is used as a threshold;
+\item \code{"mean"/"median"}, samples will be classified as \code{"low"} or \code{"high"} with
+respect to the mean/median signature score, respectively;
 \item \code{"tertiles"}, samples will be classified as \code{"<= T1"} (score lower than
 first tertile), \code{"(T1, T2]"} (score between first and second tertiles),
 \code{"> T2"} (score higher than second tertile);

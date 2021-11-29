@@ -19,8 +19,8 @@
 #'   Then, the ESTIMATE score is computed by summing the immune and stroma scores.
 #'   Finally, the tumor purity score is obtained with the following formula:
 #'   \deqn{Purity = cos(0.6049872018 + 0.0001467884 * ESTIMATE)}
-#' @param expr_data A gene expression matrix (or data frame) with gene symbols as
-#'  row names and samples as columns.
+#' @param expr_data A normalized gene expression matrix (or data frame) with
+#'   gene symbols as row names and samples as columns.
 #' @return A tibble with one row for each sample in `expr_data` and five columns:
 #'   `sample_id`, `immune_score`, `stroma_score`, `estimate_score` and `purity_score`.
 #' @source [bioinformatics.mdanderson.org/public-software/estimate/](https://bioinformatics.mdanderson.org/public-software/estimate/)

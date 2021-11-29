@@ -18,8 +18,7 @@ options(tibble.print_min = 5L, tibble.print_max = 5L)
 Hacksig is a collection of cancer transcriptomics gene signatures as well as a 
 simple and tidy interface to compute single sample enrichment scores.
 
-This document will show you how to getting started with hacksig, but before we 
-start, we must load the following packages:
+This document will show you how to getting started with hacksig, but first, we must load the following packages:
 
 ```{r, message=FALSE}
 library(hacksig)
@@ -36,6 +35,8 @@ library(msigdbr)
 
 # to parallelize computations
 library(future)
+
+theme_set(theme_bw())
 ```
 
 
@@ -71,34 +72,27 @@ get_sig_genes("ifng")
 
 ## Check your signatures
 
-The first thing you should do before computing scores for a signature is to check how 
-many of its genes are present in your data.
+The first thing you should do before computing scores for a signature is to check how many of its genes are present in your data.
 To accomplish this, we can use `check_sig()` on a gene expression matrix (either
 microarray or RNA-seq normalized data).
 
-For this tutorial, we will use `test_expr` (an R object included in hacksig) as an example 
-gene expression matrix with 20 simulated samples.
+For this tutorial, we will use `test_expr` (an R object included in hacksig) as an example gene expression matrix with 20 simulated samples.
 
-By default, `check_sig()` will compute statistics for every signature implemented 
-in `hacksig`.
+By default, `check_sig()` will compute statistics for every signature implemented in `hacksig`.
 
 ```{r}
 check_sig(test_expr)
 ```
 
 You can filter for specific signatures by entering keywords in the 
-`signatures` argument (partial match will work):
+`signatures` argument (partial match and regular expressions will work):
 
 ```{r}
 check_sig(test_expr, signatures = c("metab", "cinsarc"))
 ```
 
-Partial match for `signatures` will work. Keyword `"metab"` does partially match 
-keywords associated to the `"wu2020_metabolic"` signature.
-
 We can also check for signatures not implemented in hacksig, that is custom signatures.
-For example, we can use the `msigdbr` package to download the *Hallmark* gene set 
-collection:
+For example, we can use the `msigdbr` package to download the *Hallmark* gene set collection:
 
 ```{r}
 hallmark_list <- msigdbr(species = "Homo sapiens", category = "H") %>%
@@ -110,7 +104,7 @@ hallmark_list <- msigdbr(species = "Homo sapiens", category = "H") %>%
 check_sig(test_expr, hallmark_list)
 ```
 
-Let's see which genes are missing for the `HALLMARK_NOTCH_SIGNALING` gene set:
+Missing genes for the `HALLMARK_NOTCH_SIGNALING` gene set are:
 
 ```{r}
 check_sig(test_expr, hallmark_list) %>% 
@@ -123,18 +117,14 @@ check_sig(test_expr, hallmark_list) %>%
 
 ### hack_sig
 
-The main function of the package, `hack_sig()`, permits to obtain single 
-sample scores from gene signatures.
-By default, it will compute scores for all the signatures implemented 
-in the package with the original publication method (e.g. weighted sum of expression 
-values and model coefficients).
+The main function of the package, `hack_sig()`, permits to obtain single sample scores from gene signatures.
+By default, it will compute scores for all the signatures implemented in the package with the original publication method.
 
 ```{r}
 hack_sig(test_expr)
 ```
 
-You can also filter for specific signatures (e.g. the immune and stromal ESTIMATE 
-signatures) and choose a particular single sample method:
+You can also filter for specific signatures (e.g. the immune and stromal ESTIMATE signatures) and choose a particular single sample method:
 
 ```{r}
 hack_sig(test_expr, signatures = "estimate", method = "zscore")
@@ -156,8 +146,7 @@ hack_sig(test_expr, hallmark_list,
          method = "ssgsea", sample_norm = "separate", alpha = 0.5)
 ```
 
-There are three methods for which `hack_sig()` cannot be used to compute gene signature
-scores with the original method. These are: CINSARC, ESTIMATE and the Immunophenoscore.
+There are three methods for which `hack_sig()` cannot be used to compute gene signature scores with the original method. These are: CINSARC, ESTIMATE and the Immunophenoscore.
 
 ### hack_cinsarc
 
@@ -179,7 +168,7 @@ hack_estimate(test_expr)
 
 ### hack_immunophenoscore
 
-Finally, the raw immunophenoscore and its discrete counterpart can be obtained with:
+Finally, the raw immunophenoscore and its discrete (0-10 normalized) counterpart can be obtained with:
 
 ```{r}
 hack_immunophenoscore(test_expr)
@@ -192,7 +181,7 @@ hack_immunophenoscore(test_expr, extract = "all")
 ```
 
 
-### Stratify your samples
+## Stratify your samples
 
 If you want to categorize your samples into two or more signature classes based 
 on a score cutoff, you can use `hack_class()` after `hack_sig()`:
@@ -203,12 +192,71 @@ test_expr %>%
     hack_class()
 ```
 
-### Speed-up computation time
+By default, `hack_class()` will stratify samples either with the original publication method (if any) or by the median score (otherwise).
 
-Our single sample method implementations based on ranks (i.e. single sample GSEA and singscore) are slower than their counterparts implemented in `GSVA` and `singscore`.
+
+## Speed-up computation time
+
+Our rank-based single sample method implementations (i.e. single sample GSEA and singscore) are slower than their counterparts implemented in `GSVA` and `singscore`.
 Hence, to speed-up computation time you can use the `future` package:
 
 ```{r}
 plan(multisession)
 hack_sig(test_expr, hallmark_list, method = "ssgsea")
 ```
+
+
+## Use case
+
+Let's say we want to compute single sample scores for the KEGG gene set collection and then correlate these scores with the tumor purity given by the ESTIMATE method.
+
+First, we get the KEGG list and use `check_sig()` to keep only those gene sets whose genes are at least 2/3 present in our gene expression matrix. 
+
+```{r}
+kegg_list <- msigdbr(species = "Homo sapiens", subcategory = "KEGG") %>%
+    distinct(gs_name, gene_symbol) %>%
+    nest(genes = c(gene_symbol)) %>%
+    mutate(genes = map(genes, compose(as_vector, unname))) %>%
+    deframe()
+
+kegg_ok <- check_sig(test_expr, kegg_list) %>% 
+    filter(frac_present > 0.66) %>% 
+    pull(signature_id)
+```
+
+Then, we apply both the combined z-score and the ssGSEA method for the resulting list of 10 KEGG gene sets using `purrr::map_dfr()`:
+
+```{r}
+kegg_scores <- map_dfr(list(zscore = "zscore", ssgsea = "ssgsea"), 
+                       ~ hack_sig(test_expr,
+                                  kegg_list[kegg_ok],
+                                  method = .x,
+                                  sample_norm = "separate"),
+                       .id = "method")
+```
+
+We can transform the `kegg_scores` tibble in long format using `tidyr::pivot_longer()`:
+
+```{r}
+kegg_scores <- kegg_scores %>% 
+    pivot_longer(starts_with("KEGG"), 
+                 names_to = "kegg_id", values_to = "kegg_score")
+```
+
+Finally, after computing the tumor purity scores, we can merge the two data sets and plot the results:
+
+```{r, fig.dim=c(9,5)}
+purity_scores <- hack_estimate(test_expr) %>% select(sample_id, purity_score)
+
+kegg_scores %>% 
+    left_join(purity_scores, by = "sample_id") %>% 
+    ggplot(aes(x = kegg_id, y = kegg_score)) +
+    geom_boxplot(outlier.alpha = 0) +
+    geom_jitter(aes(color = purity_score), alpha = 0.8, width = 0.1) +
+    facet_wrap(facets = vars(method), scales = "free_x") +
+    coord_flip() +
+    scale_color_viridis_c() +
+    labs(x = NULL, y = "enrichment score", color = "Tumor purity") +
+    theme(legend.position = "top")
+```
+

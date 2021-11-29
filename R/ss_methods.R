@@ -13,6 +13,7 @@
 #' @section Algorithm:
 #' This section gives a brief explanation of how single sample scores are obtained
 #'   from different methods.
+#'
 #'   ## Combined z-score
 #'   Gene expression values are centered by their mean value and scaled by their
 #'   standard deviation across samples for each gene (z-scores). Then, for each
@@ -21,8 +22,9 @@
 #'
 #'   The combined z-score method is also implemented in the R package `GSVA`
 #'   (*Hänzelmann et al., 2013*).
+#'
 #'   ## Single sample GSEA
-#'   For each sample, genes are ranked by expression value in decreasing order and
+#'   For each sample, genes are ranked by expression value in increasing order and
 #'   rank normalization may follow (see argument `rank_norm`). Then, two probability-like
 #'   vectors are computed for each sample and signature:
 #'
@@ -38,6 +40,7 @@
 #'
 #'   The single sample GSEA method is also implemented in the R package `GSVA`
 #'   (*Hänzelmann et al., 2013*).
+#'
 #'   ## Singscore
 #'   For signatures whose genes are supposed to be up- or down-regulated, genes
 #'   are ranked by expression value in increasing or decreasing order, respectively.
@@ -55,10 +58,10 @@
 #'   signatures composed of both up- and down-regulated genes), please use the R
 #'   package `singscore` (*Foroutan et al., 2018*).
 #' @param signatures A named list of gene signatures.
-#' @param direction A character specifying the **singscore** computation method
-#'   depending on the direction of the signatures. Can be on of:
+#' @param direction A character string specifying the **singscore** computation
+#'   method depending on the direction of the signatures. Can be on of:
 #'
-#'   * `"none"` (default), undirected signatures, that is you don't know whether
+#'   * `"none"` (default), undirected signatures, that is you do not know whether
 #'   the genes are up- or down-regulated;
 #'   * `"up"`, all genes in the signature are supposed to be up-regulated;
 #'   * `"down"`, all genes in the signature are supposed to be down-regulated;

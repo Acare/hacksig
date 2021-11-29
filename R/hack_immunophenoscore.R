@@ -54,8 +54,8 @@
 #'   - \eqn{IPS = 0}, if \eqn{IPS-raw \le 0};
 #'   - \eqn{IPS = [10 * (IPS-raw / 3)]}, if \eqn{0 < IPS-raw < 3};
 #'   - \eqn{IPS = 10}, if \eqn{IPS-raw \ge 3}.
-#' @param extract A string controlling which type of biomarker scores you want to obtain.
-#'   Possible choices are:
+#' @param extract A string controlling which type of biomarker scores you want
+#'   to obtain. Possible choices are:
 #'
 #'   - `"ips"` (default), only raw and discrete IPS scores;
 #'   - `"class"`, IPS scores together with the four summary class scores;
@@ -77,7 +77,7 @@
 #' Predictors of Response to Checkpoint Blockade. *Cell reports*, 18(1), 248–262.
 #' \doi{10.1016/j.celrep.2016.12.019}.
 #' @seealso [hack_sig()] to compute Immunophenoscore biomarkers in different
-#'   ways (use `signatures = "ips"`).
+#'   ways (e.g. use `signatures = "ips"` and `method = "singscore"`).
 #'
 #'   [check_sig()] to check if all/most of the Immunophenoscore biomarkers are
 #'   present in your expression matrix (use `signatures = "ips"`).

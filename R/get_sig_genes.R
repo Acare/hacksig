@@ -1,7 +1,7 @@
 #' Get signature gene identifiers
 #'
 #' @description
-#' Obtain gene signatures implemented in `hacksig` as a named list.
+#' Obtain gene signatures implemented in `hacksig` as a named list of gene symbols.
 #' @param keywords A character vector indicating keywords for a group of signatures.
 #'   The default (`"all"`) will cause the function to check for all the signatures
 #'   implemented in `hacksig`.

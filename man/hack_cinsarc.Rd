@@ -10,8 +10,8 @@
 hack_cinsarc(expr_data, dm_status)
 }
 \arguments{
-\item{expr_data}{A gene expression matrix (or data frame) with gene symbols as
-row names and samples as columns.}
+\item{expr_data}{A normalized gene expression matrix (or data frame) with
+gene symbols as row names and samples as columns.}
 
 \item{dm_status}{A numeric vector specifying whether a sample has either (1)
 or not (0) developed distant metastasis.}
