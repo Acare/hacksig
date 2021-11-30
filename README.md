@@ -11,6 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/hacksig)](https://CRAN.R-project.org/package=hacksig)
 [![Codecov test
 coverage](https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Acare/hacksig?branch=master)
+[![R-CMD-check](https://github.com/Acare/hacksig/workflows/R-CMD-check/badge.svg)](https://github.com/Acare/hacksig/actions)
 <!-- badges: end -->
 
 The goal of `hacksig` is to provide a simple and tidy interface to
