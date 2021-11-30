@@ -14,16 +14,17 @@ coverage](https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg)](ht
 <!-- badges: end -->
 
 The goal of `hacksig` is to provide a simple and tidy interface to
-compute single sample scores for a manually curated collection of gene
-signatures and methods applied in cancer transcriptomics.
+compute single sample scores for gene signatures and methods applied in
+cancer transcriptomics.
 
-Several gene signatures and methods are implemented, including:
+Scores can be obtained either for custom lists of genes or for a
+manually curated collection of gene signatures, including:
 
 -   [CINSARC](https://doi.org/10.1038/nm.2174);
 -   [ESTIMATE](https://doi.org/10.1038/ncomms3612);
 -   [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019);
 -   [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033);
--   and many more (use `get_sig_info()` for a complete list of gene
+-   and more (use `get_sig_info()` for a complete list of gene
     signatures implemented)
 
 One can choose to apply either the original publication method or one of
@@ -42,9 +43,8 @@ devtools::install_github("Acare/hacksig")
 
 ## Usage
 
-To show example usage of the package, we will use a simulated gene
-expression matrix `test_expr`, which is stored as an R object in
-`hacksig`.
+To show example usage of the package, we will use a toy gene expression
+matrix `test_expr`, which is stored as an R object in `hacksig`.
 
 You can learn more about usage of the package in `vignette("hacksig")`.
 
@@ -58,7 +58,7 @@ library(future)
 
 ``` r
 get_sig_info()
-#> # A tibble: 20 × 4
+#> # A tibble: 23 × 4
 #>   signature_id       signature_keywords     publication_doi   description       
 #>   <chr>              <chr>                  <chr>             <chr>             
 #> 1 ayers2017_immexp   ayers2017_immexp|immu… 10.1172/JCI91190  Immune expanded g…
@@ -66,7 +66,7 @@ get_sig_info()
 #> 3 cinsarc            cinsarc|metastasis|sa… 10.1038/nm.2174   Biomarker aimed a…
 #> 4 dececco2014_int172 dececco2014_int172|he… 10.1093/annonc/m… Signature aimed a…
 #> 5 eschrich2009_rsi   eschrich2009_rsi|radi… 10.1016/j.ijrobp… Genes aimed at pr…
-#> # … with 15 more rows
+#> # … with 18 more rows
 ```
 
 ### Check your signatures
@@ -119,7 +119,7 @@ plan(multisession)
 hack_sig(test_expr, method = "ssgsea")
 #> Warning: ℹ No genes are present in 'expr_data' for the following signatures:
 #> x rooney2015_cyt
-#> # A tibble: 20 × 20
+#> # A tibble: 20 × 23
 #>   sample_id ayers2017_immexp bai2019_immune cinsarc dececco2014_int172
 #>   <chr>                <dbl>          <dbl>   <dbl>              <dbl>
 #> 1 sample1             -3914.          2316.   -13.5              1288.
@@ -127,12 +127,12 @@ hack_sig(test_expr, method = "ssgsea")
 #> 3 sample3              1697.          1829.  1805.                685.
 #> 4 sample4               366.          5611.   326.               1684.
 #> 5 sample5               969.          1224.   290.                718.
-#> # … with 15 more rows, and 15 more variables: eschrich2009_rsi <dbl>,
+#> # … with 15 more rows, and 18 more variables: eschrich2009_rsi <dbl>,
 #> #   estimate_immune <dbl>, estimate_stromal <dbl>, eustace2013_hypoxia <dbl>,
-#> #   fang2021_irgs <dbl>, ips_cp <dbl>, ips_ec <dbl>, ips_mhc <dbl>,
-#> #   ips_sc <dbl>, liu2020_immune <dbl>, lohavanichbutr2013_hpvneg <dbl>,
-#> #   muro2016_ifng <dbl>, qiang2021_irgs <dbl>, she2020_irgs <dbl>,
-#> #   wu2020_metabolic <dbl>
+#> #   fang2021_irgs <dbl>, hu2021_derbp <dbl>, ips_cp <dbl>, ips_ec <dbl>,
+#> #   ips_mhc <dbl>, ips_sc <dbl>, li2021_irgs <dbl>, liu2020_immune <dbl>,
+#> #   liu2021_mgs <dbl>, lohavanichbutr2013_hpvneg <dbl>, muro2016_ifng <dbl>,
+#> #   qiang2021_irgs <dbl>, she2020_irgs <dbl>, wu2020_metabolic <dbl>
 ```
 
 ## Contributing

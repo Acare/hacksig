@@ -39,8 +39,10 @@ Suggests:
     covr,
     future (>= 1.22.1),
     ggplot2 (>= 3.3.5),
+    GSVA,
     knitr (>= 1.36),
     msigdbr (>= 7.4.1),
     purrr (>= 0.3.4),
-    rmarkdown (>= 2.11)
+    rmarkdown (>= 2.11),
+    singscore
 VignetteBuilder: knitr

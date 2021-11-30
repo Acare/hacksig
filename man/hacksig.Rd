@@ -33,6 +33,8 @@ In addition, other more complex methods are implemented through:
 \item \code{\link[=hack_estimate]{hack_estimate()}}, for the ESTIMATE method;
 \item \code{\link[=hack_immunophenoscore]{hack_immunophenoscore()}}, for the Immunophenoscore.
 }
+
+Information about implemented signatures can be obtained with \code{\link[=get_sig_info]{get_sig_info()}}.
 }
 
 \section{Check if gene signatures are applicable to your data}{

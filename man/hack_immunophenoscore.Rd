@@ -5,8 +5,6 @@
 \title{Hack the Immunophenoscore}
 \source{
 \href{https://github.com/icbi-lab/Immunophenogram}{github.com/icbi-lab/Immunophenogram}
-
-The Cancer Immunome Atlas \url{https://tcia.at/about}
 }
 \usage{
 hack_immunophenoscore(expr_data, extract = "ips")

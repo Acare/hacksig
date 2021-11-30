@@ -46,7 +46,7 @@ In order to get a complete list of the implemented signatures, you can use
 `get_sig_info()`. It returns a tibble with very useful information:
 
 - the `signature_id`;
-- a string of keywords associated to a signature;
+- a string of keywords associated to a signature (separated by the "pipe" `|` symbol);
 - the `publication_doi` linking to the original publication;
 - a brief `description`.
 
@@ -92,7 +92,7 @@ check_sig(test_expr, signatures = c("metab", "cinsarc"))
 ```
 
 We can also check for signatures not implemented in hacksig, that is custom signatures.
-For example, we can use the `msigdbr` package to download the *Hallmark* gene set collection:
+For example, we can use the `msigdbr` package to download the *Hallmark* gene set collection as a tibble and transform it into a list:
 
 ```{r}
 hallmark_list <- msigdbr(species = "Homo sapiens", category = "H") %>%
@@ -193,6 +193,7 @@ test_expr %>%
 ```
 
 By default, `hack_class()` will stratify samples either with the original publication method (if any) or by the median score (otherwise).
+`hack_class()` will work only with signatures implemented in `hacksig`.
 
 
 ## Speed-up computation time
@@ -210,7 +211,7 @@ hack_sig(test_expr, hallmark_list, method = "ssgsea")
 
 Let's say we want to compute single sample scores for the KEGG gene set collection and then correlate these scores with the tumor purity given by the ESTIMATE method.
 
-First, we get the KEGG list and use `check_sig()` to keep only those gene sets whose genes are at least 2/3 present in our gene expression matrix. 
+First, we get the KEGG list and use `check_sig()` to keep only those gene sets whose genes are more than 2/3 present in our gene expression matrix. 
 
 ```{r}
 kegg_list <- msigdbr(species = "Homo sapiens", subcategory = "KEGG") %>%

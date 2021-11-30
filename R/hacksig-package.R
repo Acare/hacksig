@@ -23,6 +23,8 @@
 #'   * [hack_cinsarc()], for the CINSARC classification;
 #'   * [hack_estimate()], for the ESTIMATE method;
 #'   * [hack_immunophenoscore()], for the Immunophenoscore.
+#'
+#'   Information about implemented signatures can be obtained with [get_sig_info()].
 #' @section Check if gene signatures are applicable to your data:
 #'   Sometimes your gene expression matrix can miss some genes due to some prior
 #'   filtering procedure. The function [check_sig()] can be used to check how many

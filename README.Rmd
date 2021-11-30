@@ -22,15 +22,15 @@ options(tibble.print_min = 5L, tibble.print_max = 5L)
 [![Codecov test coverage](https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Acare/hacksig?branch=master)
 <!-- badges: end -->
 
-The goal of `hacksig` is to provide a simple and tidy interface to compute single sample scores for a manually curated collection of gene signatures and methods applied in cancer transcriptomics.
+The goal of `hacksig` is to provide a simple and tidy interface to compute single sample scores for gene signatures and methods applied in cancer transcriptomics.
 
-Several gene signatures and methods are implemented, including:
+Scores can be obtained either for custom lists of genes or for a manually curated collection of gene signatures, including:
 
   * [CINSARC](https://doi.org/10.1038/nm.2174);
   * [ESTIMATE](https://doi.org/10.1038/ncomms3612);
   * [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019);
   * [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033);
-  * and many more (use `get_sig_info()` for a complete list of gene signatures implemented)
+  * and more (use `get_sig_info()` for a complete list of gene signatures implemented)
 
 One can choose to apply either the original publication method or one of three single sample scoring alternatives, namely: combined z-score, single sample GSEA and singscore.
 
@@ -51,7 +51,7 @@ devtools::install_github("Acare/hacksig")
 
 ## Usage
 
-To show example usage of the package, we will use a simulated gene expression matrix `test_expr`, which is stored as an R object in `hacksig`.
+To show example usage of the package, we will use a toy gene expression matrix `test_expr`, which is stored as an R object in `hacksig`.
 
 You can learn more about usage of the package in `vignette("hacksig")`.
 

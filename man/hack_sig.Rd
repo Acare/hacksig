@@ -73,16 +73,16 @@ sample scoring methods: the combined z-score (\emph{Lee et al., 2008}), the sing
 sample GSEA (\emph{Barbie et al., 2009}) or the singscore method (\emph{Foroutan et al., 2018}).
 }
 \details{
+For \code{"original"} method, it is intended the procedure used in the original
+publication by the authors for computing the signature score.
 \code{hack_sig()} can compute signature scores with the original method only if
 this is a relatively simple procedure (e.g weighted sum of fitted model
 coefficients and expression values).
-For \code{"original"} method, it is intended the procedure used in the original
-publication by the authors for computing the signature score.
-If \code{signatures} is a custom list of gene signatures, then the \code{"ssgsea"}
-method will be applied by default.
-
 For more complex methods, such as CINSARC, ESTIMATE and Immunophenoscore,
 use the dedicated functions.
+
+If \code{signatures} is a custom list of gene signatures, then the \code{"ssgsea"}
+method will be applied by default.
 }
 \section{Algorithm}{
 

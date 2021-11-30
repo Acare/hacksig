@@ -68,8 +68,6 @@
 #' hack_immunophenoscore(test_expr)
 #' hack_immunophenoscore(test_expr, extract = "class")
 #' @source [github.com/icbi-lab/Immunophenogram](https://github.com/icbi-lab/Immunophenogram)
-#'
-#'   The Cancer Immunome Atlas [https://tcia.at/about](https://tcia.at/about)
 #' @references
 #' Charoentong, P., Finotello, F., Angelova, M., Mayer, C.,
 #' Efremova, M., Rieder, D., Hackl, H., & Trajanoski, Z. (2017). Pan-cancer
