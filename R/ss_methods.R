@@ -106,7 +106,7 @@
 #' *PLoS computational biology*, 4(11), e1000217.
 #' \doi{10.1371/journal.pcbi.1000217}.
 #'
-#' @seealso [hack_sig()], [hack_estimate()], [GSVA::gsva()], [singscore::multiScore()]
+#' @seealso [hack_sig()], [hack_estimate()], `GSVA::gsva()`, `singscore::multiScore()`
 #'
 #' @keywords internal
 #' @name ss_methods

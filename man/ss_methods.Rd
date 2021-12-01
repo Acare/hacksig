@@ -149,6 +149,6 @@ pathway activity toward precise disease classification.
 \doi{10.1371/journal.pcbi.1000217}.
 }
 \seealso{
-\code{\link[=hack_sig]{hack_sig()}}, \code{\link[=hack_estimate]{hack_estimate()}}, \code{\link[GSVA:gsva]{GSVA::gsva()}}, \code{\link[singscore:multiScore]{singscore::multiScore()}}
+\code{\link[=hack_sig]{hack_sig()}}, \code{\link[=hack_estimate]{hack_estimate()}}, \code{GSVA::gsva()}, \code{singscore::multiScore()}
 }
 \keyword{internal}
