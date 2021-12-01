@@ -52,8 +52,6 @@ devtools::install_github("Acare/hacksig")
 
 ## Usage
 
-To show example usage of the package, we will use a toy gene expression matrix `test_expr`, which is stored as an R object in `hacksig`.
-
 You can learn more about usage of the package in `vignette("hacksig")`.
 
 ```{r, message=FALSE}

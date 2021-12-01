@@ -73,8 +73,7 @@ get_sig_genes("ifng")
 ## Check your signatures
 
 The first thing you should do before computing scores for a signature is to check how many of its genes are present in your data.
-To accomplish this, we can use `check_sig()` on a gene expression matrix (either
-microarray or RNA-seq normalized data).
+To accomplish this, we can use `check_sig()` on a normalized gene expression matrix (either microarray or RNA-seq normalized data), which must be formatted as an object of class `matrix` or `data.frame` with gene symbols as row names and sample IDs as column names.
 
 For this tutorial, we will use `test_expr` (an R object included in hacksig) as an example gene expression matrix with 20 simulated samples.
 

@@ -15,8 +15,7 @@ Authors@R: c(person(given = "Andrea",
              person(given = "Federico",
                     family = "Pistore",
                     email = "federico.pistore@istitutotumori.mi.it",
-                    role = "aut",
-                    comment = c(ORCID = "")))
+                    role = "aut"))
 Description: A collection of cancer transcriptomics gene signatures as well as a 
   simple and tidy interface to compute single sample enrichment scores.
 License: MIT + file LICENSE
@@ -39,10 +38,8 @@ Suggests:
     covr,
     future (>= 1.22.1),
     ggplot2 (>= 3.3.5),
-    GSVA,
     knitr (>= 1.36),
     msigdbr (>= 7.4.1),
     purrr (>= 0.3.4),
-    rmarkdown (>= 2.11),
-    singscore
+    rmarkdown (>= 2.11)
 VignetteBuilder: knitr
