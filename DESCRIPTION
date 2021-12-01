@@ -1,7 +1,7 @@
 Package: hacksig
 Type: Package
 Title: A Tidy Framework to Hack Gene Expression Signatures
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(person(given = "Andrea", 
                     family = "Carenzo", 
                     email = "andrea.carenzo@gmail.com",
@@ -17,7 +17,13 @@ Authors@R: c(person(given = "Andrea",
                     email = "federico.pistore@istitutotumori.mi.it",
                     role = "aut"))
 Description: A collection of cancer transcriptomics gene signatures as well as a 
-  simple and tidy interface to compute single sample enrichment scores.
+    simple and tidy interface to compute single sample enrichment scores either 
+    with the original procedure or with three alternatives:
+    the "combined z-score" of Lee et al. (2008) <doi:10.1371/journal.pcbi.1000217>,
+    the "single sample GSEA" of Barbie et al. (2009) <doi:10.1038/nature08460> and 
+    the "singscore" of Foroutan et al. (2018) <doi:10.1186/s12859-018-2435-4>.
+    The 'get_sig_info()' function can be used to retrieve information about each 
+    signature implemented.
 License: MIT + file LICENSE
 URL: https://github.com/Acare/hacksig
 BugReports: https://github.com/Acare/hacksig/issues

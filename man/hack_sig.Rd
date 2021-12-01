@@ -142,13 +142,13 @@ package \code{singscore} (\emph{Foroutan et al., 2018}).
 
 \examples{
 # Raw ssGSEA scores for all implemented signatures can be obtained with:
-\dontrun{hack_sig(test_expr, method = "ssgsea")}
+\donttest{hack_sig(test_expr, method = "ssgsea")}
 
 # To obtain 0-1 normalized ssGSEA scores, use:
-\dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")}
+\donttest{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate")}
 
 # You can also change the exponent of the ssGSEA running sum with:
-\dontrun{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)}
+\donttest{hack_sig(test_expr, method = "ssgsea", sample_norm = "separate", alpha = 0.5)}
 
 # To obtain combined z-scores for custom gene signatures, use:
 custom_list <- list(rand_sig1 = rownames(test_expr)[1:5],

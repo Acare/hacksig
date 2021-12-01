@@ -1,3 +1,3 @@
-# hacksig 0.1.0
+# hacksig 0.1.1
 
 * Initial CRAN submission.
