@@ -37,13 +37,13 @@ One can choose to apply either the original publication method or one of three s
 
 ## Installation
 
-```{r, echo=FALSE, eval=FALSE}
-# You can install the released version of hacksig from [CRAN](https://CRAN.R-project.org) with:
-# 
-# install.packages("hacksig")
+You can install the released version of hacksig from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("hacksig")
 ```
 
-You can install the development version from [GitHub](https://github.com/) with:
+Or the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
