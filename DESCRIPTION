@@ -1,7 +1,7 @@
 Package: hacksig
 Type: Package
 Title: A Tidy Framework to Hack Gene Expression Signatures
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(person(given = "Andrea", 
                     family = "Carenzo", 
                     email = "andrea.carenzo@gmail.com",

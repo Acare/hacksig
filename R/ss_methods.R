@@ -209,6 +209,8 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
     es_singscore <- function(sample_data, geneset) {
         if (direction %in% c("none", "up", "down")) {
             n_in <- length(intersect(geneset, rownames(expr_data)))
+            min_score <- (n_in + 1) / 2
+            max_score <- (2 * n_genes - n_in + 1) / 2
             if (direction == "none" | direction == "up") {
                 rank_vec <- rank(sample_data)
                 if (direction == "none") {
@@ -216,17 +218,13 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
                     for (i in seq_along(rank_vec)) {
                         rank_vec[[i]] <- abs(rank_vec[[i]] - rank_center)
                     }
-                    score <- sum(rank_vec[names(rank_vec) %in% geneset]) / n_in
                     min_score <- (ceiling(n_in / 2) + 1) / 2
                     max_score <- (n_genes - ceiling(n_in / 2) + 1) / 2
-                    (score - min_score) / (max_score - min_score)
                 }
             } else if (direction == "down") {
                 rank_vec <- rank(-sample_data)
             }
             score <- sum(rank_vec[names(rank_vec) %in% geneset]) / n_in
-            min_score <- (n_in + 1) / 2
-            max_score <- (2 * n_genes - n_in + 1) / 2
             (score - min_score) / (max_score - min_score)
         } else stop("Valid choices for 'direction' are 'none', 'up', 'down'",
                     call. = FALSE)

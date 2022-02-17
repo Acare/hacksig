@@ -39,13 +39,13 @@ One can choose to apply either the original publication method or one of three s
 
 You can install the released version of hacksig from [CRAN](https://CRAN.R-project.org) with:
 
-``` r
+```{r, eval=FALSE}
 install.packages("hacksig")
 ```
 
 Or the development version from [GitHub](https://github.com/) with:
 
-``` r
+```{r, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("Acare/hacksig")
 ```
