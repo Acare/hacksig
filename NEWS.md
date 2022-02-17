@@ -1,3 +1,4 @@
+
 # hacksig 0.1.2
 
 * Fixed `hack_sig()` for `method = "singscore"` and `direction = "none"`.
