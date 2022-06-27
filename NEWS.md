@@ -1,3 +1,7 @@
+# hacksig 0.1.3
+
+* Added citation info;
+
 
 # hacksig 0.1.2
 

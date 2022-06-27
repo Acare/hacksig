@@ -50,6 +50,12 @@ Or the development version from [GitHub](https://github.com/) with:
 devtools::install_github("Acare/hacksig")
 ```
 
+## Citation
+
+If you use `hacksig` in your work, please cite us:
+
+> Andrea Carenzo, Federico Pistore, Mara S Serafini, Deborah Lenoci, Armando G Licata, Loris De Cecco, hacksig: a unified and tidy R framework to easily compute gene expression signature scores, Bioinformatics, Volume 38, Issue 10, 15 May 2022, Pages 2940–2942, https://doi.org/10.1093/bioinformatics/btac161
+
 ## Usage
 
 You can learn more about usage of the package in `vignette("hacksig")`.
@@ -97,5 +103,5 @@ hack_sig(test_expr, method = "ssgsea")
 ## Contributing
 
 If you have any suggestions about adding new features to `hacksig`, please 
-open an issue request on [GitHub](https://github.com/Acare/hacksig/issues).
+create an issue on [GitHub](https://github.com/Acare/hacksig/issues).
 Gene-level information about gene signatures are stored in `data-raw/hacksig_signatures.csv` and can be used as a template for requests.
