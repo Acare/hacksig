@@ -39,6 +39,7 @@
 #' expression data. *Nature communications*, 4, 2612. \doi{10.1038/ncomms3612}.
 #' @examples
 #' hack_estimate(test_expr)
+#' @importFrom data.table .N .I `:=`
 #' @export
 hack_estimate <- function(expr_data) {
     sig_data <- signatures_data
@@ -52,8 +53,13 @@ hack_estimate <- function(expr_data) {
     )
     result <- compute_ssgsea(expr_data = expr_data, signatures = estimate_sigs,
                              sample_norm = "raw", rank_norm = "rank", alpha = 0.25)
-    result$estimate_score <- result$immune_score + result$stroma_score
-    result$purity_score <- cos(0.6049872018 + 0.0001467884 * result$estimate_score)
-    result[result$purity_score < 0, "purity_score"] <- NA
-    result
+    data.table::setDT(result)
+    result[
+        , estimate_score := immune_score + stroma_score
+    ][
+        , purity_score := cos(0.6049872018 + 0.0001467884 * estimate_score)
+    ][
+        purity_score < 0, purity_score := NA_real_
+    ]
+    tibble::as_tibble(result)
 }
