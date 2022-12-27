@@ -39,7 +39,7 @@
 #' expression data. *Nature communications*, 4, 2612. \doi{10.1038/ncomms3612}.
 #' @examples
 #' hack_estimate(test_expr)
-#' @importFrom data.table .N .I `:=`
+#' @importFrom data.table `:=`
 #' @export
 hack_estimate <- function(expr_data) {
     sig_data <- signatures_data

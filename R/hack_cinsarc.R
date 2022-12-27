@@ -72,7 +72,6 @@ hack_cinsarc <- function(expr_data, dm_status) {
         loo_cor$cinsarc_class <- ifelse(loo_cor$x0 < loo_cor$x1, "C1", "C2")
         result[[i]] <- loo_cor[i, c("sample_id", "cinsarc_class")]
     }
-    # dplyr::bind_rows(result)
     tibble::as_tibble(
         data.table::rbindlist(result)
     )
