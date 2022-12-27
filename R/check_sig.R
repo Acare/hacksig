@@ -10,31 +10,32 @@
 #' @return A tibble with a number of rows equal to the number of input signatures
 #'   and five columns:
 #'
-#'   * `n_genes` gives the number of genes composing a signature;
-#'   * `n_present` and `frac_present` are the number and fraction of genes in a
+#'   * `signature_id`, the signature ID;
+#'   * `n_genes`, the number of genes composing a signature;
+#'   * `n_present` and `frac_present`, the number and fraction of genes in a
 #'     signature which are present in `expr_data`, respectively;
-#'   * `missing_genes` returns a named list of missing gene symbols for each signature.
+#'   * `missing_genes`, the missing gene symbols for each signature.
 #' @examples
 #' check_sig(test_expr)
 #' check_sig(test_expr, "estimate")
-#' @importFrom rlang .data
 #' @seealso [get_sig_info()], [hack_sig()]
+#' @importFrom data.table .N `:=`
 #' @export
 check_sig <- function(expr_data, signatures = "all") {
-    if (is.matrix(expr_data) == TRUE) {
+    if (is.matrix(expr_data)) {
         expr_data <- as.data.frame(expr_data)
     }
-    if (is.list(signatures) == TRUE) {
+    if (is.list(signatures)) {
         signatures <- lapply(signatures, FUN = unique)
-        if (is.null(names(signatures)) == TRUE) {
+        if (is.null(names(signatures))) {
             names(signatures) <- paste0("sig", seq_along(signatures))
         }
-        sig_data <- tidyr::unnest(
+        sig_data <- data.table::rbindlist(
             tibble::enframe(signatures, name = "signature_id", value = "gene_symbol"),
-            cols = "gene_symbol"
+            idcol = "gene_symbol"
         )
     }
-    else if (is.character(signatures) == TRUE) {
+    else if (is.character(signatures)) {
         sig_data <- signatures_data
         signatures <- paste0(signatures, collapse = "|")
         if (signatures != "all") {
@@ -45,21 +46,19 @@ check_sig <- function(expr_data, signatures = "all") {
             }
         }
     }
-    sig_data_group <- dplyr::group_by(sig_data[, c("signature_id", "gene_symbol")],
-                                      .data$signature_id)
-    sig_data_group <- dplyr::mutate(
-        sig_data_group,
-        n_genes = length(.data$gene_symbol),
-        n_present = length(intersect(.data$gene_symbol, rownames(expr_data))),
-        frac_present = .data$n_present / .data$n_genes,
-        missing_genes = list(setdiff(.data$gene_symbol, rownames(expr_data))),
-        missing_genes = stats::setNames(.data$missing_genes, .data$signature_id)
-    )
-    keep_cols <- c("signature_id", "n_genes", "n_present", "frac_present", "missing_genes")
-    result <- unique(
-        dplyr::ungroup(
-            sig_data_group[, keep_cols]
-        )
-    )
-    dplyr::arrange(result, -.data$frac_present)
+    data.table::setDT(sig_data)
+    result <- sig_data[
+        ,
+        .(n_genes = .N,
+          n_present = length(intersect(gene_symbol, rownames(expr_data))),
+          missing_genes = list(setdiff(gene_symbol, rownames(expr_data)))),
+        by = "signature_id"
+    ][
+        ,
+        frac_present := n_present / n_genes
+    ]
+    data.table::setcolorder(result,
+                            c("signature_id", "n_genes", "n_present", "frac_present", "missing_genes"))
+    data.table::setorderv(result, cols = c("frac_present", "n_genes"), order = -1)
+    tibble::as_tibble(result)
 }
