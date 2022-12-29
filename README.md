@@ -26,12 +26,11 @@ manually curated collection of gene signatures, including:
 - [ESTIMATE](https://doi.org/10.1038/ncomms3612);
 - [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019);
 - [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033);
-- and more
+- and more (use `get_sig_info()` to get a complete list of the
+  implemented signatures)
 
 The following table lists all the available gene signatures implemented
 in hacksig (see also `get_sig_info()`):
-
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
 At present, signature scores can be obtained either with the original
 publication method or using one of three single sample scoring

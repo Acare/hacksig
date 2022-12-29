@@ -16,7 +16,7 @@
 #'     sample methods.
 #'
 #'   Once single sample scores are obtained, you can assign your samples into
-#'   signature classes with [hack_class()].
+#'   signature classes with [stratify_sig()].
 #'
 #'   In addition, other more complex methods are implemented through:
 #'
