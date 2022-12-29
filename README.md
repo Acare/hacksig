@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# hacksig <img src="man/figures/logo.svg" align="right" height="139" />
+# hacksig <img src="man/figures/logo.png" align="right" height="139"/>
 
 <!-- badges: start -->
 
@@ -12,6 +12,7 @@ status](https://www.r-pkg.org/badges/version/hacksig)](https://CRAN.R-project.or
 [![Codecov test
 coverage](https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Acare/hacksig?branch=master)
 [![R-CMD-check](https://github.com/Acare/hacksig/workflows/R-CMD-check/badge.svg)](https://github.com/Acare/hacksig/actions)
+
 <!-- badges: end -->
 
 The goal of `hacksig` is to provide a simple and tidy interface to
@@ -25,16 +26,21 @@ manually curated collection of gene signatures, including:
 - [ESTIMATE](https://doi.org/10.1038/ncomms3612);
 - [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019);
 - [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033);
-- and more (use `get_sig_info()` for a complete list of gene signatures
-  implemented)
+- and more
 
-One can choose to apply either the original publication method or one of
-three single sample scoring alternatives, namely: combined z-score,
-single sample GSEA and singscore.
+The following table lists all the available gene signatures implemented
+in hacksig (see also `get_sig_info()`):
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+At present, signature scores can be obtained either with the original
+publication method or using one of three single sample scoring
+alternatives, namely: *combined z-score*, *single sample GSEA* and
+*singscore*.
 
 ## Installation
 
-You can install the released version of hacksig from
+You can install the last stable version of hacksig from
 [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
@@ -55,20 +61,26 @@ If you use `hacksig` in your work, please cite us with:
 ``` r
 citation("hacksig")
 #> 
-#> To cite package 'hacksig' in publications use:
+#> To cite hacksig in publications use:
 #> 
-#>   Carenzo A, De Cecco L, Pistore F (2022). _hacksig: A Tidy Framework
-#>   to Hack Gene Expression Signatures_. R package version 0.1.2,
-#>   <https://CRAN.R-project.org/package=hacksig>.
+#>   Andrea Carenzo, Federico Pistore, Mara S Serafini, Deborah Lenoci,
+#>   Armando G Licata, Loris De Cecco, hacksig: a unified and tidy R
+#>   framework to easily compute gene expression signature scores,
+#>   Bioinformatics, Volume 38, Issue 10, 15 May 2022, Pages 2940–2942,
+#>   https://doi.org/10.1093/bioinformatics/btac161
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
-#>   @Manual{,
-#>     title = {hacksig: A Tidy Framework to Hack Gene Expression Signatures},
-#>     author = {Andrea Carenzo and Loris {De Cecco} and Federico Pistore},
+#>   @Article{,
+#>     title = {hacksig: a unified and tidy R framework to easily compute gene expression signature scores},
+#>     author = {Andrea Carenzo and Federico Pistore and Mara S. Serafini and Deborah Lenoci and Armando G. Licata and Loris {De Cecco}},
+#>     journal = {Bioinformatics},
+#>     doi = {10.1093/bioinformatics/btac161},
 #>     year = {2022},
-#>     note = {R package version 0.1.2},
-#>     url = {https://CRAN.R-project.org/package=hacksig},
+#>     volume = {38},
+#>     number = {10},
+#>     pages = {2940-2942},
+#>     url = {https://doi.org/10.1093/bioinformatics/btac161},
 #>   }
 ```
 
@@ -82,7 +94,7 @@ library(dplyr)
 library(future)
 ```
 
-### Get available signatures
+### Available signatures
 
 ``` r
 get_sig_info()
@@ -104,7 +116,7 @@ get_sig_info()
 check_sig(test_expr, signatures = "estimate")
 #> # A tibble: 2 × 5
 #>   signature_id     n_genes n_present frac_present missing_genes
-#>   <chr>              <int>     <int>        <dbl> <named list> 
+#>   <chr>              <int>     <int>        <dbl> <list>       
 #> 1 estimate_stromal     141        91        0.645 <chr [50]>   
 #> 2 estimate_immune      141        74        0.525 <chr [67]>
 ```
@@ -116,11 +128,11 @@ hack_sig(test_expr, signatures = c("ifng", "cinsarc"), method = "zscore")
 #> # A tibble: 20 × 3
 #>   sample_id cinsarc muro2016_ifng
 #>   <chr>       <dbl>         <dbl>
-#> 1 sample1    -0.482       -0.511 
-#> 2 sample2    -2.61         0.400 
-#> 3 sample3     1.44         0.347 
-#> 4 sample4    -0.538        0.0849
-#> 5 sample5    -0.537        0.390 
+#> 1 sample1   -0.482         -0.511
+#> 2 sample10  -0.0926        -1.60 
+#> 3 sample11   0.730         -1.03 
+#> 4 sample12  -0.625          0.851
+#> 5 sample13   0.930         -0.369
 #> # … with 15 more rows
 ```
 
@@ -129,7 +141,7 @@ hack_sig(test_expr, signatures = c("ifng", "cinsarc"), method = "zscore")
 ``` r
 test_expr %>% 
     hack_sig("estimate", method = "singscore", direction = "up") %>% 
-    hack_class(cutoff = "median")
+    stratify_sig(cutoff = "median")
 #> # A tibble: 20 × 3
 #>   sample_id estimate_immune estimate_stromal
 #>   <chr>     <chr>           <chr>           
@@ -151,11 +163,11 @@ hack_sig(test_expr, method = "ssgsea")
 #> # A tibble: 20 × 23
 #>   sample_id ayers2017_…¹ bai20…² cinsarc decec…³ eschr…⁴ estim…⁵ estim…⁶ eusta…⁷
 #>   <chr>            <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 sample1         -3914.   2316.   -13.5   1288.   1678.   -636.    778.    49.4
-#> 2 sample2         -3348.   1350. -1070.    1322.   3605.   2118.    703.   673. 
-#> 3 sample3          1697.   1829.  1805.     685.  -2207.    725.    805.   -22.6
-#> 4 sample4           366.   5611.   326.    1684.    975.    737.   2031.  2202. 
-#> 5 sample5           969.   1224.   290.     718.   4109.    181.   1129.  1571. 
+#> 1 sample1            NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
+#> 2 sample10           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
+#> 3 sample11           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
+#> 4 sample12           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
+#> 5 sample13           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
 #> # … with 15 more rows, 14 more variables: fang2021_irgs <dbl>,
 #> #   hu2021_derbp <dbl>, ips_cp <dbl>, ips_ec <dbl>, ips_mhc <dbl>,
 #> #   ips_sc <dbl>, li2021_irgs <dbl>, liu2020_immune <dbl>, liu2021_mgs <dbl>,

@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 options(tibble.print_min = 5L, tibble.print_max = 5L)
 ```
 
-Hacksig is a collection of cancer transcriptomics gene signatures as well as a 
+Hacksig is a collection of cancer transcriptomics gene signatures and it provides a 
 simple and tidy interface to compute single sample enrichment scores.
 
 This document will show you how to getting started with hacksig, but first, we must load the following packages:
@@ -40,7 +40,7 @@ theme_set(theme_bw())
 ```
 
 
-## Get implemented signatures
+## Available signatures from the literature
 
 In order to get a complete list of the implemented signatures, you can use 
 `get_sig_info()`. It returns a tibble with very useful information:
@@ -52,14 +52,6 @@ In order to get a complete list of the implemented signatures, you can use
 
 ```{r}
 get_sig_info()
-```
-
-To get a full view of the tibble, use:
-
-```{r, eval=FALSE}
-get_sig_info() %>% print(n = Inf)
-# or
-View(get_sig_info())
 ```
 
 If you want to get the list of gene symbols for one or more of the implemented 
@@ -84,7 +76,7 @@ check_sig(test_expr)
 ```
 
 You can filter for specific signatures by entering keywords in the 
-`signatures` argument (partial match and regular expressions will work):
+`signatures` argument (partial matching and regular expressions will work too):
 
 ```{r}
 check_sig(test_expr, signatures = c("metab", "cinsarc"))
@@ -183,16 +175,16 @@ hack_immunophenoscore(test_expr, extract = "all")
 ## Stratify your samples
 
 If you want to categorize your samples into two or more signature classes based 
-on a score cutoff, you can use `hack_class()` after `hack_sig()`:
+on a score cutoff, you can use `stratify_sig()` after `hack_sig()`:
 
 ```{r}
 test_expr %>% 
     hack_sig("estimate", method = "singscore", direction = "up") %>% 
-    hack_class()
+    stratify_sig()
 ```
 
-By default, `hack_class()` will stratify samples either with the original publication method (if any) or by the median score (otherwise).
-`hack_class()` will work only with signatures implemented in `hacksig`.
+By default, `stratify_sig()` will stratify samples either with the original publication method (if any) or by the median score (otherwise).
+`stratify_sig()` will work only with signatures implemented in `hacksig`.
 
 
 ## Speed-up computation time

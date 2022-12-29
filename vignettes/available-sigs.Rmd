@@ -1,0 +1,48 @@
+---
+title: "Available signatures"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{available-sigs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE}
+library(hacksig)
+library(dplyr)
+```
+
+The following table is based on the output of `get_sig_info()` and it can be used 
+to explore in a simple way all the implemented gene signatures in hacksig.
+
+The search bar allows you to search for specific type of signatures and links in 
+the DOI column redirect to the original papers.
+
+```{r, echo=FALSE}
+get_sig_info() |> 
+    mutate(
+        publication_doi = paste0(
+            "<a href='https://doi.org/", publication_doi, "'>", publication_doi, "</a>"
+        )
+    ) |> 
+    reactable::reactable(
+        columns = list(
+            signature_id = reactable::colDef("signature ID"),
+            signature_keywords = reactable::colDef(show = FALSE, 
+                                                   searchable = TRUE, 
+                                                   filterable = TRUE),
+            publication_doi = reactable::colDef("DOI", html = TRUE)
+        ),
+        searchable = TRUE,
+        striped = TRUE,
+        highlight = TRUE,
+        defaultPageSize = 10
+    )
+```

@@ -14,30 +14,31 @@ knitr::opts_chunk$set(
 options(tibble.print_min = 5L, tibble.print_max = 5L)
 ```
 
-# hacksig <img src="man/figures/logo.svg" align="right" height="139" />
+# hacksig <img src="man/figures/logo.png" align="right" height="139"/>
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN status](https://www.r-pkg.org/badges/version/hacksig)](https://CRAN.R-project.org/package=hacksig)
-[![Codecov test coverage](https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Acare/hacksig?branch=master)
-[![R-CMD-check](https://github.com/Acare/hacksig/workflows/R-CMD-check/badge.svg)](https://github.com/Acare/hacksig/actions)
+
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![CRAN status](https://www.r-pkg.org/badges/version/hacksig)](https://CRAN.R-project.org/package=hacksig) [![Codecov test coverage](https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Acare/hacksig?branch=master) [![R-CMD-check](https://github.com/Acare/hacksig/workflows/R-CMD-check/badge.svg)](https://github.com/Acare/hacksig/actions)
+
 <!-- badges: end -->
 
 The goal of `hacksig` is to provide a simple and tidy interface to compute single sample scores for gene signatures and methods applied in cancer transcriptomics.
 
 Scores can be obtained either for custom lists of genes or for a manually curated collection of gene signatures, including:
 
-  * [CINSARC](https://doi.org/10.1038/nm.2174);
-  * [ESTIMATE](https://doi.org/10.1038/ncomms3612);
-  * [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019);
-  * [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033);
-  * and more (use `get_sig_info()` for a complete list of gene signatures implemented)
+-   [CINSARC](https://doi.org/10.1038/nm.2174);
+-   [ESTIMATE](https://doi.org/10.1038/ncomms3612);
+-   [Immunophenoscore](https://doi.org/10.1016/j.celrep.2016.12.019);
+-   [Cytolitic activity](https://doi.org/10.1016/j.cell.2014.12.033);
+-   and more (use `get_sig_info()` to get a complete list of the implemented signatures)
 
-One can choose to apply either the original publication method or one of three single sample scoring alternatives, namely: combined z-score, single sample GSEA and singscore.
+The following table lists all the available gene signatures implemented in hacksig (see also `get_sig_info()`):
+
+At present, signature scores can be obtained either with the original publication method or using one of three single sample scoring alternatives, namely: *combined z-score*, *single sample GSEA* and *singscore*.
 
 ## Installation
 
-You can install the released version of hacksig from [CRAN](https://CRAN.R-project.org) with:
+You can install the last stable version of hacksig from [CRAN](https://CRAN.R-project.org) with:
 
 ```{r, eval=FALSE}
 install.packages("hacksig")
@@ -58,7 +59,6 @@ If you use `hacksig` in your work, please cite us with:
 citation("hacksig")
 ```
 
-
 ## Usage
 
 You can learn more about usage of the package in `vignette("hacksig")`.
@@ -69,7 +69,7 @@ library(dplyr)
 library(future)
 ```
 
-### Get available signatures
+### Available signatures
 
 ```{r}
 get_sig_info()
@@ -92,7 +92,7 @@ hack_sig(test_expr, signatures = c("ifng", "cinsarc"), method = "zscore")
 ```{r}
 test_expr %>% 
     hack_sig("estimate", method = "singscore", direction = "up") %>% 
-    hack_class(cutoff = "median")
+    stratify_sig(cutoff = "median")
 ```
 
 ### Speed-up computation time
@@ -102,8 +102,6 @@ plan(multisession)
 hack_sig(test_expr, method = "ssgsea")
 ```
 
-
 ## Contributing
 
-If you have any suggestions about adding new features or signatures to `hacksig`, please create an issue on [GitHub](https://github.com/Acare/hacksig/issues).
-Gene-level information about gene signatures are stored in `data-raw/hacksig_signatures.csv` and can be used as a template for requests.
+If you have any suggestions about adding new features or signatures to `hacksig`, please create an issue on [GitHub](https://github.com/Acare/hacksig/issues). Gene-level information about gene signatures are stored in `data-raw/hacksig_signatures.csv` and can be used as a template for requests.
