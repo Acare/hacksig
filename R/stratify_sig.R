@@ -12,8 +12,8 @@
 #'   * `"mean"`/`"median"`, samples will be classified as `"low"` or `"high"` with
 #'     respect to the mean/median signature score, respectively;
 #'   * `"quantile"`, samples will be classified into signature score quantiles;
-#' @param probs A numeric vector of probabilities with values in $[0, 1]$ to use in
-#'   combination with `cutoff = "quantile"`. By default, it correspond to quartiles
+#' @param probs A numeric vector of probabilities with values in `[0, 1]` to use in
+#'   combination with `cutoff = "quantile"`. By default, it corresponds to quartiles
 #'   (`c(0, 0.25, 0.5, 0.75, 1)`).
 #' @return A tibble with the same dimension as `sig_data`, having a column `sample_id`
 #'   with sample identifiers and one column for each input signature giving
@@ -22,6 +22,7 @@
 #' scores <- hack_sig(test_expr, "immune")
 #' stratify_sig(scores)
 #' @seealso [hack_sig()], [stats::quantile()]
+#' @importFrom data.table `:=` .SD
 #' @export
 stratify_sig <- function(sig_data, cutoff = "original", probs = seq(0, 1, 0.25)) {
     sig_info <- signatures_data
