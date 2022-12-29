@@ -47,13 +47,13 @@
 #' @section Algorithm:
 #' Samplewise gene expression z-scores are obtained for each of 26 immune cell
 #'   types and biomarkers. Then, weighted averaged z-scores are computed for each
-#'   class and the raw immunophenoscore (\eqn{IPS-raw}) results as the sum of the
+#'   class and the raw immunophenoscore (\eqn{IPS_{raw}}) results as the sum of the
 #'   four class scores. Finally, the immunophenoscore (\eqn{IPS}) is given as an
 #'   integer value between 0 and 10 in the following way:
 #'
-#'   - \eqn{IPS = 0}, if \eqn{IPS-raw \le 0};
-#'   - \eqn{IPS = [10 * (IPS-raw / 3)]}, if \eqn{0 < IPS-raw < 3};
-#'   - \eqn{IPS = 10}, if \eqn{IPS-raw \ge 3}.
+#'   - \eqn{IPS = 0}, if \eqn{IPS_{raw} \le 0};
+#'   - \eqn{IPS = [10 * (IPS_{raw} / 3)]}, if \eqn{0 < IPS_{raw} < 3};
+#'   - \eqn{IPS = 10}, if \eqn{IPS_{raw} \ge 3}.
 #' @param extract A string controlling which type of biomarker scores you want
 #'   to obtain. Possible choices are:
 #'
@@ -79,10 +79,11 @@
 #'
 #'   [check_sig()] to check if all/most of the Immunophenoscore biomarkers are
 #'   present in your expression matrix (use `signatures = "ips"`).
-#' @importFrom rlang .data
+#' @importFrom data.table `:=`
 #' @export
 hack_immunophenoscore <- function(expr_data, extract = "ips") {
     sig_data <- signatures_data
+    class_score = gene_weight = norm_expr = weighted_type_score = NULL # due to NSE notes in R CMD check
     ips_genes <- sig_data[grep("ips", sig_data$signature_id),
                           c("signature_keywords", "signature_id", "gene_symbol", "gene_weight")]
     ips_genes$signature_keywords <- gsub("\\|.*", "", ips_genes$signature_keywords)
@@ -94,59 +95,65 @@ hack_immunophenoscore <- function(expr_data, extract = "ips") {
     ips_data <- merge(ips_genes,
                       tibble::as_tibble(scaled_data, rownames = "gene_symbol"),
                       by = "gene_symbol")
-    ips_data <- tidyr::pivot_longer(
-        ips_data,
-        cols = -c("gene_symbol", "gene_type", "gene_weight", "gene_class"),
-        names_to = "sample_id",
-        values_to = "norm_expr"
-        )
-    ips_data <- dplyr::mutate(dplyr::group_by(ips_data, .data$sample_id, .data$gene_type),
-                              type_score = mean(.data$norm_expr),
-                              type_weight = mean(.data$gene_weight))
-    keep_cols <- c("sample_id", "gene_type", "gene_class", "type_score", "type_weight")
-    result_type <- dplyr::distinct(dplyr::ungroup(ips_data[, keep_cols]))
-    result_type$weighted_type_score <- result_type$type_weight * result_type$type_score
-    result_type$type_weight <- NULL
-    result_class <- dplyr::mutate(
-        dplyr::group_by(result_type, .data$sample_id, .data$gene_class),
-        class_score = mean(.data$weighted_type_score)
+    data.table::setDT(ips_data)
+    ips_data <- data.table::melt(ips_data,
+                                 id.vars = c("gene_symbol", "gene_type", "gene_weight", "gene_class"),
+                                 variable.name = "sample_id",
+                                 value.name = "norm_expr")
+    ips_data[,
+             c("type_score", "type_weight") :=
+                 list(mean(norm_expr, na.rm = TRUE), mean(gene_weight, na.rm = TRUE)),
+             by = c("sample_id", "gene_type")]
+    result_type <- unique(
+        ips_data[, c("sample_id", "gene_type", "gene_class", "type_score", "type_weight")]
     )
-    keep_cols <- c("sample_id", "gene_class", "class_score")
-    result_class <- dplyr::distinct(dplyr::ungroup(result_class[, keep_cols]))
-    result_class <- dplyr::mutate(
-        dplyr::group_by(result_class, .data$sample_id),
-        raw = sum(.data$class_score),
-        ips = dplyr::case_when(
-            .data$raw <= 0 ~ 0,
-            .data$raw >= 3 ~ 10,
-            .data$raw > 0 | .data$raw < 3 ~ round(.data$raw * 10 / 3, digits = 0)
-            )
-        )
-    result_class <- dplyr::ungroup(
-        tidyr::pivot_wider(
+    result_type$weighted_type_score <- result_type$type_weight * result_type$type_score
+    result_type[, "type_weight" := NULL]
+
+    result_class <- data.table::copy(result_type)
+    result_class[,
+                 "class_score" := mean(weighted_type_score, na.rm = TRUE),
+                 by = c("sample_id", "gene_class")]
+    result_class <- unique(
+        result_class[, c("sample_id", "gene_class", "class_score")]
+    )
+    result_class[
+        ,
+        "raw" := sum(class_score, na.rm = TRUE),
+        by = "sample_id"
+    ][
+        ,
+        "ips" := data.table::fcase(
+            raw <= 0, 0,
+            raw >= 3, 10,
+            raw > 0 | raw < 3, round(raw * 10 / 3, digits = 0)
+        ),
+        by = "sample_id"
+    ]
+
+    result_class <- data.table::dcast(
             result_class,
-            c("sample_id", "raw", "ips"),
-            names_from = "gene_class",
-            values_from = "class_score"
-        )
+            sample_id + raw + ips ~ gene_class,
+            value.var = "class_score"
+    )
+    result_type <- data.table::dcast(
+        result_type,
+        sample_id ~ gene_type,
+        value.var = "weighted_type_score"
     )
     names(result_class)[-1] <- paste0(names(result_class)[-1], "_score")
     names(result_class) <- tolower(names(result_class))
-    result_type <- tidyr::pivot_wider(
-        result_type,
-        "sample_id",
-        names_from = "gene_type",
-        values_from = "weighted_type_score"
-    )
     names(result_type) <- tolower(gsub(" |-", "_", names(result_type)))
     names(result_type)[-1] <- paste0(names(result_type)[-1], "_score")
-    result <- dplyr::left_join(result_class, result_type, by = "sample_id")
+
+    result <- result_type[result_class, on = "sample_id"]
+
     if (extract == "class") {
-        result_class
+        tibble::as_tibble(result_class)
     } else if (extract == "ips") {
-        result_class[, c("sample_id", "raw_score", "ips_score")]
+        tibble::as_tibble(result_class[, c("sample_id", "raw_score", "ips_score")])
     } else if (extract == "all") {
-        result
+        tibble::as_tibble(result)
     } else stop("Must provide a valid string for 'extract'.
                 Possible choices are 'ips', 'class', 'all'.", call. = FALSE)
 }

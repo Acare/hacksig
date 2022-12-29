@@ -69,17 +69,17 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
                      call. = FALSE)
         )
     }
-    if (is.matrix(expr_data) == TRUE) {
+    if (is.matrix(expr_data)) {
         expr_data <- as.data.frame(expr_data)
     }
     if (is.list(signatures)) {
         signatures <- lapply(signatures, FUN = unique)
         signatures <- signatures[lapply(signatures, length) > 1]
-        if (is.null(names(signatures)) == TRUE) {
+        if (is.null(names(signatures))) {
             names(signatures) <- paste0("sig", seq_along(signatures))
         }
         check_info <- check_sig(expr_data = expr_data, signatures = signatures)
-        check_info <- check_info[check_info$n_present == 0,]
+        check_info <- check_info[check_info$n_present == 0, ]
         if (nrow(check_info) > 0) {
             signatures <- signatures[!names(signatures) %in% check_info$signature_id]
             rlang::warn(
@@ -178,12 +178,14 @@ hack_sig <- function(expr_data, signatures = "all", method = "original",
                 }
                 result[[i]] <- temp
             }
-            result <- dplyr::bind_rows(result)
-
-            tidyr::pivot_wider(result,
-                               id_cols = "sample_id",
-                               names_from = "signature_id",
-                               values_from = "sig_score")
+            result <- data.table::rbindlist(result)
+            tibble::as_tibble(
+                data.table::dcast(
+                    result,
+                    sample_id ~ signature_id,
+                    value.var = "sig_score"
+                )
+            )
         }
     } else stop("Argument 'signatures' must be a named list of gene signatures or a string with a keyword.",
                 call. = FALSE)

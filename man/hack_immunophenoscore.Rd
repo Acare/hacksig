@@ -76,13 +76,13 @@ by class together with the number of genes which represent them:\tabular{lcc}{
 
 Samplewise gene expression z-scores are obtained for each of 26 immune cell
 types and biomarkers. Then, weighted averaged z-scores are computed for each
-class and the raw immunophenoscore (\eqn{IPS-raw}) results as the sum of the
+class and the raw immunophenoscore (\eqn{IPS_{raw}}) results as the sum of the
 four class scores. Finally, the immunophenoscore (\eqn{IPS}) is given as an
 integer value between 0 and 10 in the following way:
 \itemize{
-\item \eqn{IPS = 0}, if \eqn{IPS-raw \le 0};
-\item \eqn{IPS = [10 * (IPS-raw / 3)]}, if \eqn{0 < IPS-raw < 3};
-\item \eqn{IPS = 10}, if \eqn{IPS-raw \ge 3}.
+\item \eqn{IPS = 0}, if \eqn{IPS_{raw} \le 0};
+\item \eqn{IPS = [10 * (IPS_{raw} / 3)]}, if \eqn{0 < IPS_{raw} < 3};
+\item \eqn{IPS = 10}, if \eqn{IPS_{raw} \ge 3}.
 }
 }
 

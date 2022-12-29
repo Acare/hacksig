@@ -14,27 +14,21 @@
 #' @seealso [check_sig()], [hack_sig()], [get_sig_genes()]
 #' @examples
 #' get_sig_info()
-#' @importFrom rlang .data
+#' @importFrom data.table `:=`
 #' @export
 get_sig_info <- function() {
-    sig_data <- signatures_data
-    keep_cols <- c("signature_id", "signature_keywords", "publication_doi", "description")
-    sig_data <- unique(sig_data[, keep_cols])
-    split_kwrds <- dplyr::mutate(
-        dplyr::rowwise(sig_data),
-        signature_keywords = list(strsplit(.data$signature_keywords, "\\|"))
+    signature_keywords = NULL # due to NSE notes in R CMD check
+    sig_data <- unique(
+        signatures_data[, c("signature_id", "signature_keywords", "publication_doi", "description")]
     )
-    split_kwrds <- dplyr::summarise(
-        dplyr::group_by(split_kwrds, .data$signature_id),
-        signature_keywords = list(unique(unlist(lapply(.data$signature_keywords, `[[`, 1))))
-    )
-    split_kwrds <- dplyr::mutate(
-        dplyr::group_by(split_kwrds, .data$signature_id),
-        signature_keywords = paste0(sort(unlist(.data$signature_keywords)),
-                                    collapse = "|")
-    )
-    sig_data <- dplyr::left_join(split_kwrds,
-                                 unique(sig_data[, keep_cols[-2]]),
-                                 by = "signature_id")
-    dplyr::arrange(dplyr::ungroup(sig_data), .data$signature_id)
+    data.table::setDT(sig_data)
+    sig_data[, signature_keywords := paste0(signature_keywords, collapse = "|"), by = "signature_id"]
+    sig_data <- unique(sig_data)
+    sig_data[
+        ,
+        signature_keywords := paste0(sort(unique(strsplit(signature_keywords, "\\|")[[1]])), collapse = "|"),
+        by = "signature_id"
+    ]
+    data.table::setorderv(sig_data, cols = "signature_id", order = 1)
+    tibble::as_tibble(sig_data)
 }

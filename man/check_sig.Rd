@@ -18,10 +18,11 @@ function to check for all the signatures implemented in \code{hacksig}.}
 A tibble with a number of rows equal to the number of input signatures
 and five columns:
 \itemize{
-\item \code{n_genes} gives the number of genes composing a signature;
-\item \code{n_present} and \code{frac_present} are the number and fraction of genes in a
+\item \code{signature_id}, a unique identifier associated to a signature;
+\item \code{n_genes}, the number of genes composing a signature;
+\item \code{n_present} and \code{frac_present}, the number and fraction of genes in a
 signature which are present in \code{expr_data}, respectively;
-\item \code{missing_genes} returns a named list of missing gene symbols for each signature.
+\item \code{missing_genes}, the missing gene symbols for each signature.
 }
 }
 \description{

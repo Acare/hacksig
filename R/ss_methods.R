@@ -106,7 +106,7 @@
 #' *PLoS computational biology*, 4(11), e1000217.
 #' \doi{10.1371/journal.pcbi.1000217}.
 #'
-#' @seealso [hack_sig()], [hack_estimate()], `GSVA::gsva()`, `singscore::multiScore()`
+#' @seealso [hack_sig()], [hack_estimate()], [GSVA::gsva()], [singscore::multiScore()]
 #'
 #' @keywords internal
 #' @name ss_methods
@@ -114,9 +114,6 @@ NULL
 
 #' @rdname ss_methods
 compute_zscore <- function(expr_data, signatures) {
-    if (is.matrix(expr_data) == TRUE) {
-        expr_data <- as.data.frame(expr_data)
-    }
     single_sig_zscore <- function(dataset, genes) {
         filt_data <- dataset[rownames(dataset) %in% genes, ]
         scaled_data <- scale(t(filt_data), center = TRUE, scale = TRUE)
@@ -129,24 +126,24 @@ compute_zscore <- function(expr_data, signatures) {
             single_sig_zscore(dataset = expr_data, genes = genes)
         }
     )
-    result <- dplyr::bind_rows(result, .id = "signature_id")
-    tidyr::pivot_wider(result,
-                       id_cols = "sample_id",
-                       names_from = "signature_id",
-                       values_from = "zscore")
+    result <- data.table::rbindlist(result, idcol = "signature_id")
+    tibble::as_tibble(
+        data.table::dcast(
+            result,
+            sample_id ~ signature_id,
+            value.var = "zscore"
+        )
+    )
 }
 
 #' @rdname ss_methods
 compute_ssgsea <- function(expr_data, signatures, sample_norm = "raw",
                            rank_norm = "none", alpha = 0.25) {
-    if (is.matrix(expr_data) == TRUE) {
-        expr_data <- as.data.frame(expr_data)
-    }
     n_genes <- nrow(expr_data)
     es_ssgsea <- function(sample_data, geneset) {
         n_in <- length(intersect(geneset, rownames(expr_data)))
         n_out <- n_genes - n_in
-        rank_vec <- rank(sample_data)
+        rank_vec <- data.table::frank(sample_data)
         if (rank_norm %in% c("rank", "logrank")) {
             rank_vec <- 10000 / n_genes * rank_vec
             if (rank_norm == "logrank") {
@@ -178,33 +175,27 @@ compute_ssgsea <- function(expr_data, signatures, sample_norm = "raw",
         result <- lapply(
             result,
             FUN = function(dataset) {
-                dplyr::mutate(
-                    dataset,
-                    ssgsea = (.data$ssgsea - range(.data$ssgsea)[1]) /
-                        (range(.data$ssgsea)[2] - range(.data$ssgsea)[1])
-                )
+                dataset$ssgsea <- (dataset$ssgsea - range(dataset$ssgsea)[1]) /
+                    (range(dataset$ssgsea)[2] - range(dataset$ssgsea)[1])
+                dataset
             }
         )
     }
-    result <- dplyr::bind_rows(result, .id = "signature_id")
+    result <- data.table::rbindlist(result, idcol = "signature_id")
     if (sample_norm == "all") {
-        result <- dplyr::mutate(
-            result,
-            ssgsea = .data$ssgsea /
-                (range(.data$ssgsea)[2] - range(.data$ssgsea)[1])
-        )
+        result$ssgsea <- result$ssgsea / (range(result$ssgsea)[2] - range(result$ssgsea)[1])
     }
-    tidyr::pivot_wider(result,
-                       id_cols = "sample_id",
-                       names_from = "signature_id",
-                       values_from = "ssgsea")
+    tibble::as_tibble(
+        data.table::dcast(
+            result,
+            sample_id ~ signature_id,
+            value.var = "ssgsea"
+        )
+    )
 }
 
 #' @rdname ss_methods
 compute_singscore <- function(expr_data, signatures, direction = "none") {
-    if (is.matrix(expr_data) == TRUE) {
-        expr_data <- as.data.frame(expr_data)
-    }
     n_genes <- nrow(expr_data)
     es_singscore <- function(sample_data, geneset) {
         if (direction %in% c("none", "up", "down")) {
@@ -212,7 +203,7 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
             min_score <- (n_in + 1) / 2
             max_score <- (2 * n_genes - n_in + 1) / 2
             if (direction == "none" | direction == "up") {
-                rank_vec <- rank(sample_data)
+                rank_vec <- data.table::frank(sample_data)
                 if (direction == "none") {
                     rank_center <- ceiling(n_genes / 2)
                     for (i in seq_along(rank_vec)) {
@@ -222,7 +213,7 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
                     max_score <- (n_genes - ceiling(n_in / 2) + 1) / 2
                 }
             } else if (direction == "down") {
-                rank_vec <- rank(-sample_data)
+                rank_vec <- data.table::frank(-sample_data)
             }
             score <- sum(rank_vec[names(rank_vec) %in% geneset]) / n_in
             (score - min_score) / (max_score - min_score)
@@ -253,9 +244,12 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
             single_sig_singscore(dataset = expr_data, genes = genes)
         }
     )
-    result <- dplyr::bind_rows(result, .id = "signature_id")
-    tidyr::pivot_wider(result,
-                       id_cols = "sample_id",
-                       names_from = "signature_id",
-                       values_from = "singscore")
+    result <- data.table::rbindlist(result, idcol = "signature_id")
+    tibble::as_tibble(
+        data.table::dcast(
+            result,
+            sample_id ~ signature_id,
+            value.var = "singscore"
+        )
+    )
 }

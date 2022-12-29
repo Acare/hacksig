@@ -43,6 +43,7 @@
 #' @export
 hack_estimate <- function(expr_data) {
     sig_data <- signatures_data
+    immune_score = stroma_score = estimate_score = purity_score = NULL # due to NSE notes in R CMD check
     estimate_sigs <- list(
         immune_score = sig_data[sig_data$signature_id == "estimate_immune",
                                 "gene_symbol",

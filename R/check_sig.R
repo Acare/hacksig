@@ -10,7 +10,7 @@
 #' @return A tibble with a number of rows equal to the number of input signatures
 #'   and five columns:
 #'
-#'   * `signature_id`, the signature ID;
+#'   * `signature_id`, a unique identifier associated to a signature;
 #'   * `n_genes`, the number of genes composing a signature;
 #'   * `n_present` and `frac_present`, the number and fraction of genes in a
 #'     signature which are present in `expr_data`, respectively;
@@ -25,15 +25,20 @@ check_sig <- function(expr_data, signatures = "all") {
     if (is.matrix(expr_data)) {
         expr_data <- as.data.frame(expr_data)
     }
+    gene_symbol = n_genes = n_present = missing_genes = frac_present = NULL # due to NSE notes in R CMD check
     if (is.list(signatures)) {
         signatures <- lapply(signatures, FUN = unique)
         if (is.null(names(signatures))) {
             names(signatures) <- paste0("sig", seq_along(signatures))
         }
-        sig_data <- data.table::rbindlist(
-            tibble::enframe(signatures, name = "signature_id", value = "gene_symbol"),
-            idcol = "gene_symbol"
+        sig_data <- data.table::as.data.table(
+            tibble::enframe(signatures, name = "signature_id", value = "gene_symbol")
         )
+        sig_data <- sig_data[
+            ,
+            list(gene_symbol = unlist(gene_symbol, use.names = FALSE)),
+            by = "signature_id"
+        ]
     }
     else if (is.character(signatures)) {
         sig_data <- signatures_data
@@ -45,13 +50,13 @@ check_sig <- function(expr_data, signatures = "all") {
                      call. = FALSE)
             }
         }
+        data.table::setDT(sig_data)
     }
-    data.table::setDT(sig_data)
     result <- sig_data[
         ,
-        .(n_genes = .N,
-          n_present = length(intersect(gene_symbol, rownames(expr_data))),
-          missing_genes = list(setdiff(gene_symbol, rownames(expr_data)))),
+        list(n_genes = .N,
+             n_present = length(intersect(gene_symbol, rownames(expr_data))),
+             missing_genes = list(setdiff(gene_symbol, rownames(expr_data)))),
         by = "signature_id"
     ][
         ,
