@@ -1,0 +1,19 @@
+url: https://acare.github.io/hacksig/
+template:
+  bootstrap: 5
+reference:
+- title: "Score computation"
+  contents:
+  - hack_sig
+  - hack_estimate
+  - hack_cinsarc
+  - hack_immunophenoscore
+  - stratify_sig
+- title: "Utilities"
+  contents:
+  - check_sig
+  - get_sig_info
+  - get_sig_genes
+- title: "Example data"
+  contents:
+  - test_expr

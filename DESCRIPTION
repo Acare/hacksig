@@ -25,7 +25,8 @@ Description: A collection of cancer transcriptomics gene signatures as well as a
     The 'get_sig_info()' function can be used to retrieve information about each 
     signature implemented.
 License: MIT + file LICENSE
-URL: https://github.com/Acare/hacksig
+URL: https://github.com/Acare/hacksig,
+    https://acare.github.io/hacksig/
 BugReports: https://github.com/Acare/hacksig/issues
 Encoding: UTF-8
 LazyData: true
