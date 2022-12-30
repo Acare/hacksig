@@ -144,6 +144,7 @@ compute_ssgsea <- function(expr_data, signatures, sample_norm = "raw",
         n_in <- length(intersect(geneset, rownames(expr_data)))
         n_out <- n_genes - n_in
         rank_vec <- data.table::frank(sample_data)
+        names(rank_vec) <- rownames(expr_data)
         if (rank_norm %in% c("rank", "logrank")) {
             rank_vec <- 10000 / n_genes * rank_vec
             if (rank_norm == "logrank") {
@@ -161,15 +162,14 @@ compute_ssgsea <- function(expr_data, signatures, sample_norm = "raw",
         sum(prob_in - prob_out)
     }
     single_sig_ssgsea <- function(dataset, genes) {
-        ssgsea_vec <- apply(dataset, MARGIN = 2,
-                            FUN = es_ssgsea, geneset = genes)
+        ssgsea_vec <- apply(dataset,
+                            MARGIN = 2,
+                            FUN = function(x) es_ssgsea(x, geneset = genes))
         tibble::enframe(ssgsea_vec, name = "sample_id", value = "ssgsea")
     }
     result <- future.apply::future_lapply(
         X = signatures,
-        FUN = function(genes) {
-            single_sig_ssgsea(dataset = expr_data, genes = genes)
-        }
+        FUN = function(genes) single_sig_ssgsea(dataset = expr_data, genes = genes)
     )
     if (sample_norm == "separate") {
         result <- lapply(
@@ -202,7 +202,7 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
             n_in <- length(intersect(geneset, rownames(expr_data)))
             min_score <- (n_in + 1) / 2
             max_score <- (2 * n_genes - n_in + 1) / 2
-            if (direction == "none" | direction == "up") {
+            if (direction == "none" || direction == "up") {
                 rank_vec <- data.table::frank(sample_data)
                 if (direction == "none") {
                     rank_center <- ceiling(n_genes / 2)
@@ -215,6 +215,7 @@ compute_singscore <- function(expr_data, signatures, direction = "none") {
             } else if (direction == "down") {
                 rank_vec <- data.table::frank(-sample_data)
             }
+            names(rank_vec) <- rownames(expr_data)
             score <- sum(rank_vec[names(rank_vec) %in% geneset]) / n_in
             (score - min_score) / (max_score - min_score)
         } else stop("Valid choices for 'direction' are 'none', 'up', 'down'",

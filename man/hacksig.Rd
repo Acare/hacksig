@@ -48,6 +48,7 @@ genes your expression matrix contain for every input signature.
 Useful links:
 \itemize{
   \item \url{https://github.com/Acare/hacksig}
+  \item \url{https://acare.github.io/hacksig/}
   \item Report bugs at \url{https://github.com/Acare/hacksig/issues}
 }
 

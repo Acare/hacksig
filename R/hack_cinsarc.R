@@ -49,11 +49,11 @@
 #' hack_cinsarc(test_expr, test_dm_status)
 #' @export
 hack_cinsarc <- function(expr_data, dm_status) {
-    sig_data <- signatures_data
+    signature_id = gene_symbol = NULL # due to NSE notes in R CMD check
+    sig_data <- data.table::as.data.table(signatures_data)
     event_df <- tibble::tibble(sample_id = colnames(expr_data),
                                event = as.factor(ifelse(dm_status == 0, "X0", "X1")))
-    cinsarc_genes <- sig_data[sig_data$signature_id == "cinsarc",
-                              "gene_symbol", drop = TRUE]
+    cinsarc_genes <- sig_data[signature_id == "cinsarc", gene_symbol]
     filt_data <- expr_data[rownames(expr_data) %in% cinsarc_genes, ]
     centered_data <- scale(t(filt_data), center = TRUE, scale = FALSE)
     result <- vector("list", ncol(expr_data))

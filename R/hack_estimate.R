@@ -42,15 +42,11 @@
 #' @importFrom data.table `:=`
 #' @export
 hack_estimate <- function(expr_data) {
-    sig_data <- signatures_data
-    immune_score = stroma_score = estimate_score = purity_score = NULL # due to NSE notes in R CMD check
+    signature_id = gene_symbol = immune_score = stroma_score = estimate_score = purity_score = NULL # due to NSE notes in R CMD check
+    sig_data <- data.table::as.data.table(signatures_data)
     estimate_sigs <- list(
-        immune_score = sig_data[sig_data$signature_id == "estimate_immune",
-                                "gene_symbol",
-                                drop = TRUE],
-        stroma_score = sig_data[sig_data$signature_id == "estimate_stromal",
-                                "gene_symbol",
-                                drop = TRUE]
+        immune_score = sig_data[signature_id == "estimate_immune", gene_symbol],
+        stroma_score = sig_data[signature_id == "estimate_stromal", gene_symbol]
     )
     result <- compute_ssgsea(expr_data = expr_data, signatures = estimate_sigs,
                              sample_norm = "raw", rank_norm = "rank", alpha = 0.25)

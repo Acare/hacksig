@@ -29,9 +29,6 @@ manually curated collection of gene signatures, including:
 - and more (use `get_sig_info()` to get a complete list of the
   implemented signatures)
 
-The following table lists all the available gene signatures implemented
-in hacksig (see also `get_sig_info()`):
-
 At present, signature scores can be obtained either with the original
 publication method or using one of three single sample scoring
 alternatives, namely: *combined z-score*, *single sample GSEA* and
@@ -145,10 +142,10 @@ test_expr %>%
 #>   sample_id estimate_immune estimate_stromal
 #>   <chr>     <chr>           <chr>           
 #> 1 sample1   low             low             
-#> 2 sample2   high            low             
-#> 3 sample3   low             low             
-#> 4 sample4   low             high            
-#> 5 sample5   low             high            
+#> 2 sample10  high            high            
+#> 3 sample11  high            low             
+#> 4 sample12  high            low             
+#> 5 sample13  low             low             
 #> # … with 15 more rows
 ```
 
@@ -162,11 +159,11 @@ hack_sig(test_expr, method = "ssgsea")
 #> # A tibble: 20 × 23
 #>   sample_id ayers2017_…¹ bai20…² cinsarc decec…³ eschr…⁴ estim…⁵ estim…⁶ eusta…⁷
 #>   <chr>            <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 sample1            NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
-#> 2 sample10           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
-#> 3 sample11           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
-#> 4 sample12           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
-#> 5 sample13           NaN     NaN     NaN     NaN     NaN     NaN     NaN     NaN
+#> 1 sample1         -3914.   2316.   -13.5   1288.   1678.   -636.    778.    49.4
+#> 2 sample10         1077.    575.   801.     811.   2288.   1590.   1297.  1556. 
+#> 3 sample11          501.   -490.  1340.    1244.   1389.   2040.    512.  -210. 
+#> 4 sample12         2315.   1034.  -151.     981.   3846.   1835.    772.  2138. 
+#> 5 sample13        -2179.    327.  1737.    1288.    665.    632.    778.  2249. 
 #> # … with 15 more rows, 14 more variables: fang2021_irgs <dbl>,
 #> #   hu2021_derbp <dbl>, ips_cp <dbl>, ips_ec <dbl>, ips_mhc <dbl>,
 #> #   ips_sc <dbl>, li2021_irgs <dbl>, liu2020_immune <dbl>, liu2021_mgs <dbl>,
