@@ -49,14 +49,6 @@ Or the development version from [GitHub](https://github.com/) with:
 devtools::install_github("Acare/hacksig")
 ```
 
-## Citation
-
-If you use `hacksig` in your work, please cite us with:
-
-```{r}
-citation("hacksig")
-```
-
 ## Usage
 
 You can learn more about usage of the package in `vignette("hacksig")`.

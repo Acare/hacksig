@@ -50,36 +50,6 @@ Or the development version from [GitHub](https://github.com/) with:
 devtools::install_github("Acare/hacksig")
 ```
 
-## Citation
-
-If you use `hacksig` in your work, please cite us with:
-
-``` r
-citation("hacksig")
-#> 
-#> To cite hacksig in publications use:
-#> 
-#>   Andrea Carenzo, Federico Pistore, Mara S Serafini, Deborah Lenoci,
-#>   Armando G Licata, Loris De Cecco, hacksig: a unified and tidy R
-#>   framework to easily compute gene expression signature scores,
-#>   Bioinformatics, Volume 38, Issue 10, 15 May 2022, Pages 2940–2942,
-#>   https://doi.org/10.1093/bioinformatics/btac161
-#> 
-#> A BibTeX entry for LaTeX users is
-#> 
-#>   @Article{,
-#>     title = {hacksig: a unified and tidy R framework to easily compute gene expression signature scores},
-#>     author = {Andrea Carenzo and Federico Pistore and Mara S. Serafini and Deborah Lenoci and Armando G. Licata and Loris {De Cecco}},
-#>     journal = {Bioinformatics},
-#>     doi = {10.1093/bioinformatics/btac161},
-#>     year = {2022},
-#>     volume = {38},
-#>     number = {10},
-#>     pages = {2940-2942},
-#>     url = {https://doi.org/10.1093/bioinformatics/btac161},
-#>   }
-```
-
 ## Usage
 
 You can learn more about usage of the package in `vignette("hacksig")`.
@@ -94,15 +64,15 @@ library(future)
 
 ``` r
 get_sig_info()
-#> # A tibble: 23 × 4
+#> # A tibble: 40 × 4
 #>   signature_id       signature_keywords                          publi…¹ descr…²
 #>   <chr>              <chr>                                       <chr>   <chr>  
 #> 1 ayers2017_immexp   ayers2017_immexp|immune expanded            10.117… Immune…
-#> 2 bai2019_immune     bai2019_immune|head and neck|hnscc|inflamm… 10.115… Immune…
+#> 2 bai2019_immune     bai2019_immune|head and neck squamous cell… 10.115… Immune…
 #> 3 cinsarc            cinsarc|metastasis|sarcoma|sts              10.103… Biomar…
-#> 4 dececco2014_int172 dececco2014_int172|head and neck|hnscc      10.109… Signat…
+#> 4 dececco2014_int172 dececco2014_int172|head and neck squamous … 10.109… Signat…
 #> 5 eschrich2009_rsi   eschrich2009_rsi|radioresistance|radiosens… 10.101… Genes …
-#> # … with 18 more rows, and abbreviated variable names ¹​publication_doi,
+#> # … with 35 more rows, and abbreviated variable names ¹​publication_doi,
 #> #   ²​description
 ```
 
@@ -155,8 +125,9 @@ test_expr %>%
 plan(multisession)
 hack_sig(test_expr, method = "ssgsea")
 #> Warning: ℹ No genes are present in 'expr_data' for the following signatures:
+#> ✖ zhu2021_ferroptosis
 #> ✖ rooney2015_cyt
-#> # A tibble: 20 × 23
+#> # A tibble: 20 × 39
 #>   sample_id ayers2017_…¹ bai20…² cinsarc decec…³ eschr…⁴ estim…⁵ estim…⁶ eusta…⁷
 #>   <chr>            <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
 #> 1 sample1         -3914.   2316.   -13.5   1288.   1678.   -636.    778.    49.4
@@ -164,13 +135,13 @@ hack_sig(test_expr, method = "ssgsea")
 #> 3 sample11          501.   -490.  1340.    1244.   1389.   2040.    512.  -210. 
 #> 4 sample12         2315.   1034.  -151.     981.   3846.   1835.    772.  2138. 
 #> 5 sample13        -2179.    327.  1737.    1288.    665.    632.    778.  2249. 
-#> # … with 15 more rows, 14 more variables: fang2021_irgs <dbl>,
-#> #   hu2021_derbp <dbl>, ips_cp <dbl>, ips_ec <dbl>, ips_mhc <dbl>,
-#> #   ips_sc <dbl>, li2021_irgs <dbl>, liu2020_immune <dbl>, liu2021_mgs <dbl>,
-#> #   lohavanichbutr2013_hpvneg <dbl>, muro2016_ifng <dbl>, qiang2021_irgs <dbl>,
-#> #   she2020_irgs <dbl>, wu2020_metabolic <dbl>, and abbreviated variable names
-#> #   ¹​ayers2017_immexp, ²​bai2019_immune, ³​dececco2014_int172, ⁴​eschrich2009_rsi,
-#> #   ⁵​estimate_immune, ⁶​estimate_stromal, ⁷​eustace2013_hypoxia
+#> # … with 15 more rows, 30 more variables: fan2021_ferroptosis <dbl>,
+#> #   fang2021_irgs <dbl>, han2021_ferroptosis <dbl>, he2021_ferroptosis_a <dbl>,
+#> #   he2021_ferroptosis_b <dbl>, hu2021_derbp <dbl>,
+#> #   huang2022_ferroptosis <dbl>, ips_cp <dbl>, ips_ec <dbl>, ips_mhc <dbl>,
+#> #   ips_sc <dbl>, li2021_ferroptosis_a <dbl>, li2021_ferroptosis_b <dbl>,
+#> #   li2021_ferroptosis_c <dbl>, li2021_ferroptosis_d <dbl>, li2021_irgs <dbl>,
+#> #   liu2020_immune <dbl>, liu2021_mgs <dbl>, lohavanichbutr2013_hpvneg <dbl>, …
 ```
 
 ## Contributing
