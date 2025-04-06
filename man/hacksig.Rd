@@ -3,7 +3,6 @@
 \docType{package}
 \name{hacksig}
 \alias{hacksig}
-\alias{_PACKAGE}
 \alias{hacksig-package}
 \title{hacksig: A Tidy Framework to Hack Gene Expression Signatures}
 \description{
