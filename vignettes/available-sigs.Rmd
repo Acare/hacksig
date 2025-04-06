@@ -2,7 +2,7 @@
 title: "Available signatures"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{available-sigs}
+  %\VignetteIndexEntry{Available signatures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
