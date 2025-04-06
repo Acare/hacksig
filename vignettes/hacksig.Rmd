@@ -86,7 +86,7 @@ We can also check for signatures not implemented in hacksig, that is custom sign
 For example, we can use the `msigdbr` package to download the *Hallmark* gene set collection as a tibble and transform it into a list:
 
 ```{r}
-hallmark_list <- msigdbr(species = "Homo sapiens", category = "H") %>%
+hallmark_list <- msigdbr(species = "Homo sapiens", collection = "H") %>%
     distinct(gs_name, gene_symbol) %>%
     nest(genes = c(gene_symbol)) %>%
     mutate(genes = map(genes, compose(as_vector, unname))) %>%
@@ -205,7 +205,7 @@ Let's say we want to compute single sample scores for the KEGG gene set collecti
 First, we get the KEGG list and use `check_sig()` to keep only those gene sets whose genes are more than 2/3 present in our gene expression matrix. 
 
 ```{r}
-kegg_list <- msigdbr(species = "Homo sapiens", subcategory = "KEGG") %>%
+kegg_list <- msigdbr(species = "Homo sapiens", subcollection = "CP:KEGG_MEDICUS") %>%
     distinct(gs_name, gene_symbol) %>%
     nest(genes = c(gene_symbol)) %>%
     mutate(genes = map(genes, compose(as_vector, unname))) %>%
