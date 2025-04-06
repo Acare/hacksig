@@ -1,29 +1,19 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Fixed a bug in the `hack_sig()` function related to the `"singscore"` method.
+* Added new signatures to the package;
+* Fixed vignette-building bugs related to new versions of suggested packages
 
 ## Test environments
 
-- Ubuntu 20.04.3 LTS (local): R 4.1,2;
-- Win-builder: R-devel, R-release and R-oldrelease;
-- R-hub builder:
-  * Fedora Linux, R-devel, clang, gfortran;
-  * Ubuntu Linux 20.04.1 LTS, R-release, GCC;
-  * Windows Server 2008 R2 SP1, R-devel, 32/64 bit;
-- R-CMD-check GitHub Actions:
-  * macOS-latest (R-release);
-  * Windows-latest (R-release);
-  * Ubuntu-latest (R-devel);
-  * Ubuntu-latest (R-release);
-  * Ubuntu-latest (R-oldrelease);
+- Fedora Linux 41 (local): R 4.4.3;
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+#### Local
 
-**the NOTE appears only when using R-hub builder on Windows Server 2022, R-devel, 64 bit**
+0 errors | 0 warnings | 3 notes
 
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
+1. `Package suggested but not available for checking: ‘covr’`: The package is actually listed in DESCRIPTION;
+2. `unable to verify current time`: The *worldclockapi* website is unavailable and this could cause the note;
+3. `Packages unavailable to check Rd xrefs: ‘GSVA’, ‘singscore’`: These are Bioconductor packages, they're just referenced in the help pages.
