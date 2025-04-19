@@ -5,14 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content='A collection of cancer transcriptomics gene signatures as well as a 
-    simple and tidy interface to compute single sample enrichment scores either 
-    with the original procedure or with three alternatives:
-    the "combined z-score" of Lee et al. (2008) &lt;doi:10.1371/journal.pcbi.1000217&gt;,
-    the "single sample GSEA" of Barbie et al. (2009) &lt;doi:10.1038/nature08460&gt; and 
-    the "singscore" of Foroutan et al. (2018) &lt;doi:10.1186/s12859-018-2435-4&gt;.
-    The get_sig_info() function can be used to retrieve information about each 
-    signature implemented.'>
 <title>A Tidy Framework to Hack Gene Expression Signatures • hacksig</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -21,72 +13,50 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="A Tidy Framework to Hack Gene Expression Signatures">
-<meta property="og:description" content='A collection of cancer transcriptomics gene signatures as well as a 
-    simple and tidy interface to compute single sample enrichment scores either 
-    with the original procedure or with three alternatives:
-    the "combined z-score" of Lee et al. (2008) &lt;doi:10.1371/journal.pcbi.1000217&gt;,
-    the "single sample GSEA" of Barbie et al. (2009) &lt;doi:10.1038/nature08460&gt; and 
-    the "singscore" of Foroutan et al. (2018) &lt;doi:10.1186/s12859-018-2435-4&gt;.
-    The get_sig_info() function can be used to retrieve information about each 
-    signature implemented.'>
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="A Tidy Framework to Hack Gene Expression Signatures">
+<meta name="description" content='A collection of cancer transcriptomics gene signatures as well as a simple and tidy interface to compute single sample enrichment scores either with the original procedure or with three alternatives: the "combined z-score" of Lee et al. (2008) &lt;doi:10.1371/journal.pcbi.1000217&gt;, the "single sample GSEA" of Barbie et al. (2009) &lt;doi:10.1038/nature08460&gt; and the "singscore" of Foroutan et al. (2018) &lt;doi:10.1186/s12859-018-2435-4&gt;. The get_sig_info() function can be used to retrieve information about each signature implemented.'>
+<meta property="og:description" content='A collection of cancer transcriptomics gene signatures as well as a simple and tidy interface to compute single sample enrichment scores either with the original procedure or with three alternatives: the "combined z-score" of Lee et al. (2008) &lt;doi:10.1371/journal.pcbi.1000217&gt;, the "single sample GSEA" of Barbie et al. (2009) &lt;doi:10.1038/nature08460&gt; and the "singscore" of Foroutan et al. (2018) &lt;doi:10.1186/s12859-018-2435-4&gt;. The get_sig_info() function can be used to retrieve information about each signature implemented.'>
 <meta property="og:image" content="https://acare.github.io/hacksig/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="index.html">hacksig</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="articles/hacksig.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="articles/hacksig.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/available-sigs.html">Available signatures</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/available-sigs.html">Available signatures</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/Acare/hacksig/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/Acare/hacksig/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-home">
 <div class="row">
@@ -97,7 +67,6 @@
 </div>
 <!-- badges: start -->
 
-<!-- badges: end -->
 <p>The goal of <code>hacksig</code> is to provide a simple and tidy interface to compute single sample scores for gene signatures and methods applied in cancer transcriptomics.</p>
 <p>Scores can be obtained either for custom lists of genes or for a manually curated collection of gene signatures, including:</p>
 <ul>
@@ -137,15 +106,14 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/get_sig_info.html">get_sig_info</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 40 × 4</span></span>
-<span><span class="co">#&gt;   signature_id       signature_keywords                          publi…¹ descr…²</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;              &lt;chr&gt;                                       &lt;chr&gt;   &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt; 1 ayers2017_immexp   ayers2017_immexp|immune expanded            10.117… Immune…</span></span>
-<span><span class="co">#&gt; 2 bai2019_immune     bai2019_immune|head and neck squamous cell… 10.115… Immune…</span></span>
-<span><span class="co">#&gt; 3 cinsarc            cinsarc|metastasis|sarcoma|sts              10.103… Biomar…</span></span>
-<span><span class="co">#&gt; 4 dececco2014_int172 dececco2014_int172|head and neck squamous … 10.109… Signat…</span></span>
-<span><span class="co">#&gt; 5 eschrich2009_rsi   eschrich2009_rsi|radioresistance|radiosens… 10.101… Genes …</span></span>
-<span><span class="co">#&gt; # … with 35 more rows, and abbreviated variable names ¹​publication_doi,</span></span>
-<span><span class="co">#&gt; #   ²​description</span></span></code></pre></div>
+<span><span class="co">#&gt;   signature_id       signature_keywords              publication_doi description</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;              &lt;chr&gt;                           &lt;chr&gt;           &lt;chr&gt;      </span></span>
+<span><span class="co">#&gt; 1 ayers2017_immexp   ayers2017_immexp|immune expand… 10.1172/JCI911… Immune exp…</span></span>
+<span><span class="co">#&gt; 2 bai2019_immune     bai2019_immune|head and neck s… 10.1155/2019/3… Immune/inf…</span></span>
+<span><span class="co">#&gt; 3 cinsarc            cinsarc|metastasis|sarcoma|sts  10.1038/nm.2174 Biomarker …</span></span>
+<span><span class="co">#&gt; 4 dececco2014_int172 dececco2014_int172|head and ne… 10.1093/annonc… Signature …</span></span>
+<span><span class="co">#&gt; 5 eschrich2009_rsi   eschrich2009_rsi|radioresistan… 10.1016/j.ijro… Genes aime…</span></span>
+<span><span class="co">#&gt; # ℹ 35 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="check-your-signatures">Check your signatures<a class="anchor" aria-label="anchor" href="#check-your-signatures"></a>
@@ -171,7 +139,7 @@
 <span><span class="co">#&gt; 3 sample11   0.730         -1.03 </span></span>
 <span><span class="co">#&gt; 4 sample12  -0.625          0.851</span></span>
 <span><span class="co">#&gt; 5 sample13   0.930         -0.369</span></span>
-<span><span class="co">#&gt; # … with 15 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 15 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="stratify-your-samples">Stratify your samples<a class="anchor" aria-label="anchor" href="#stratify-your-samples"></a>
@@ -188,7 +156,7 @@
 <span><span class="co">#&gt; 3 sample11  high            low             </span></span>
 <span><span class="co">#&gt; 4 sample12  high            low             </span></span>
 <span><span class="co">#&gt; 5 sample13  low             low             </span></span>
-<span><span class="co">#&gt; # … with 15 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 15 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="speed-up-computation-time">Speed-up computation time<a class="anchor" aria-label="anchor" href="#speed-up-computation-time"></a>
@@ -200,20 +168,20 @@
 <span><span class="co">#&gt; ✖ zhu2021_ferroptosis</span></span>
 <span><span class="co">#&gt; ✖ rooney2015_cyt</span></span>
 <span><span class="co">#&gt; # A tibble: 20 × 39</span></span>
-<span><span class="co">#&gt;   sample_id ayers2017_…¹ bai20…² cinsarc decec…³ eschr…⁴ estim…⁵ estim…⁶ eusta…⁷</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 sample1         -3914.   2316.   -13.5   1288.   1678.   -636.    778.    49.4</span></span>
-<span><span class="co">#&gt; 2 sample10         1077.    575.   801.     811.   2288.   1590.   1297.  1556. </span></span>
-<span><span class="co">#&gt; 3 sample11          501.   -490.  1340.    1244.   1389.   2040.    512.  -210. </span></span>
-<span><span class="co">#&gt; 4 sample12         2315.   1034.  -151.     981.   3846.   1835.    772.  2138. </span></span>
-<span><span class="co">#&gt; 5 sample13        -2179.    327.  1737.    1288.    665.    632.    778.  2249. </span></span>
-<span><span class="co">#&gt; # … with 15 more rows, 30 more variables: fan2021_ferroptosis &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   fang2021_irgs &lt;dbl&gt;, han2021_ferroptosis &lt;dbl&gt;, he2021_ferroptosis_a &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   he2021_ferroptosis_b &lt;dbl&gt;, hu2021_derbp &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt;   sample_id ayers2017_immexp bai2019_immune cinsarc dececco2014_int172</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt;              &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 sample1             -3914.          2316.   -13.5              1288.</span></span>
+<span><span class="co">#&gt; 2 sample10             1077.           575.   801.                811.</span></span>
+<span><span class="co">#&gt; 3 sample11              501.          -490.  1340.               1244.</span></span>
+<span><span class="co">#&gt; 4 sample12             2315.          1034.  -151.                981.</span></span>
+<span><span class="co">#&gt; 5 sample13            -2179.           327.  1737.               1288.</span></span>
+<span><span class="co">#&gt; # ℹ 15 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 34 more variables: eschrich2009_rsi &lt;dbl&gt;, estimate_immune &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   estimate_stromal &lt;dbl&gt;, eustace2013_hypoxia &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   fan2021_ferroptosis &lt;dbl&gt;, fang2021_irgs &lt;dbl&gt;, han2021_ferroptosis &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   he2021_ferroptosis_a &lt;dbl&gt;, he2021_ferroptosis_b &lt;dbl&gt;, hu2021_derbp &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   huang2022_ferroptosis &lt;dbl&gt;, ips_cp &lt;dbl&gt;, ips_ec &lt;dbl&gt;, ips_mhc &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   ips_sc &lt;dbl&gt;, li2021_ferroptosis_a &lt;dbl&gt;, li2021_ferroptosis_b &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   li2021_ferroptosis_c &lt;dbl&gt;, li2021_ferroptosis_d &lt;dbl&gt;, li2021_irgs &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   liu2020_immune &lt;dbl&gt;, liu2021_mgs &lt;dbl&gt;, lohavanichbutr2013_hpvneg &lt;dbl&gt;, …</span></span></code></pre></div>
+<span><span class="co">#&gt; #   ips_sc &lt;dbl&gt;, li2021_ferroptosis_a &lt;dbl&gt;, li2021_ferroptosis_b &lt;dbl&gt;, …</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -263,6 +231,7 @@
 <li><a href="https://CRAN.R-project.org/package=hacksig" class="external-link"><img src="https://www.r-pkg.org/badges/version/hacksig" alt="CRAN status"></a></li>
 <li><a href="https://app.codecov.io/gh/Acare/hacksig?branch=master" class="external-link"><img src="https://codecov.io/gh/Acare/hacksig/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://github.com/Acare/hacksig/actions" class="external-link"><img src="https://github.com/Acare/hacksig/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/Acare/hacksig/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Acare/hacksig/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
@@ -271,21 +240,19 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Andrea Carenzo, Loris De Cecco, Federico Pistore.</p>
+  <p>Developed by Andrea Carenzo, Loris De Cecco, Federico Pistore.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

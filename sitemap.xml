@@ -1,66 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://acare.github.io/hacksig/404.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/articles/available-sigs.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/articles/hacksig.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/index.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/check_sig.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/get_sig_genes.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/get_sig_info.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/hack_cinsarc.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/hack_estimate.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/hack_immunophenoscore.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/hack_sig.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/hacksig.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/ss_methods.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/stratify_sig.html</loc>
-  </url>
-  <url>
-    <loc>https://acare.github.io/hacksig/reference/test_expr.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://acare.github.io/hacksig/404.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/LICENSE-text.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/LICENSE.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/articles/available-sigs.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/articles/hacksig.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/articles/index.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/authors.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/index.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/news/index.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/check_sig.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/get_sig_genes.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/get_sig_info.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/hack_cinsarc.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/hack_estimate.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/hack_immunophenoscore.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/hack_sig.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/hacksig.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/index.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/ss_methods.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/stratify_sig.html</loc></url>
+<url><loc>https://acare.github.io/hacksig/reference/test_expr.html</loc></url>
 </urlset>
+
