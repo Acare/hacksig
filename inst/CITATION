@@ -1,7 +1,12 @@
-citHeader("To cite hacksig in publications use:")
-
-citEntry(
-  entry    = "Article",
+bibentry(
+  bibtype  = "Article",
+  textVersion = paste(sep = "",
+    "Andrea Carenzo, Federico Pistore, Mara S Serafini, Deborah Lenoci, Armando G Licata, Loris De Cecco, ",
+    "hacksig: a unified and tidy R framework to easily compute gene expression signature scores, ",
+    "Bioinformatics, Volume 38, Issue 10, 15 May 2022, Pages 2940–2942, ",
+    "https://doi.org/10.1093/bioinformatics/btac161"
+  ),
+  header = "To cite hacksig in publications use:",
   title    = "hacksig: a unified and tidy R framework to easily compute gene expression signature scores",
   author   = "Andrea Carenzo, Federico Pistore, Mara S. Serafini, Deborah Lenoci, Armando G. Licata, Loris De Cecco",
   journal  = "Bioinformatics",
@@ -10,11 +15,5 @@ citEntry(
   volume   = "38",
   number   = "10",
   pages    = "2940-2942",
-  url      = "https://doi.org/10.1093/bioinformatics/btac161",
-  textVersion = paste(sep = "",
-    "Andrea Carenzo, Federico Pistore, Mara S Serafini, Deborah Lenoci, Armando G Licata, Loris De Cecco, ",
-    "hacksig: a unified and tidy R framework to easily compute gene expression signature scores, ",
-    "Bioinformatics, Volume 38, Issue 10, 15 May 2022, Pages 2940–2942, ",
-    "https://doi.org/10.1093/bioinformatics/btac161"
-  )
+  url      = "https://doi.org/10.1093/bioinformatics/btac161"
 )
