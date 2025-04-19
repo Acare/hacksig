@@ -47,7 +47,6 @@ Suggests:
     future (>= 1.22.1),
     ggplot2 (>= 3.3.5),
     knitr (>= 1.36),
-    msigdbdf (>= 24.1.0),
     msigdbr (>= 10.0.0),
     purrr (>= 0.3.4),
     reactable (>= 0.4.1),
