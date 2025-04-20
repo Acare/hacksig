@@ -219,12 +219,14 @@ kegg_ok <- check_sig(test_expr, kegg_list) %>%
 Then, we apply both the combined z-score and the ssGSEA method for the resulting list of 10 KEGG gene sets using `purrr::map_dfr()`:
 
 ```{r}
-kegg_scores <- map_dfr(list(zscore = "zscore", ssgsea = "ssgsea"), 
-                       ~ hack_sig(test_expr,
-                                  kegg_list[kegg_ok],
-                                  method = .x,
-                                  sample_norm = "separate"),
-                       .id = "method")
+kegg_scores <- map(list(zscore = "zscore", ssgsea = "ssgsea"),
+                   function(x) {
+                       hack_sig(test_expr,
+                                kegg_list[c(kegg_ok)],
+                                method = x,
+                                sample_norm = "separate")
+                   }) %>% 
+    bind_rows(.id = "method")
 ```
 
 We can transform the `kegg_scores` tibble in long format using `tidyr::pivot_longer()`:
