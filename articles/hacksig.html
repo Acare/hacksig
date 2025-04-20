@@ -427,12 +427,14 @@ expression matrix.</p>
 the resulting list of 10 KEGG gene sets using
 <code><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">purrr::map_dfr()</a></code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">kegg_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_dfr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zscore <span class="op">=</span> <span class="st">"zscore"</span>, ssgsea <span class="op">=</span> <span class="st">"ssgsea"</span><span class="op">)</span>, </span>
-<span>                       <span class="op">~</span> <span class="fu"><a href="../reference/hack_sig.html">hack_sig</a></span><span class="op">(</span><span class="va">test_expr</span>,</span>
-<span>                                  <span class="va">kegg_list</span><span class="op">[</span><span class="va">kegg_ok</span><span class="op">]</span>,</span>
-<span>                                  method <span class="op">=</span> <span class="va">.x</span>,</span>
-<span>                                  sample_norm <span class="op">=</span> <span class="st">"separate"</span><span class="op">)</span>,</span>
-<span>                       .id <span class="op">=</span> <span class="st">"method"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">kegg_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>zscore <span class="op">=</span> <span class="st">"zscore"</span>, ssgsea <span class="op">=</span> <span class="st">"ssgsea"</span><span class="op">)</span>,</span>
+<span>                   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>                       <span class="fu"><a href="../reference/hack_sig.html">hack_sig</a></span><span class="op">(</span><span class="va">test_expr</span>,</span>
+<span>                                <span class="va">kegg_list</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">kegg_ok</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>                                method <span class="op">=</span> <span class="va">x</span>,</span>
+<span>                                sample_norm <span class="op">=</span> <span class="st">"separate"</span><span class="op">)</span></span>
+<span>                   <span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span>.id <span class="op">=</span> <span class="st">"method"</span><span class="op">)</span></span></code></pre></div>
 <p>We can transform the <code>kegg_scores</code> tibble in long format
 using <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">tidyr::pivot_longer()</a></code>:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
